@@ -144,11 +144,15 @@ private fun CarteDonneesReference(donnees: DonneesReference) {
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
-                text = stringResource(
-                    R.string.reglages_calendrier_version,
-                    donnees.versionCalendrier,
-                    donnees.calendrierPublieLe.format(FORMAT_JOUR),
-                ),
+                text = if (donnees.versionCalendrier != null && donnees.calendrierPublieLe != null) {
+                    stringResource(
+                        R.string.reglages_calendrier_version,
+                        donnees.versionCalendrier,
+                        donnees.calendrierPublieLe.format(FORMAT_JOUR),
+                    )
+                } else {
+                    stringResource(R.string.reglages_calendrier_absent)
+                },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -157,7 +161,8 @@ private fun CarteDonneesReference(donnees: DonneesReference) {
 
             LigneInfo(
                 libelle = stringResource(R.string.reglages_source_titre),
-                valeur = donnees.sourceCalendrier,
+                valeur = donnees.sourceCalendrier
+                    ?: stringResource(R.string.reglages_source_inconnue),
             )
 
             HorizontalDivider()

@@ -44,9 +44,12 @@ sealed interface ReglagesUiState {
  */
 @Immutable
 data class DonneesReference(
-    val sourceCalendrier: String,
-    val calendrierPublieLe: LocalDate,
-    val versionCalendrier: Int,
+    // Les trois champs du calendrier sont facultatifs : tant que le contenu embarqué n'est
+    // pas chargé — ou si son chargement a échoué au démarrage — la provenance est inconnue.
+    // Sans cela, l'écran resterait sur « Chargement… » indéfiniment.
+    val sourceCalendrier: String?,
+    val calendrierPublieLe: LocalDate?,
+    val versionCalendrier: Int?,
     val versionAnnuaire: Int?,
     val derniereVerification: LocalDate?,
 )

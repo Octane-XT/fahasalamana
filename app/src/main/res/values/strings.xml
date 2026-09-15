@@ -39,6 +39,8 @@
     <string name="reglages_annuaire_titre">Annuaire des centres de santé</string>
     <string name="reglages_annuaire_version">Version %1$d</string>
     <string name="reglages_annuaire_absent">Pas encore chargé sur ce téléphone</string>
+    <string name="reglages_calendrier_absent">Calendrier pas encore chargé sur ce téléphone</string>
+    <string name="reglages_source_inconnue">Inconnue sur ce téléphone</string>
     <string name="reglages_derniere_verification">Dernière vérification des mises à jour : %1$s</string>
     <string name="reglages_derniere_verification_jamais">Dernière vérification des mises à jour : jamais</string>
     <string name="reglages_action_verifier">Vérifier les mises à jour</string>
