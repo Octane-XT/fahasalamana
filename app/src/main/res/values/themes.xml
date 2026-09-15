@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Thème minimal du manifeste : l'apparence réelle est définie en Compose (TODO(B01),
-  ui/theme/Theme.kt). Parent android:Theme.Material.Light.NoActionBar pour éviter
-  une dépendance à AppCompat dans un projet 100 % Compose.
+  Thème minimal du manifeste : il ne sert qu'à la fenêtre avant la première image
+  Compose. L'apparence réelle vient de FahasalamanaTheme (ui/theme/Theme.kt), posé par
+  MainActivity. Parent android:Theme.Material.Light.NoActionBar pour éviter une
+  dépendance à AppCompat dans un projet 100 % Compose.
+
+  Connu : en mode sombre, la fenêtre reste claire le temps de la première image. Un
+  values-night/themes.xml avec un windowBackground sombre le corrigerait (finition B23).
 -->
 <resources>
 
