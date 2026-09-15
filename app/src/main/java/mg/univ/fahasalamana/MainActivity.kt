@@ -3,55 +3,29 @@ package mg.univ.fahasalamana
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.activity.enableEdgeToEdge
+import mg.univ.fahasalamana.ui.navigation.AppNavHost
+import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
 
 /**
  * Activité unique : l'application est entièrement en Compose.
  *
- * TODO(B01) : remplacer [SocleProvisoire] par AppTheme { AppNavHost() } une fois le thème
- * et la navigation en place.
+ * Elle ne fait que poser le thème et la navigation ; tout le reste vit dans les écrans.
+ *
+ * TODO(B10) : traiter l'intent de deep link fahasalamana://enfant/{id} venant d'une
+ * notification de rappel, en reconstruisant la pile MesEnfants -> FicheEnfant.
  */
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Bord à bord : obligatoire à partir de targetSdk 35, et le Scaffold de chaque
+        // écran gère alors lui-même les encarts système.
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    SocleProvisoire()
-                }
+            FahasalamanaTheme {
+                AppNavHost()
             }
         }
-    }
-}
-
-@Composable
-private fun SocleProvisoire() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineMedium,
-        )
-        Text(
-            text = stringResource(R.string.socle_provisoire),
-            style = MaterialTheme.typography.bodyMedium,
-        )
     }
 }
