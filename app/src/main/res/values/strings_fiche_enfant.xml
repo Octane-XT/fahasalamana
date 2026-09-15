@@ -30,7 +30,7 @@
     <string name="fiche_badge_a_faire">%1$d à faire</string>
     <string name="fiche_badge_en_retard">%1$d en retard</string>
     <string name="fiche_badge_a_jour">Carnet à jour</string>
-    <string name="fiche_prochaine_echeance">Prochaine échéance le %1$s</string>
+    <string name="fiche_prochaine_echeance">Prochaine dose à faire : le %1$s</string>
 
     <!-- B08 — Fiche enfant : en-têtes de tranche d'âge -->
     <string name="fiche_groupe_naissance">Naissance</string>
@@ -91,5 +91,14 @@
         <item quantity="one">%1$d fait</item>
         <item quantity="other">%1$d faits</item>
     </plurals>
+
+    <!-- B08 — Fiche enfant : doses saisies dont le vaccin a quitté le calendrier de référence
+         (CDC §B5.2 : « conservée et affichée »). Dernière section de la fiche.
+         Règle R7 : la phrase dit ce qui a changé du côté du calendrier, jamais du côté du
+         parent — la dose a bien été reçue, et elle compte toujours parmi les doses faites.
+         Le nom du vaccin n'est pas affichable : il vivait dans la ligne de calendrier qui a
+         été retirée. Ne reste que la date, saisie par le parent. -->
+    <string name="fiche_hors_calendrier_titre">Doses hors calendrier</string>
+    <string name="fiche_hors_calendrier_dose">Dose reçue le %1$s. Ce vaccin ne figure plus au calendrier de référence.</string>
 
 </resources>

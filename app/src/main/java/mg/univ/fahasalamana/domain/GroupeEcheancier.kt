@@ -52,13 +52,64 @@ fun grouperParAge(echeancier: List<LigneEcheancier>): List<GroupeEcheancier> {
 }
 
 /**
- * Nombre de doses saisies comme faites, pour le bandeau de résumé de la fiche (« 12 faits »).
+ * Doses saisies pour cet enfant dont le vaccin ne figure dans **aucune ligne** du [calendrier].
+ *
+ * C'est la contrepartie d'affichage de la séparation « contenu de référence / données
+ * personnelles » (CDC §B5.2) : une mise à jour du calendrier (B19) remplace `vaccins_reference`
+ * en bloc, sans jamais toucher à `vaccins_administres`, et la clé étrangère a été retirée
+ * exprès pour que la dose survive à la disparition de sa référence. Le CDC exige qu'elle soit
+ * « conservée **et** affichée » : sans cette fonction, une dose correctement saisie par une mère
+ * disparaîtrait de la fiche de son enfant du jour au lendemain, sans explication.
+ *
+ * [CalculateurEcheancier.echeancier] ne peut pas la produire : il parcourt le calendrier, et une
+ * dose absente du calendrier n'a plus ni nom, ni dose, ni date prévue à afficher. Il ne reste
+ * que ce que le parent a lui-même saisi — une date —, et c'est tout ce que la fiche montre.
+ *
+ * Fonction **pure**, comme [grouperParAge] : c'est du calcul, pas de l'affichage.
+ *
+ * Deux gardes reprises de [CalculateurEcheancier] :
+ * - les doses d'un autre enfant sont ignorées (donnée de santé : la fiche de Faly ne montre
+ *   jamais une ligne de Soa, même si l'appelant se trompe de liste) ;
+ * - si un carnet importé (B17) contient deux saisies pour le même vaccin, la plus ancienne
+ *   date l'emporte et la dose n'apparaît qu'une fois, comme dans l'échéancier.
+ *
+ * @return les doses concernées, de la plus ancienne à la plus récente ; liste vide dans le cas
+ *   normal, où tout ce qui a été saisi figure encore au calendrier.
+ */
+fun dosesHorsCalendrier(
+    enfant: Enfant,
+    administres: List<VaccinAdministre>,
+    calendrier: List<VaccinReference>,
+): List<VaccinAdministre> {
+    val idsDuCalendrier = calendrier.mapTo(HashSet(), VaccinReference::id)
+
+    return administres
+        .filter { it.enfantId == enfant.id && it.vaccinId !in idsDuCalendrier }
+        .groupBy(VaccinAdministre::vaccinId)
+        .map { (_, doses) -> doses.minBy(VaccinAdministre::date) }
+        // `vaccinId` départage deux doses de même date : l'ordre d'affichage ne doit pas
+        // dépendre de l'ordre de lecture de la base.
+        .sortedWith(compareBy<VaccinAdministre>({ it.date }, { it.vaccinId }))
+}
+
+/**
+ * Nombre de doses que l'enfant a **réellement reçues**, pour le bandeau de résumé de la
+ * fiche (« 12 faits »).
  *
  * Complète [ResumeEnfant] (règle R6), qui compte les retards et les doses à faire mais pas
  * celles déjà reçues : ce type est partagé avec l'écran « Mes enfants » et n'est pas modifié ici.
+ *
+ * Les lignes [StatutVaccin.Fait] de l'échéancier ne suffisent pas : elles s'arrêtent au
+ * calendrier. Une dose qui en est sortie ([dosesHorsCalendrier]) a bien été reçue et doit
+ * continuer de compter, sinon le compteur baisserait tout seul après une mise à jour des
+ * références (B19) — ce que le parent lirait comme une dose perdue.
+ *
+ * @param horsCalendrier sortie de [dosesHorsCalendrier] pour le même enfant et le même
+ *   calendrier que [echeancier] : les deux listes sont disjointes par construction, aucune
+ *   dose n'est comptée deux fois.
  */
-fun nbFaits(echeancier: List<LigneEcheancier>): Int =
-    echeancier.count { it.statut is StatutVaccin.Fait }
+fun nbFaits(echeancier: List<LigneEcheancier>, horsCalendrier: List<VaccinAdministre>): Int =
+    echeancier.count { it.statut is StatutVaccin.Fait } + horsCalendrier.size
 
 /**
  * Âge théorique d'une dose, en jours depuis la naissance, calculé en remontant la chaîne
