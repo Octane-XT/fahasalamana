@@ -31,6 +31,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantScreen
+import mg.univ.fahasalamana.ui.saisie.SaisieVaccinScreen
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import mg.univ.fahasalamana.R
@@ -168,16 +169,10 @@ fun AppNavHost(
                 )
             }
 
-            composable<SaisieVaccin> { entree ->
-                val route = entree.toRoute<SaisieVaccin>()
-                EcranProvisoire(
-                    nomEcran = "SaisieVaccin",
-                    tache = "B09",
-                    arguments = listOf(
-                        "enfantId" to route.enfantId,
-                        "vaccinId" to route.vaccinId,
-                    ),
+            composable<SaisieVaccin> {
+                SaisieVaccinScreen(
                     onRetour = { navController.navigateUp() },
+                    onTermine = { navController.navigateUp() },
                 )
             }
 
