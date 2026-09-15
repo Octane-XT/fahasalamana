@@ -51,7 +51,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
@@ -64,6 +66,7 @@ import mg.univ.fahasalamana.R
 import mg.univ.fahasalamana.domain.ErreurDateNaissance
 import mg.univ.fahasalamana.domain.ErreurPrenom
 import mg.univ.fahasalamana.domain.Sexe
+import mg.univ.fahasalamana.platform.DemandeNotificationsRappels
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.components.EtatVide
@@ -225,15 +228,33 @@ private fun FormulaireEnfant(
     onSupprime: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // (B10) Un enfant vient d'être créé : c'est le moment prévu par le CDC (§B8) pour
+    // demander l'autorisation d'envoyer des rappels — il y a désormais un échéancier à
+    // rappeler. La demande est intercalée entre l'enregistrement et la sortie de l'écran,
+    // et elle ne peut rien bloquer : `onTermine` quitte l'écran quelle que soit la réponse,
+    // et l'enfant est déjà en base quand elle s'affiche. En modification, rien ne change :
+    // la question a déjà été posée à la création.
+    var demandeNotifications by remember { mutableStateOf(false) }
+
     // Le ViewModel signale qu'il a fini ; c'est ici qu'on quitte l'écran. Les deux sorties
     // ne mènent pas au même endroit (voir la documentation de `onSupprime`).
     LaunchedEffect(state.sortie) {
         when (state.sortie) {
-            SortieEdition.ENREGISTRE -> onEnregistre()
+            SortieEdition.ENREGISTRE ->
+                if (state.mode == ModeEdition.CREATION) demandeNotifications = true else onEnregistre()
+
             SortieEdition.SUPPRIME -> onSupprime()
             null -> Unit
         }
     }
+
+    DemandeNotificationsRappels(
+        declenchee = demandeNotifications,
+        onTermine = {
+            demandeNotifications = false
+            onEnregistre()
+        },
+    )
 
     // Le message est résolu hors du `LaunchedEffect` : `stringResource` n'est appelable que
     // dans une composition.

@@ -101,6 +101,27 @@ class PreferencesLocales(context: Context) {
         datastore.edit { it[Cles.DERNIERE_VERIFICATION] = jour.toString() }
     }
 
+    // --- Rappels (B10) --------------------------------------------------------
+
+    /**
+     * L'explication précédant la demande de `POST_NOTIFICATIONS` a déjà été suivie d'une
+     * vraie demande système (Android 13+, CDC §B8).
+     *
+     * Ce drapeau existe parce qu'Android ne permet pas de distinguer « jamais demandé » de
+     * « refusé définitivement » : `shouldShowRequestPermissionRationale()` renvoie `false`
+     * dans les deux cas. Sans lui, l'explication reviendrait à chaque ajout d'enfant chez
+     * quelqu'un qui a déjà dit non — et la boîte système, elle, ne s'afficherait plus.
+     *
+     * Il n'est **pas** écrit quand l'utilisateur répond « Plus tard » : reporter n'est pas
+     * refuser, et la question a le droit de revenir au prochain enfant ajouté.
+     */
+    val notificationsDemandeFaite: Flow<Boolean> =
+        preferences.map { it[Cles.NOTIFICATIONS_DEMANDE_FAITE] ?: false }
+
+    suspend fun marquerDemandeNotificationsFaite() {
+        datastore.edit { it[Cles.NOTIFICATIONS_DEMANDE_FAITE] = true }
+    }
+
     // --- Verrouillage par code (B18) -----------------------------------------
 
     /** Empreinte SHA-256 salée du code, jamais le code lui-même. `null` si aucun code n'est défini. */
@@ -142,6 +163,7 @@ class PreferencesLocales(context: Context) {
         val CALENDRIER_PUBLIE_LE = stringPreferencesKey("calendrier_publie_le")
         val ANNUAIRE_VERSION = intPreferencesKey("annuaire_version")
         val DERNIERE_VERIFICATION = stringPreferencesKey("derniere_verification")
+        val NOTIFICATIONS_DEMANDE_FAITE = booleanPreferencesKey("notifications_demande_faite")
         val PIN_HASH = stringPreferencesKey("pin_hash")
         val PIN_SEL = stringPreferencesKey("pin_sel")
         val VERROUILLAGE_ACTIF = booleanPreferencesKey("verrouillage_actif")

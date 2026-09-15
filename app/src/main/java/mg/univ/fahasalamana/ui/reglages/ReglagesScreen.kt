@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mg.univ.fahasalamana.R
+import mg.univ.fahasalamana.platform.BlocRappelsDebug
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
@@ -62,8 +63,10 @@ import java.util.Locale
  * sur un écran vide. Le texte de confidentialité décrit ce que le code fait aujourd'hui,
  * et rien de plus : il est lu en soutenance.
  *
- * TODO(B10) : entrée « Rappels » (interrupteur de notifications, notification de test en
- * build debug), une fois NotificationHelper livré.
+ * (B10) Le bloc « Rappels » est ajouté en bas de page par `BlocRappelsDebug()`, qui n'existe
+ * qu'en build debug : il porte la notification de test de la Definition of Done. L'interrupteur
+ * d'activation des notifications, lui, reste à faire — TODO(B12), en même temps que le
+ * branchement de `replanifier` sur ses déclencheurs, l'activation étant l'un d'eux (§B8).
  */
 
 /** Dates affichées en jour/mois/année, comme dans les wireframes (§B7.2). */
@@ -100,6 +103,9 @@ private fun ReglagesContenu(
             BlocConfidentialite()
             BlocCarnet()
             BlocSecurite()
+            // (B10) Notification de test, en dernier et en build debug seulement : la
+            // version publiée appelle le jumeau vide de `src/release/` et n'affiche rien.
+            BlocRappelsDebug()
             // Respiration en bas de page : la barre d'onglets est juste en dessous.
             Spacer(Modifier.height(8.dp))
         }

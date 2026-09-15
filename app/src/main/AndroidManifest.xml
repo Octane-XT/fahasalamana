@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Rappels de vaccination (Android 13+). Demandée à l'exécution, TODO(B10). -->
+    <!-- Rappels de vaccination (Android 13+). Demandée à l'exécution au premier ajout
+         d'enfant, précédée d'une explication maison (B10, CDC §B8) : voir
+         platform/PermissionNotifications.kt. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Uniquement pour la mise à jour du calendrier et de l'annuaire (B19).
          Aucune donnée personnelle ne transite par le réseau. -->
@@ -39,7 +41,24 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- TODO(B10) : deep link fahasalamana://enfant/{id} depuis la notification. -->
+            <!-- (B10) Lien profond des notifications de rappel : fahasalamana://enfant/{enfantId}
+                 (CDC §B7.1). Le schéma et l'hôte sont les mêmes deux chaînes que dans
+                 platform/LienNotification.kt et que dans le navDeepLink de la destination
+                 FicheEnfant ; les faire diverger casserait le lien sans le moindre message.
+
+                 Schéma privé et non https : aucun site ne porte ce nom, il n'y a donc ni
+                 App Links à vérifier, ni fichier assetlinks.json à publier — et surtout
+                 aucune chance qu'un identifiant d'enfant parte dans une barre d'adresse.
+                 BROWSABLE reste nécessaire pour qu'un lien touché hors de l'application
+                 (notification, `adb shell am start`) atteigne l'activité. -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="enfant"
+                    android:scheme="fahasalamana" />
+            </intent-filter>
         </activity>
 
         <!-- WorkManager s'initialise tout seul au démarrage du processus, avant

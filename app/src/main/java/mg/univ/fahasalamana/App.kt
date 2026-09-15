@@ -8,6 +8,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import mg.univ.fahasalamana.data.repository.ReferenceRepository
 import mg.univ.fahasalamana.di.appModule
+import mg.univ.fahasalamana.platform.creerCanauxNotification
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -49,7 +50,14 @@ class App : Application() {
 
         amorcerContenuDeReference()
 
-        // TODO(B10) : création du canal de notification des rappels de vaccination.
+        // (B10) Canal des rappels de vaccination. Créé ici plutôt qu'à la première
+        // notification : un canal doit exister avant d'être utilisé, et `RappelWorker`
+        // (B11) peut s'exécuter dans un processus réveillé par WorkManager où aucun écran
+        // n'a encore été affiché — `onCreate` de l'Application, lui, est toujours passé.
+        // L'appel est direct et non injecté par Koin : la création d'un canal ne dépend que
+        // du Context, et faire dépendre le démarrage d'une définition Koin de plus, c'est
+        // un plantage au lancement de plus le jour où elle manque.
+        creerCanauxNotification(this)
     }
 
     /**

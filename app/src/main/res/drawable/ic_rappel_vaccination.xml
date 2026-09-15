@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Petite icône des notifications de rappel (B10).
+
+  Une croix de santé, pleine et sans détail : Android ne garde que l'alpha d'une petite
+  icône de notification et la reteinte lui-même. Tout dégradé, toute couleur et tout trait
+  fin y disparaîtraient — d'où une forme volontairement massive, lisible à 24 dp dans la
+  barre d'état.
+
+  Le projet n'a encore aucun jeu d'icônes (TODO(B24) : icône de lanceur et adaptive icon) ;
+  ce fichier est le premier, et il ne sert qu'aux notifications.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M10,3h4v7h7v4h-7v7h-4v-7H3v-4h7z" />
+</vector>

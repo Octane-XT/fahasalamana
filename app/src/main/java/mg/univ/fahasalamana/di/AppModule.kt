@@ -15,6 +15,7 @@ import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.platform.horlogeJour
 import mg.univ.fahasalamana.ui.edition.EditionEnfantViewModel
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
+import mg.univ.fahasalamana.platform.NotificationHelper
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinViewModel
@@ -79,7 +80,7 @@ val appModule = module {
     // supprime toute question de fuite ou de concurrence.
     factory { CalculateurEcheancier() }
 
-    // --- Plateforme (rappels, notifications) --- TODO(B10), TODO(B11)
+    // --- Plateforme (rappels, notifications) --- TODO(B11)
     // (B06) Jour courant, qui change à minuit et au retour au premier plan : c'est lui qui
     // fait basculer un vaccin de « à venir » à « à faire » sans rouvrir l'application.
     //
@@ -91,6 +92,11 @@ val appModule = module {
     // Attention à la portée du type : Koin indexe sur la classe effacée `Flow`. Le jour où
     // un second `Flow<…>` doit être déclaré, il faudra un qualificatif nommé sur les deux.
     single<Flow<LocalDate>> { horlogeJour() }
+
+    // (B10) Notifications de rappel : canal, lien profond, permission. Sans état, mais
+    // `single` pour ne pas reconstruire une façade à chaque injection. Consommée par
+    // RappelWorker (B11) ; le canal, lui, est créé directement depuis App.onCreate.
+    single { NotificationHelper(androidContext()) }
 
     // --- ViewModels ---
     // (B15) Réglages : lit la provenance du calendrier et les préférences locales.
