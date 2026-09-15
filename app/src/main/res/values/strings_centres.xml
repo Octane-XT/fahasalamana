@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textes de l'écran Centres de santé (tâche B13, US-B6 scénario 1, wireframe §B7.2).
+  Fichier distinct de strings.xml : Android fusionne tous les fichiers de res/values/, ce qui
+  permet aux deux développeurs d'ajouter leurs textes en parallèle sans se marcher dessus.
+
+  Ton factuel et non culpabilisant (règle R7) : un district sans centre décrit ce que
+  l'annuaire contient, jamais une erreur de l'utilisateur. Aucun de ces textes n'affirme
+  qu'un centre est ouvert, joignable ou compétent : ils rapportent ce que l'annuaire publie.
+
+  Chaque tâche ajoute ses clés à la fin de sa section, sans réordonner le fichier.
+-->
+<resources>
+
+    <!-- B13 — Barre du haut -->
+    <string name="centres_titre">Centres de santé</string>
+
+    <!-- B13 — Les deux menus déroulants en cascade (wireframe §B7.2).
+         `centres_district_inactif` s'affiche sous le second menu tant qu'aucune région
+         n'est choisie : le champ grisé dit alors pourquoi il ne s'ouvre pas. -->
+    <string name="centres_region_label">Région</string>
+    <string name="centres_region_invite">Choisir une région</string>
+    <string name="centres_district_label">District</string>
+    <string name="centres_district_invite">Choisir un district</string>
+    <string name="centres_district_inactif">Choisissez d\'abord une région</string>
+
+    <!-- B13 — Zone sous les menus : les deux étapes de la cascade, avant toute liste -->
+    <string name="centres_invite_region_titre">Choisissez une région</string>
+    <string name="centres_invite_region_description">Les centres de santé de base sont classés par région, puis par district.</string>
+    <string name="centres_invite_district_titre">Choisissez un district</string>
+    <string name="centres_invite_district_description">La liste des centres de ce district s\'affichera ici.</string>
+
+    <!-- B13 — Un district que l'annuaire ne couvre pas encore. Ce n'est ni une panne, ni
+         une faute : on dit ce qui manque et ce qu'on peut faire à la place. -->
+    <string name="centres_vide_titre">Aucun centre dans ce district</string>
+    <string name="centres_vide_description">L\'annuaire ne contient pas encore de centre pour ce district. Vous pouvez en choisir un autre dans la même région.</string>
+
+    <!-- B13 — Annuaire absent de ce téléphone : distinct d'une erreur de lecture. -->
+    <string name="centres_annuaire_absent_titre">Annuaire pas encore chargé</string>
+    <string name="centres_annuaire_absent_description">L\'annuaire des centres de santé n\'est pas encore disponible sur ce téléphone.</string>
+
+    <!-- B13 — Échec de lecture de la base. Aucune donnée personnelle dans ce message. -->
+    <string name="centres_erreur">L\'annuaire des centres n\'a pas pu être lu.</string>
+
+    <!-- B13 — Liste des centres : compteur, puis les libellés portés par les deux icônes
+         de chaque carte. Ces libellés ne sont pas affichés à l'écran : ils sont la
+         description des icônes, et c'est TalkBack qui les lit avant le texte. -->
+    <plurals name="centres_nombre">
+        <item quantity="one">%1$d centre</item>
+        <item quantity="other">%1$d centres</item>
+    </plurals>
+    <string name="centres_horaires_label">Horaires</string>
+    <string name="centres_adresse_label">Adresse</string>
+    <string name="centres_type_description">Type de centre : %1$s</string>
+
+</resources>

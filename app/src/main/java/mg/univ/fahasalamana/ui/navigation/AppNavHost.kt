@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import mg.univ.fahasalamana.ui.centres.CentresScreen
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantScreen
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinScreen
 import androidx.navigation.compose.rememberNavController
@@ -54,8 +55,6 @@ import kotlin.reflect.KClass
  * encart système en haut, pour ne pas les compter deux fois.
  */
 
-/** Identifiants fictifs des liens de démonstration, le temps que les vrais écrans arrivent. */
-private const val CENTRE_DEMO = "demo-centre"
 
 /** Un onglet de la barre du bas : sa racine, son libellé et ses deux icônes. */
 private data class Onglet(
@@ -179,15 +178,10 @@ fun AppNavHost(
             // --- Onglet Centres ---
 
             composable<Centres> {
-                EcranProvisoire(
-                    nomEcran = "Centres",
-                    tache = "B13",
-                    liens = listOf(
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "DetailCentre"),
-                            onClic = { navController.navigate(DetailCentre(centreId = CENTRE_DEMO)) },
-                        ),
-                    ),
+                CentresScreen(
+                    onOuvrirCentre = { centreId ->
+                        navController.navigate(DetailCentre(centreId = centreId))
+                    },
                 )
             }
 

@@ -15,6 +15,7 @@ import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.platform.horlogeJour
 import mg.univ.fahasalamana.ui.edition.EditionEnfantViewModel
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
+import mg.univ.fahasalamana.ui.centres.CentresViewModel
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinViewModel
@@ -132,6 +133,11 @@ val appModule = module {
             horlogeJour = get(),
         )
     }
+
+    // (B13) Centres de santé : la route n'a pas d'argument, mais le SavedStateHandle sert
+    // tout de même — il retient la région et le district choisis, qui survivent ainsi à la
+    // rotation et à la mort du processus.
+    viewModel { CentresViewModel(savedStateHandle = get(), annuaire = get()) }
 
     // TODO(B10) à TODO(B18) : un viewModel par écran restant.
 }
