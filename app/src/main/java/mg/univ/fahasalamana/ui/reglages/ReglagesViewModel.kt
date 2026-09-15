@@ -8,8 +8,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import mg.univ.fahasalamana.data.local.PreferencesLocales
+import mg.univ.fahasalamana.data.repository.InfosSource
 import mg.univ.fahasalamana.data.repository.ReferenceRepository
 
 /**
@@ -32,15 +34,18 @@ class ReglagesViewModel(
      * d'émettre [ReglagesUiState.Erreur] sur la même chaîne.
      */
     private val etat: Flow<ReglagesUiState> = combine(
-        reference.observerInfosSource(),
+        // `observerInfosSource()` n'émet rien tant que rien n'est chargé : sans cette
+        // première valeur nulle, la combinaison ne produirait jamais d'état et l'écran
+        // resterait en chargement pour toujours. Même parade que FicheEnfantViewModel.
+        reference.observerInfosSource().onStart<InfosSource?> { emit(null) },
         preferences.annuaireVersion,
         preferences.derniereVerification,
     ) { infos, versionAnnuaire, derniereVerification ->
         ReglagesUiState.Pret(
             DonneesReference(
-                sourceCalendrier = infos.source,
-                calendrierPublieLe = infos.publieLe,
-                versionCalendrier = infos.version,
+                sourceCalendrier = infos?.source,
+                calendrierPublieLe = infos?.publieLe,
+                versionCalendrier = infos?.version,
                 // VERSION_ABSENTE (0) signifie « rien de chargé », pas « version 0 ».
                 versionAnnuaire = versionAnnuaire.takeIf { it != PreferencesLocales.VERSION_ABSENTE },
                 derniereVerification = derniereVerification,
