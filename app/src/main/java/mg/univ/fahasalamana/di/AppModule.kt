@@ -14,6 +14,7 @@ import mg.univ.fahasalamana.data.repository.ReferenceRepositoryImpl
 import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.platform.horlogeJour
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
+import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -95,6 +96,17 @@ val appModule = module {
 
     // (B06) Mes enfants : carnet + calendrier + jour courant, résumés par le calculateur (R6).
     viewModel { MesEnfantsViewModel(get(), get(), get(), get()) }
+
+    // (B08) Fiche enfant : enfantId lu par SavedStateHandle.toRoute<FicheEnfant>().
+    viewModel {
+        FicheEnfantViewModel(
+            savedStateHandle = get(),
+            enfants = get(),
+            reference = get(),
+            calc = get(),
+            horlogeJour = get(),
+        )
+    }
 
     // TODO(B07) à TODO(B18) : un viewModel par écran restant.
 }
