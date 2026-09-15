@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Rappels de vaccination (Android 13+). Demandée à l'exécution, TODO(B10). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Uniquement pour la mise à jour du calendrier et de l'annuaire (B19).
+         Aucune donnée personnelle ne transite par le réseau. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Intents résolus par l'application : cartes et téléphone (B14). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="geo" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+        </intent>
+    </queries>
+
+    <application
+        android:name=".App"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Fahasalamana">
+        <!-- allowBackup=false : le carnet contient des données de santé, il ne part
+             ni dans une sauvegarde cloud ni dans un transfert d'appareil (CDC §B8).
+             TODO(B24) : ajouter android:dataExtractionRules pour Android 12+. -->
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Fahasalamana">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- TODO(B10) : deep link fahasalamana://enfant/{id} depuis la notification. -->
+        </activity>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Tous les textes affichés passent par ce fichier (CDC §0.1) : l'interface est en français,
+  une traduction malgache reste possible en ajoutant values-mg/strings.xml.
+  Ton factuel et non culpabilisant (règle R7) : « Prévu le… », jamais « Vous avez oublié ».
+  Chaque tâche ajoute ses clés à la fin de sa section, sans réordonner le fichier.
+-->
+<resources>
+
+    <!-- Général -->
+    <string name="app_name">Fahasalamana Zaza</string>
+    <string name="socle_provisoire">Socle en place — écrans à venir</string>
+
+</resources>

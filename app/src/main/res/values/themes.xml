@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Thème minimal du manifeste : l'apparence réelle est définie en Compose (TODO(B01),
+  ui/theme/Theme.kt). Parent android:Theme.Material.Light.NoActionBar pour éviter
+  une dépendance à AppCompat dans un projet 100 % Compose.
+-->
+<resources>
+
+    <style name="Theme.Fahasalamana" parent="android:Theme.Material.Light.NoActionBar" />
+
+</resources>
