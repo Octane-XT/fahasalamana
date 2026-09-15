@@ -5,6 +5,7 @@ import mg.univ.fahasalamana.data.repository.InfosSource
 import mg.univ.fahasalamana.domain.Enfant
 import mg.univ.fahasalamana.domain.GroupeEcheancier
 import mg.univ.fahasalamana.domain.ResumeEnfant
+import mg.univ.fahasalamana.domain.VaccinAdministre
 import java.time.LocalDate
 
 /**
@@ -47,7 +48,13 @@ sealed interface FicheEnfantUiState {
      *   en-tête, et elle change à minuit sans quitter l'écran.
      * @param groupes échéancier découpé en tranches d'âge (`domain.grouperParAge`), déjà trié.
      * @param resume compteurs de la règle R6, pour les puces de l'en-tête.
-     * @param nbFaits nombre de doses reçues, absent de [ResumeEnfant].
+     * @param nbFaits nombre de doses reçues, absent de [ResumeEnfant]. Compte aussi les
+     *   [dosesHorsCalendrier] : elles ont bien été reçues.
+     * @param dosesHorsCalendrier doses saisies dont le vaccin ne figure plus au calendrier de
+     *   référence (`domain.dosesHorsCalendrier`). Vide dans le cas normal ; non vide après une
+     *   mise à jour des références (B19) qui a retiré une dose déjà saisie. Le CDC §B5.2 exige
+     *   qu'elles soient conservées **et** affichées : elles forment la dernière section de la
+     *   fiche plutôt que de disparaître sans explication.
      * @param infosSource provenance du calendrier pour le bandeau de pied de fiche (US-B7).
      *   `null` tant que le contenu de référence n'a pas été chargé sur ce téléphone :
      *   l'échéancier s'affiche quand même, seule la mention de version manque.
@@ -59,6 +66,7 @@ sealed interface FicheEnfantUiState {
         val groupes: List<GroupeEcheancier>,
         val resume: ResumeEnfant,
         val nbFaits: Int,
+        val dosesHorsCalendrier: List<VaccinAdministre>,
         val infosSource: InfosSource?,
     ) : FicheEnfantUiState
 }

@@ -33,7 +33,7 @@
     <!-- B06 — Prochaine échéance : %1$s nom du vaccin, %2$s dose, %3$s date -->
     <string name="mes_enfants_prochain">Prochain : %1$s %2$s, le %3$s</string>
     <string name="mes_enfants_prochain_date_seule">Prochain : le %1$s</string>
-    <string name="mes_enfants_prochain_aucun">Prochain : aucune échéance à venir</string>
+    <string name="mes_enfants_prochain_aucun">Toutes les doses du calendrier sont faites</string>
 
     <!-- B06 — Âge de l'enfant, dans l'unité la plus parlante -->
     <plurals name="mes_enfants_age_ans">

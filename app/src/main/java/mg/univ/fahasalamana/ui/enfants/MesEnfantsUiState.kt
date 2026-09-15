@@ -42,8 +42,9 @@ sealed interface MesEnfantsUiState {
  * chiffres de R6 ne sont recopiés nulle part, ce qui garantit que l'écran et la fiche
  * enfant affichent les mêmes.
  *
- * @param prochainVaccinNom nom du vaccin de [ResumeEnfant.prochaineEcheance], `null` si
- *   aucune échéance à venir ou si plus aucun vaccin du calendrier ne porte cette date.
+ * @param prochainVaccinNom nom du vaccin de [ResumeEnfant.prochaineEcheance], `null` s'il
+ *   ne reste plus rien à faire ou si plus aucun vaccin du calendrier ne porte cette date.
+ *   La date peut être passée : c'est alors la dose en retard la plus ancienne.
  * @param prochainVaccinDose dose correspondante (« 1re dose »), même condition.
  */
 @Immutable
@@ -94,8 +95,7 @@ internal fun ligneEnfant(
     // plus précoce du calendrier, donc celle qu'on annonce quand plusieurs coïncident.
     val prochain = resume.prochaineEcheance?.let { date ->
         echeancier.firstOrNull { ligne ->
-            ligne.prevuLe == date &&
-                (ligne.statut is StatutVaccin.AVenir || ligne.statut is StatutVaccin.EnAttente)
+            ligne.prevuLe == date && ligne.statut !is StatutVaccin.Fait
         }
     }
 

@@ -67,6 +67,7 @@ import mg.univ.fahasalamana.domain.Sexe
 import mg.univ.fahasalamana.domain.StatutVaccin
 import mg.univ.fahasalamana.domain.VaccinAdministre
 import mg.univ.fahasalamana.domain.VaccinReference
+import mg.univ.fahasalamana.domain.dosesHorsCalendrier
 import mg.univ.fahasalamana.domain.grouperParAge
 import mg.univ.fahasalamana.domain.nbFaits
 import mg.univ.fahasalamana.ui.components.EtatChargement
@@ -252,6 +253,21 @@ private fun Echeancier(
             }
         }
 
+        // Dernière section, juste avant le bandeau de source : les doses saisies dont le
+        // vaccin a quitté le calendrier de référence (CDC §B5.2). Elles n'ont plus de
+        // tranche d'âge — plus de ligne de calendrier du tout — donc plus de place dans
+        // `state.groupes` ; les mettre en fin de liste les conserve sans les confondre
+        // avec l'échéancier en cours.
+        if (state.dosesHorsCalendrier.isNotEmpty()) {
+            stickyHeader(key = "hors-calendrier") {
+                EnTeteGroupe(stringResource(R.string.fiche_hors_calendrier_titre))
+            }
+            items(items = state.dosesHorsCalendrier, key = { dose -> dose.id }) { dose ->
+                LigneHorsCalendrier(dose)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            }
+        }
+
         item(key = "bandeau-source") { BandeauSource(state.infosSource) }
     }
 }
@@ -428,6 +444,45 @@ private fun LigneVaccin(
             // Décoratif : l'action est déjà annoncée par `onClickLabel` sur la ligne.
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+/**
+ * Une dose reçue dont le vaccin ne figure plus au calendrier de référence.
+ *
+ * Elle garde la pastille verte des doses faites : le vaccin a bien été reçu, et le compteur
+ * « faits » de l'en-tête la compte toujours. Seule la phrase change — elle dit ce qui s'est
+ * passé du côté du calendrier, jamais du côté du parent (règle R7).
+ *
+ * Il n'y a **pas** de nom de vaccin à afficher : c'est la ligne de calendrier qui portait le
+ * nom et la dose, et c'est elle qui a disparu. Reste ce que le parent a saisi lui-même, une
+ * date, et c'est tout ce que la fiche montre — un identifiant technique ne dirait rien.
+ *
+ * Ligne non cliquable, contrairement aux lignes d'échéancier : `SaisieVaccin` cherche le
+ * vaccin dans le calendrier et n'afficherait qu'un écran « introuvable ». Mieux vaut une
+ * ligne qui informe qu'une ligne qui mène à un cul-de-sac.
+ */
+@Composable
+private fun LigneHorsCalendrier(dose: VaccinAdministre) {
+    val couleurs = FahasalamanaTheme.couleursStatut
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Pastille(couleur = couleurs.fait, icone = Icons.Outlined.CheckCircle)
+        Spacer(Modifier.width(16.dp))
+        Text(
+            text = stringResource(
+                R.string.fiche_hors_calendrier_dose,
+                dose.date.format(FORMAT_JOUR),
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.weight(1f),
         )
     }
 }
@@ -700,17 +755,22 @@ private fun etatDApercu(
 ): FicheEnfantUiState.Pret {
     val calc = CalculateurEcheancier()
     val lignes = calc.echeancier(enfant, CALENDRIER_APERCU, administres, aujourdHui)
+    val horsCalendrier = dosesHorsCalendrier(enfant, administres, CALENDRIER_APERCU)
     return FicheEnfantUiState.Pret(
         enfant = enfant,
         aujourdHui = aujourdHui,
         groupes = grouperParAge(lignes),
         resume = calc.resume(lignes),
-        nbFaits = nbFaits(lignes),
+        nbFaits = nbFaits(lignes, horsCalendrier),
+        dosesHorsCalendrier = horsCalendrier,
         infosSource = SOURCE_APERCU,
     )
 }
 
-/** Faly, 9 mois : deux doses faites à la naissance, une série en retard, une fenêtre ouverte. */
+/**
+ * Faly, 9 mois : deux doses faites à la naissance, une série en retard, une fenêtre ouverte,
+ * et une dose saisie dont le vaccin a depuis quitté le calendrier de référence.
+ */
 private val FALY = Enfant("apercu-faly", "Faly", LocalDate.of(2026, 1, 1), Sexe.GARCON)
 
 private val ETAT_RETARDS = etatDApercu(
@@ -721,6 +781,10 @@ private val ETAT_RETARDS = etatDApercu(
             "adm-2", FALY.id, "vpo0", LocalDate.of(2026, 1, 2),
             lieu = "CSB2 Ankirihiry",
         ),
+        // Rotavirus : saisi par la mère, puis retiré du calendrier de référence. La dose
+        // reste au carnet et s'affiche en dernière section (§B5.2), et elle compte toujours
+        // parmi les doses faites de l'en-tête.
+        VaccinAdministre("adm-3", FALY.id, "rota1", LocalDate.of(2026, 2, 15)),
     ),
     aujourdHui = LocalDate.of(2026, 10, 5),
 )

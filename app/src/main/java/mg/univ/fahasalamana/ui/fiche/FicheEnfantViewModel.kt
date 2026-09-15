@@ -17,6 +17,7 @@ import mg.univ.fahasalamana.data.repository.EnfantRepository
 import mg.univ.fahasalamana.data.repository.InfosSource
 import mg.univ.fahasalamana.data.repository.ReferenceRepository
 import mg.univ.fahasalamana.domain.CalculateurEcheancier
+import mg.univ.fahasalamana.domain.dosesHorsCalendrier
 import mg.univ.fahasalamana.domain.grouperParAge
 import mg.univ.fahasalamana.domain.nbFaits
 import mg.univ.fahasalamana.ui.navigation.FicheEnfant
@@ -77,18 +78,23 @@ class FicheEnfantViewModel(
             FicheEnfantUiState.Introuvable
         } else {
             val enfant = enfantAvecVaccins.enfant.toDomain()
+            val administres = enfantAvecVaccins.administres.toDomain()
             val lignes = calc.echeancier(
                 enfant = enfant,
                 calendrier = calendrier,
-                administres = enfantAvecVaccins.administres.toDomain(),
+                administres = administres,
                 aujourdHui = aujourdHui,
             )
+            // Les doses dont le vaccin a quitté le calendrier ne sont dans aucune ligne :
+            // l'échéancier suit le calendrier, elles suivent les saisies (CDC §B5.2).
+            val horsCalendrier = dosesHorsCalendrier(enfant, administres, calendrier)
             FicheEnfantUiState.Pret(
                 enfant = enfant,
                 aujourdHui = aujourdHui,
                 groupes = grouperParAge(lignes),
                 resume = calc.resume(lignes),
-                nbFaits = nbFaits(lignes),
+                nbFaits = nbFaits(lignes, horsCalendrier),
+                dosesHorsCalendrier = horsCalendrier,
                 infosSource = infos,
             )
         }
