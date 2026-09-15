@@ -63,4 +63,29 @@
     <string name="reglages_code_verrouillage">Code de verrouillage</string>
     <string name="reglages_a_venir">Pas encore disponible dans cette version</string>
 
+    <!-- Âge d'un enfant — écrit par `ui/components/TexteAge.kt`, affiché par la liste des
+         enfants (B06) et par l'en-tête de la fiche (B08).
+         Ces textes vivent dans le fichier partagé et non dans un fichier d'écran, parce que
+         deux écrans les affichent : dupliqués, ils avaient divergé — « 1 an » dans la liste
+         et « 18 mois » dans la fiche pour le même enfant (revue statique du 15/09, n° 9).
+         L'unité est choisie par `domain/AgeEnfant.kt`, jamais ici : un seul seuil, les
+         années à partir de 24 mois révolus. -->
+    <string name="age_jour_de_naissance">naissance aujourd\'hui</string>
+    <plurals name="age_jours">
+        <item quantity="one">%1$d jour</item>
+        <item quantity="other">%1$d jours</item>
+    </plurals>
+    <plurals name="age_semaines">
+        <item quantity="one">%1$d semaine</item>
+        <item quantity="other">%1$d semaines</item>
+    </plurals>
+    <plurals name="age_mois">
+        <item quantity="one">%1$d mois</item>
+        <item quantity="other">%1$d mois</item>
+    </plurals>
+    <plurals name="age_ans">
+        <item quantity="one">%1$d an</item>
+        <item quantity="other">%1$d ans</item>
+    </plurals>
+
 </resources>
