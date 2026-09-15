@@ -54,6 +54,16 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    // (B04) Les deux JSON de référence d'`assets/` sont ajoutés au classpath des tests JVM.
+    // `ContratReferenceTest` vérifie ainsi le contrat du §B5.1 sur les fichiers réellement
+    // embarqués dans l'APK, plutôt que sur une copie dans `src/test/resources` qui finirait
+    // par diverger. Cela ne change rien à l'APK : seul le source set `test` est touché.
+    sourceSets {
+        getByName("test") {
+            resources.srcDir("src/main/assets")
+        }
+    }
 }
 
 // Schéma Room exporté et versionné (B02) : c'est lui qui permettra d'écrire une migration
