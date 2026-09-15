@@ -33,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import mg.univ.fahasalamana.R
+import mg.univ.fahasalamana.ui.enfants.MesEnfantsScreen
 import mg.univ.fahasalamana.ui.reglages.ReglagesScreen
 import kotlin.reflect.KClass
 
@@ -51,7 +52,6 @@ import kotlin.reflect.KClass
  */
 
 /** Identifiants fictifs des liens de démonstration, le temps que les vrais écrans arrivent. */
-private const val ENFANT_DEMO = "demo-enfant"
 private const val VACCIN_DEMO = "demo-vaccin"
 private const val CENTRE_DEMO = "demo-centre"
 
@@ -129,20 +129,14 @@ fun AppNavHost(
         ) {
             // --- Onglet Enfants ---
 
+            // (B06) Premier écran réel de l'onglet Enfants. Il ne navigue pas lui-même :
+            // il reçoit deux lambdas, la navigation restant l'affaire de ce fichier.
             composable<MesEnfants> {
-                EcranProvisoire(
-                    nomEcran = "MesEnfants",
-                    tache = "B06",
-                    liens = listOf(
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "EditionEnfant"),
-                            onClic = { navController.navigate(EditionEnfant()) },
-                        ),
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "FicheEnfant"),
-                            onClic = { navController.navigate(FicheEnfant(enfantId = ENFANT_DEMO)) },
-                        ),
-                    ),
+                MesEnfantsScreen(
+                    onAjouterEnfant = { navController.navigate(EditionEnfant()) },
+                    onOuvrirEnfant = { enfantId ->
+                        navController.navigate(FicheEnfant(enfantId = enfantId))
+                    },
                 )
             }
 
