@@ -39,12 +39,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-        }
-    }
-
     buildFeatures {
         compose = true
     }
@@ -63,6 +57,14 @@ android {
         getByName("test") {
             resources.srcDir("src/main/assets")
         }
+    }
+}
+
+// La cible Java du compilateur Kotlin se règle sur l'extension `kotlin`, qui est au niveau
+// du projet et non dans le bloc `android`.
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
