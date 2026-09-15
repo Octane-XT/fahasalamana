@@ -34,6 +34,7 @@ import mg.univ.fahasalamana.ui.fiche.FicheEnfantScreen
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import mg.univ.fahasalamana.R
+import mg.univ.fahasalamana.ui.edition.EditionEnfantScreen
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsScreen
 import mg.univ.fahasalamana.ui.reglages.ReglagesScreen
 import kotlin.reflect.KClass
@@ -140,13 +141,17 @@ fun AppNavHost(
                 )
             }
 
-            composable<EditionEnfant> { entree ->
-                val route = entree.toRoute<EditionEnfant>()
-                EcranProvisoire(
-                    nomEcran = "EditionEnfant",
-                    tache = "B07",
-                    arguments = listOf("enfantId" to route.enfantId),
+            // (B07) Création quand `enfantId` est nul, modification sinon. L'argument n'est pas
+            // lu ici : le ViewModel le récupère par SavedStateHandle.toRoute<EditionEnfant>().
+            //
+            // La sortie après suppression ne peut pas être un simple `navigateUp()` : on
+            // arrive sur cet écran depuis la fiche de l'enfant, qui est encore dans la pile et
+            // afficherait « Introuvable ». On remonte donc jusqu'à la liste.
+            composable<EditionEnfant> {
+                EditionEnfantScreen(
                     onRetour = { navController.navigateUp() },
+                    onEnregistre = { navController.navigateUp() },
+                    onSupprime = { navController.popBackStack(route = MesEnfants, inclusive = false) },
                 )
             }
 

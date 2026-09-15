@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textes de l'écran « Édition enfant » (B07, US-B1). Fichier séparé de strings.xml, comme
+  strings_mes_enfants.xml : Android fusionne tous les fichiers de res/values/, et deux
+  développeurs qui écrivent un écran en parallèle ne s'écrasent alors pas l'un l'autre.
+  Toutes les clés sont préfixées « edition_ ».
+
+  Ton factuel et non culpabilisant (règle R7) : un message d'erreur décrit ce qui empêche
+  d'enregistrer, il ne reproche rien — « La date de naissance ne peut pas être dans le
+  futur », jamais « Vous vous êtes trompé ».
+-->
+<resources>
+
+    <!-- B07 — Titres : une seule route, deux usages (création / modification) -->
+    <string name="edition_titre_creation">Ajouter un enfant</string>
+    <string name="edition_titre_modification">Modifier la fiche de %1$s</string>
+    <!-- Le temps de lire la fiche en base, le prénom n'est pas encore connu. -->
+    <string name="edition_titre_modification_sans_nom">Modifier la fiche</string>
+
+    <!-- B07 — Champ Prénom -->
+    <string name="edition_champ_prenom">Prénom</string>
+    <string name="edition_champ_prenom_aide">Il apparaît dans la liste et dans les rappels.</string>
+
+    <!-- B07 — Champ Date de naissance. C'est elle qui sert au calcul de tout l'échéancier (R1). -->
+    <string name="edition_champ_date">Date de naissance</string>
+    <string name="edition_champ_date_format">jj/mm/aaaa</string>
+    <string name="edition_champ_date_aide">Toutes les dates de vaccination sont calculées à partir d\'elle.</string>
+    <string name="edition_action_choisir_date">Choisir la date de naissance</string>
+    <string name="edition_selecteur_titre">Date de naissance</string>
+
+    <!-- B07 — Champ Sexe. « Non précisé » est une réponse valide, pas un défaut technique. -->
+    <string name="edition_champ_sexe">Sexe</string>
+    <string name="edition_champ_sexe_aide">Facultatif : il n\'entre pas dans le calcul des dates.</string>
+    <string name="edition_sexe_garcon">Garçon</string>
+    <string name="edition_sexe_fille">Fille</string>
+    <string name="edition_sexe_non_precise">Non précisé</string>
+
+    <!-- B07 — Messages de validation (domain/ValidationEnfant.kt).
+         « La date de naissance ne peut pas être dans le futur » est repris mot pour mot du
+         scénario Gherkin de US-B1, sans point final : c'est le texte que la recette vérifie. -->
+    <string name="edition_erreur_prenom_vide">Indiquez le prénom de l\'enfant.</string>
+    <string name="edition_erreur_prenom_trop_long">Le prénom ne peut pas dépasser %1$d caractères.</string>
+    <string name="edition_erreur_date_absente">Choisissez la date de naissance.</string>
+    <string name="edition_erreur_date_futur">La date de naissance ne peut pas être dans le futur</string>
+    <string name="edition_erreur_date_trop_ancienne">La date de naissance ne peut pas être antérieure au %1$s. Vérifiez l\'année.</string>
+
+    <!-- B07 — Boutons de validation : le libellé dit ce que fait l'appui, pas « OK » -->
+    <string name="edition_action_creer">Ajouter l\'enfant</string>
+    <string name="edition_action_enregistrer">Enregistrer les modifications</string>
+    <string name="edition_action_valider">Valider</string>
+    <string name="edition_action_annuler">Annuler</string>
+
+    <!-- B07 — Suppression (US-B1, scénario « suppression »).
+         Ce sont des données de santé, et l'application est hors ligne : il n'y a ni
+         corbeille ni sauvegarde automatique (§B8). Le dialogue dit donc exactement ce qui
+         part avec l'enfant, sans dramatiser. -->
+    <string name="edition_action_supprimer">Supprimer cet enfant</string>
+    <string name="edition_suppression_titre">Supprimer la fiche de %1$s ?</string>
+    <string name="edition_suppression_titre_sans_nom">Supprimer cette fiche ?</string>
+    <string name="edition_suppression_message">Les vaccins déjà saisis pour %1$s et les rappels programmés seront supprimés en même temps. Cette suppression est définitive : la fiche ne pourra pas être retrouvée.</string>
+    <string name="edition_suppression_message_sans_nom">Les vaccins déjà saisis pour cet enfant et les rappels programmés seront supprimés en même temps. Cette suppression est définitive : la fiche ne pourra pas être retrouvée.</string>
+    <string name="edition_suppression_confirmer">Supprimer</string>
+    <string name="edition_suppression_annuler">Annuler</string>
+
+    <!-- B07 — L'enfant à modifier n'est plus dans le carnet : ce n'est pas une panne -->
+    <string name="edition_introuvable_titre">Cet enfant n\'est plus dans le carnet</string>
+    <string name="edition_introuvable_description">Sa fiche a peut-être été supprimée depuis un autre écran.</string>
+    <string name="edition_introuvable_action">Revenir</string>
+
+    <!-- B07 — Pannes. Aucune donnée personnelle dans ces messages (règle 7 de CLAUDE.md). -->
+    <string name="edition_erreur_lecture">La fiche de l\'enfant n\'a pas pu être lue.</string>
+    <string name="edition_echec_enregistrement">L\'enfant n\'a pas pu être enregistré.</string>
+    <string name="edition_echec_suppression">La fiche n\'a pas pu être supprimée.</string>
+
+</resources>
