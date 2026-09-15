@@ -51,26 +51,38 @@ class CalculateurEcheancier {
         }
     }
 
-    /** Synthèse d'un échéancier déjà calculé (R6) : badges de la fiche et tri de la liste. */
+    /**
+     * Synthèse d'un échéancier déjà calculé (R6) : badges de la fiche et tri de la liste.
+     *
+     * [ResumeEnfant.prochaineEcheance] est la date de la **prochaine dose à faire**, tous
+     * statuts non faits confondus. Ne retenir que les dates encore à venir produisait deux
+     * lignes contradictoires côte à côte sur la même carte — « 3 en retard » et « Prochain :
+     * aucune échéance à venir » — dès qu'un enfant n'avait plus que du retard. Le wireframe
+     * §B7.2 montre l'inverse : « 1 en retard · 1 à faire / prochain : RR1 le 28/09 ».
+     */
     fun resume(echeancier: List<LigneEcheancier>): ResumeEnfant {
         var nbEnRetard = 0
         var nbAFaire = 0
-        val datesNonDues = mutableListOf<LocalDate>()
+        val datesNonFaites = mutableListOf<LocalDate>()
 
         echeancier.forEach { ligne ->
             when (ligne.statut) {
-                is StatutVaccin.Fait -> Unit
-                is StatutVaccin.AVenir -> ligne.prevuLe?.let(datesNonDues::add)
-                is StatutVaccin.EnAttente -> ligne.prevuLe?.let(datesNonDues::add)
+                // Reçue : elle ne compte dans aucun badge et n'est plus une échéance.
+                is StatutVaccin.Fait -> return@forEach
+                is StatutVaccin.AVenir, is StatutVaccin.EnAttente -> Unit
                 is StatutVaccin.AFaire -> nbAFaire++
                 is StatutVaccin.EnRetard -> nbEnRetard++
             }
+            // Les quatre autres statuts sont autant de doses encore à faire : leur date
+            // entre dans le calcul, qu'elle soit devant nous ou déjà dépassée. Une ligne
+            // sans date calculable (chaîne de dépendances cassée) n'en donne aucune.
+            ligne.prevuLe?.let(datesNonFaites::add)
         }
 
         return ResumeEnfant(
             nbEnRetard = nbEnRetard,
             nbAFaire = nbAFaire,
-            prochaineEcheance = datesNonDues.minOrNull(),
+            prochaineEcheance = datesNonFaites.minOrNull(),
         )
     }
 

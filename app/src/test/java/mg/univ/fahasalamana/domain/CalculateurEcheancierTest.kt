@@ -212,8 +212,10 @@ class CalculateurEcheancierTest {
             StatutVaccin.AFaire(prevuLe = aujourdHui, jusquAu = LocalDate.of(2026, 6, 3)),
             lignes.ligne("vpo0").statut,
         )
+        // R6 : la prochaine dose à faire, c'est BCG, prévue aujourd'hui même — et non la
+        // première dose encore à venir (Pentavalent 1, le 01/07).
         assertEquals(
-            ResumeEnfant(nbEnRetard = 0, nbAFaire = 2, prochaineEcheance = LocalDate.of(2026, 7, 1)),
+            ResumeEnfant(nbEnRetard = 0, nbAFaire = 2, prochaineEcheance = aujourdHui),
             calc.resume(lignes),
         )
     }
@@ -263,6 +265,28 @@ class CalculateurEcheancierTest {
             StatutVaccin.AFaire(LocalDate.of(2026, 2, 12), LocalDate.of(2026, 2, 26)),
             lignes.ligne("penta1").statut,
         )
+    }
+
+    /**
+     * Contrepartie du test précédent : la dose saisie ne disparaît pas pour autant du carnet.
+     *
+     * L'échéancier ne peut pas la porter — il suit le calendrier — mais `dosesHorsCalendrier`
+     * la retrouve, et c'est elle que la fiche affiche en dernière section (CDC §B5.2 :
+     * conservée **et** affichée). Les deux tests se lisent ensemble : sans celui-ci, une dose
+     * correctement saisie serait silencieusement invisible.
+     */
+    @Test
+    fun vaccinRetireDuCalendrier_resteRetrouveParDosesHorsCalendrier() {
+        val calendrier = CalendrierDeTest.sans("rota1", "rota2")
+        val saisie = listOf(administre("rota1", LocalDate.of(2026, 2, 15)))
+
+        val horsCalendrier = dosesHorsCalendrier(faly, saisie, calendrier)
+
+        assertEquals(listOf("rota1"), horsCalendrier.map(VaccinAdministre::vaccinId))
+        assertEquals(LocalDate.of(2026, 2, 15), horsCalendrier.single().date)
+        // Et elle continue de compter parmi les doses reçues de l'en-tête de la fiche.
+        val lignes = echeancierAu(LocalDate.of(2026, 2, 20), saisie, calendrier)
+        assertEquals(1, nbFaits(lignes, horsCalendrier))
     }
 
     /** Dose retirée du calendrier mais déjà administrée : elle ancre toujours la dose suivante. */
@@ -357,22 +381,67 @@ class CalculateurEcheancierTest {
         assertEquals(4, resume.nbAFaire)     // les quatre doses de 6 semaines
     }
 
+    /**
+     * `prochaineEcheance` est la date de la prochaine dose **à faire**, tous statuts non
+     * faits confondus : ici BCG, prévu le 01/01 et déjà en retard, et non la première date
+     * encore à venir (12/03, Pentavalent 2).
+     */
     @Test
-    fun resume_prochaineEcheance_estLaPlusProcheDateNonEncoreDue() {
+    fun resume_prochaineEcheance_estLaPlusProcheDoseNonFaite() {
         val lignes = echeancierAu(LocalDate.of(2026, 2, 20))
 
-        assertEquals(LocalDate.of(2026, 3, 12), calc.resume(lignes).prochaineEcheance)
+        assertEquals(LocalDate.of(2026, 1, 1), calc.resume(lignes).prochaineEcheance)
     }
 
+    /** Les doses reçues sortent du calcul : l'échéance avance au fur et à mesure des saisies. */
     @Test
-    fun resume_toutEnRetard_neRenvoieAucuneProchaineEcheanceAvantRR1() {
+    fun resume_prochaineEcheance_ignoreLesDosesDejaFaites() {
+        val saisie = listOf(
+            administre("bcg", LocalDate.of(2026, 1, 2)),
+            administre("vpo0", LocalDate.of(2026, 1, 2)),
+        )
+
+        val lignes = echeancierAu(LocalDate.of(2026, 2, 20), saisie)
+
+        // Les quatre doses de 6 semaines, prévues le 12/02 et encore dans leur fenêtre.
+        assertEquals(LocalDate.of(2026, 2, 12), calc.resume(lignes).prochaineEcheance)
+    }
+
+    /**
+     * Le défaut corrigé, dans sa forme la plus visible : un enfant dont **toutes** les doses
+     * restantes sont en retard.
+     *
+     * Restreint aux dates encore à venir, le résumé ne trouvait plus rien et la carte de
+     * §B7.2 affichait deux lignes contradictoires côte à côte — « 16 en retard » et
+     * « Prochain : aucune échéance à venir » — alors qu'il restait précisément seize doses à
+     * faire. La prochaine est BCG, prévue le 01/01 : dépassée, mais c'est bien elle.
+     */
+    @Test
+    fun resume_toutEnRetard_renvoieLaProchaineDoseAFaire() {
+        val lignes = echeancierAu(LocalDate.of(2028, 1, 1))
+
+        val resume = calc.resume(lignes)
+
+        assertEquals(16, resume.nbEnRetard)
+        assertEquals(0, resume.nbAFaire)
+        assertEquals(LocalDate.of(2026, 1, 1), resume.prochaineEcheance)
+    }
+
+    /**
+     * Même règle quand il reste des doses à venir : le résumé n'enjambe plus les retards.
+     *
+     * Au 01/06, quatorze doses sont en retard et Rougeole-Rubéole 1 est encore devant nous,
+     * le 28/09. C'est l'ancienne réponse ; la prochaine dose à faire est la plus ancienne des
+     * quatorze, pas la première encore à venir.
+     */
+    @Test
+    fun resume_prochaineEcheance_nEnjambePasLesDosesEnRetard() {
         val lignes = echeancierAu(LocalDate.of(2026, 6, 1))
 
         val resume = calc.resume(lignes)
 
         assertEquals(14, resume.nbEnRetard)
-        assertEquals(0, resume.nbAFaire)
-        assertEquals(LocalDate.of(2026, 9, 28), resume.prochaineEcheance)
+        assertEquals(LocalDate.of(2026, 1, 1), resume.prochaineEcheance)
     }
 
     @Test
