@@ -8,7 +8,9 @@ import mg.univ.fahasalamana.data.repository.CentreRepository
 import mg.univ.fahasalamana.data.repository.CentreRepositoryImpl
 import mg.univ.fahasalamana.data.repository.ReferenceRepository
 import mg.univ.fahasalamana.data.repository.ReferenceRepositoryImpl
+import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 /**
@@ -57,5 +59,9 @@ val appModule = module {
 
     // --- Plateforme (rappels, notifications) --- TODO(B10), TODO(B11)
 
-    // --- ViewModels --- TODO(B06) à TODO(B18)
+    // --- ViewModels ---
+    // (B15) Réglages : lit la provenance du calendrier et les préférences locales.
+    viewModel { ReglagesViewModel(get(), get()) }
+
+    // TODO(B06) à TODO(B18) : un viewModel par écran restant.
 }

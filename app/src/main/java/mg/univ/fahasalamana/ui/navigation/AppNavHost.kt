@@ -33,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import mg.univ.fahasalamana.R
+import mg.univ.fahasalamana.ui.reglages.ReglagesScreen
 import kotlin.reflect.KClass
 
 /*
@@ -222,17 +223,11 @@ fun AppNavHost(
 
             // --- Onglet Réglages ---
 
+            // TODO(B18) : passer à ReglagesScreen une lambda qui navigue vers Verrouillage,
+            // pour créer ou modifier le code. L'entrée « Code de verrouillage » de l'écran est
+            // encore inactive (B15), et Verrouillage n'a donc plus d'accès depuis l'interface.
             composable<Reglages> {
-                EcranProvisoire(
-                    nomEcran = "Reglages",
-                    tache = "B15",
-                    liens = listOf(
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "Verrouillage"),
-                            onClic = { navController.navigate(Verrouillage) },
-                        ),
-                    ),
-                )
+                ReglagesScreen()
             }
 
             // --- Hors onglets ---
