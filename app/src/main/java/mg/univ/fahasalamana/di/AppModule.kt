@@ -17,6 +17,7 @@ import mg.univ.fahasalamana.ui.edition.EditionEnfantViewModel
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
+import mg.univ.fahasalamana.ui.saisie.SaisieVaccinViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -121,5 +122,16 @@ val appModule = module {
         )
     }
 
-    // TODO(B09) à TODO(B18) : un viewModel par écran restant.
+    // (B09) Saisie d'un vaccin : enfantId et vaccinId lus par SavedStateHandle.toRoute<SaisieVaccin>().
+    viewModel {
+        SaisieVaccinViewModel(
+            savedStateHandle = get(),
+            enfants = get(),
+            reference = get(),
+            calc = get(),
+            horlogeJour = get(),
+        )
+    }
+
+    // TODO(B10) à TODO(B18) : un viewModel par écran restant.
 }
