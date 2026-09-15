@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import mg.univ.fahasalamana.ui.fiche.FicheEnfantScreen
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import mg.univ.fahasalamana.R
@@ -52,7 +53,6 @@ import kotlin.reflect.KClass
  */
 
 /** Identifiants fictifs des liens de démonstration, le temps que les vrais écrans arrivent. */
-private const val VACCIN_DEMO = "demo-vaccin"
 private const val CENTRE_DEMO = "demo-centre"
 
 /** Un onglet de la barre du bas : sa racine, son libellé et ses deux icônes. */
@@ -153,27 +153,13 @@ fun AppNavHost(
             // TODO(B10) : deep link fahasalamana://enfant/{enfantId} sur cette destination,
             // avec l'intent-filter correspondant dans AndroidManifest.xml et la reconstruction
             // de la pile MesEnfants -> FicheEnfant depuis la notification (CDC §B7.1).
-            composable<FicheEnfant> { entree ->
-                val route = entree.toRoute<FicheEnfant>()
-                EcranProvisoire(
-                    nomEcran = "FicheEnfant",
-                    tache = "B08",
-                    arguments = listOf("enfantId" to route.enfantId),
-                    liens = listOf(
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "SaisieVaccin"),
-                            onClic = {
-                                navController.navigate(
-                                    SaisieVaccin(enfantId = route.enfantId, vaccinId = VACCIN_DEMO),
-                                )
-                            },
-                        ),
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "EditionEnfant"),
-                            onClic = { navController.navigate(EditionEnfant(enfantId = route.enfantId)) },
-                        ),
-                    ),
+            composable<FicheEnfant> {
+                FicheEnfantScreen(
                     onRetour = { navController.navigateUp() },
+                    onModifierEnfant = { enfantId -> navController.navigate(EditionEnfant(enfantId)) },
+                    onSaisirVaccin = { enfantId, vaccinId ->
+                        navController.navigate(SaisieVaccin(enfantId = enfantId, vaccinId = vaccinId))
+                    },
                 )
             }
 
