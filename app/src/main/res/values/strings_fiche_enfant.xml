@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textes de l'écran Fiche enfant (tâche B08, US-B2). Fichier distinct de strings.xml :
+  Android fusionne tous les fichiers de res/values/, ce qui permet aux deux développeurs
+  d'ajouter leurs textes en parallèle sans se marcher dessus.
+  Ton factuel et non culpabilisant (règle R7) : « Prévu le… », « À faire dès que possible »,
+  jamais « Vous avez oublié ». C'est l'écran le plus lu de l'application : rien ici ne doit
+  pouvoir se lire comme un reproche.
+  Chaque tâche ajoute ses clés à la fin de sa section, sans réordonner le fichier.
+-->
+<resources>
+
+    <!-- B08 — Fiche enfant : barre du haut et états de l'écran -->
+    <string name="fiche_titre">Carnet de vaccination</string>
+    <string name="fiche_action_modifier">Modifier cet enfant</string>
+    <string name="fiche_erreur">Le carnet de cet enfant n\'a pas pu être lu.</string>
+    <string name="fiche_introuvable_titre">Cet enfant n\'est plus dans le carnet</string>
+    <string name="fiche_introuvable_detail">Il a peut-être été supprimé depuis la liste des enfants.</string>
+    <string name="fiche_introuvable_action">Revenir à mes enfants</string>
+    <string name="fiche_calendrier_absent_titre">Le calendrier vaccinal n\'est pas encore chargé</string>
+    <string name="fiche_calendrier_absent_detail">Les échéances s\'afficheront dès que le calendrier de référence sera disponible sur ce téléphone.</string>
+
+    <!-- B08 — Fiche enfant : en-tête (naissance, âge, compteurs de la règle R6) -->
+    <string name="fiche_naissance_garcon">Né le %1$s</string>
+    <string name="fiche_naissance_fille">Née le %1$s</string>
+    <string name="fiche_naissance_neutre">Naissance le %1$s</string>
+    <!-- Assemble « Né le 01/01/2026 » et « 9 mois » : un seul texte à réordonner si besoin. -->
+    <string name="fiche_entete_naissance_age">%1$s · %2$s</string>
+    <!-- L'âge lui-même n'est plus écrit ici : il vient des clés `age_*` de strings.xml,
+         partagées avec la liste des enfants (`ui/components/TexteAge.kt`). L'ancienne clé
+         `fiche_age_aujourdhui` disait « né aujourd'hui » là où la liste affichait
+         « 0 jour » pour le même enfant. -->
+    <string name="fiche_badge_a_faire">%1$d à faire</string>
+    <string name="fiche_badge_en_retard">%1$d en retard</string>
+    <string name="fiche_badge_a_jour">Carnet à jour</string>
+    <string name="fiche_prochaine_echeance">Prochaine dose à faire : le %1$s</string>
+
+    <!-- B08 — Fiche enfant : en-têtes de tranche d'âge -->
+    <string name="fiche_groupe_naissance">Naissance</string>
+    <!-- Doses dont l'âge n'est pas calculable : la dose dont elles dépendent a été retirée
+         du calendrier. Affichées en dernier plutôt que masquées. -->
+    <string name="fiche_groupe_autres">Autres doses</string>
+
+    <!-- B08 — Fiche enfant : une ligne de vaccin -->
+    <string name="fiche_vaccin_titre">%1$s — %2$s</string>
+    <string name="fiche_vaccin_titre_court">%1$s %2$s</string>
+    <string name="fiche_action_saisir">Saisir ou corriger cette dose</string>
+
+    <!-- B08 — Fiche enfant : les cinq statuts (règle R2), nom de l'état puis phrase factuelle.
+         « En retard » nomme l'état, comme le CDC et le résumé ; la phrase qui suit dit quoi
+         faire, jamais ce qui aurait dû être fait. -->
+    <string name="fiche_statut_fait">Fait</string>
+    <string name="fiche_statut_a_venir">À venir</string>
+    <string name="fiche_statut_a_faire">À faire</string>
+    <string name="fiche_statut_en_retard">En retard</string>
+    <string name="fiche_statut_en_attente">En attente</string>
+    <string name="fiche_detail_fait">Fait le %1$s</string>
+    <string name="fiche_detail_prevu_le">Prévu le %1$s</string>
+    <string name="fiche_detail_fenetre">Possible jusqu\'au %1$s</string>
+    <string name="fiche_detail_en_retard">Prévu le %1$s — à faire dès que possible</string>
+    <string name="fiche_detail_en_attente">Prévu le %1$s, après %2$s</string>
+    <string name="fiche_detail_en_attente_sans_date">À faire après %1$s</string>
+    <string name="fiche_dose_precedente">la dose précédente</string>
+
+    <!-- B08 — Fiche enfant : bandeau de source du calendrier en pied de fiche (US-B7) -->
+    <string name="fiche_source_mention">Calendrier de démonstration — à valider auprès du Ministère de la Santé</string>
+    <string name="fiche_source_version">Version %1$d, publiée le %2$s</string>
+    <string name="fiche_source_inconnue">Version du calendrier inconnue sur ce téléphone</string>
+
+    <!-- B08 — Fiche enfant : durées écrites. Elles ne servent plus à l'âge de l'enfant —
+         mutualisé dans les clés `age_*` de strings.xml — mais aux durées propres à cet
+         écran : les en-têtes de tranche d'âge du calendrier (« 6 semaines », « 9 mois »,
+         valeurs théoriques arrondies) et le décompte « dans 23 jours » d'une dose à venir.
+         Préfixées fiche_ pour ne pas entrer en collision avec les clés partagées.
+         `fiche_duree_ans` a été retirée avec l'ancien calcul d'âge : aucune tranche du
+         calendrier n'atteint l'année (il s'arrête à 15 mois). -->
+    <plurals name="fiche_duree_jours">
+        <item quantity="one">%1$d jour</item>
+        <item quantity="other">%1$d jours</item>
+    </plurals>
+    <plurals name="fiche_duree_semaines">
+        <item quantity="one">%1$d semaine</item>
+        <item quantity="other">%1$d semaines</item>
+    </plurals>
+    <plurals name="fiche_duree_mois">
+        <item quantity="one">%1$d mois</item>
+        <item quantity="other">%1$d mois</item>
+    </plurals>
+    <plurals name="fiche_dans_jours">
+        <item quantity="one">dans %1$d jour</item>
+        <item quantity="other">dans %1$d jours</item>
+    </plurals>
+    <plurals name="fiche_badge_faits">
+        <item quantity="one">%1$d fait</item>
+        <item quantity="other">%1$d faits</item>
+    </plurals>
+
+    <!-- B08 — Fiche enfant : doses saisies dont le vaccin a quitté le calendrier de référence
+         (CDC §B5.2 : « conservée et affichée »). Dernière section de la fiche.
+         Règle R7 : la phrase dit ce qui a changé du côté du calendrier, jamais du côté du
+         parent — la dose a bien été reçue, et elle compte toujours parmi les doses faites.
+         Le nom du vaccin n'est pas affichable : il vivait dans la ligne de calendrier qui a
+         été retirée. Ne reste que la date, saisie par le parent. -->
+    <string name="fiche_hors_calendrier_titre">Doses hors calendrier</string>
+    <string name="fiche_hors_calendrier_dose">Dose reçue le %1$s. Ce vaccin ne figure plus au calendrier de référence.</string>
+
+</resources>

@@ -9,7 +9,6 @@
 
     <!-- Général -->
     <string name="app_name">Fahasalamana Zaza</string>
-    <string name="socle_provisoire">Socle en place — écrans à venir</string>
 
     <!-- B01 — Navigation : libellés des trois onglets de la barre du bas -->
     <string name="onglet_enfants">Enfants</string>
@@ -27,5 +26,66 @@
     <string name="ecran_provisoire_arguments">Arguments de navigation</string>
     <string name="ecran_provisoire_sans_argument">Aucun argument</string>
     <string name="ecran_provisoire_ouvrir">Ouvrir %1$s</string>
+
+    <!-- B15 — Écran Réglages : données de référence (US-B7) -->
+    <string name="reglages_titre">Réglages</string>
+    <string name="reglages_section_reference">Données de référence</string>
+    <string name="reglages_calendrier_titre">Calendrier vaccinal</string>
+    <string name="reglages_calendrier_version">Version %1$d, publiée le %2$s</string>
+    <string name="reglages_source_titre">Source</string>
+    <string name="reglages_mention_demonstration">Calendrier de démonstration — à valider auprès du Ministère de la Santé</string>
+    <string name="reglages_mention_demonstration_detail">Toutes les dates de l\'application sont calculées à partir de ce calendrier. L\'application ne donne aucun avis médical : en cas de doute, demandez au centre de santé.</string>
+    <string name="reglages_annuaire_titre">Annuaire des centres de santé</string>
+    <string name="reglages_annuaire_version">Version %1$d</string>
+    <string name="reglages_annuaire_absent">Pas encore chargé sur ce téléphone</string>
+    <string name="reglages_calendrier_absent">Calendrier pas encore chargé sur ce téléphone</string>
+    <string name="reglages_source_inconnue">Inconnue sur ce téléphone</string>
+    <string name="reglages_derniere_verification">Dernière vérification des mises à jour : %1$s</string>
+    <string name="reglages_derniere_verification_jamais">Dernière vérification des mises à jour : jamais</string>
+    <string name="reglages_action_verifier">Vérifier les mises à jour</string>
+    <string name="reglages_action_verifier_indisponible">La recherche de mise à jour n\'est pas encore disponible dans cette version.</string>
+    <string name="reglages_reference_erreur">Les informations du calendrier n\'ont pas pu être lues.</string>
+
+    <!-- B15 — Écran Réglages : confidentialité (CDC §B8, point 7).
+         Ce texte est lu en soutenance : il décrit ce que le code fait aujourd'hui.
+         Toute évolution du code (export, réseau, sauvegarde) doit être répercutée ici. -->
+    <string name="reglages_section_confidentialite">Confidentialité</string>
+    <string name="reglages_confidentialite_donnees_locales">Les enfants que vous ajoutez et les vaccins que vous saisissez restent sur ce téléphone, dans la mémoire de l\'application.</string>
+    <string name="reglages_confidentialite_aucun_envoi">L\'application ne crée aucun compte et n\'envoie aucune donnée de santé sur Internet : ni les enfants, ni les vaccins saisis.</string>
+    <string name="reglages_confidentialite_sauvegarde">La sauvegarde automatique vers le cloud est désactivée : le carnet n\'est pas copié sur les serveurs de Google.</string>
+    <string name="reglages_confidentialite_export">Le carnet ne peut sortir de ce téléphone que par un export de fichier que vous demandez vous-même. Cet export n\'est pas encore disponible : aujourd\'hui, rien ne sort de l\'application.</string>
+
+    <!-- B15 — Écran Réglages : entrées réservées aux tâches B16, B17 et B18 -->
+    <string name="reglages_section_carnet">Carnet</string>
+    <string name="reglages_export">Exporter le carnet</string>
+    <string name="reglages_import">Importer un carnet</string>
+    <string name="reglages_section_securite">Sécurité</string>
+    <string name="reglages_code_verrouillage">Code de verrouillage</string>
+    <string name="reglages_a_venir">Pas encore disponible dans cette version</string>
+
+    <!-- Âge d'un enfant — écrit par `ui/components/TexteAge.kt`, affiché par la liste des
+         enfants (B06) et par l'en-tête de la fiche (B08).
+         Ces textes vivent dans le fichier partagé et non dans un fichier d'écran, parce que
+         deux écrans les affichent : dupliqués, ils avaient divergé — « 1 an » dans la liste
+         et « 18 mois » dans la fiche pour le même enfant (revue statique du 15/09, n° 9).
+         L'unité est choisie par `domain/AgeEnfant.kt`, jamais ici : un seul seuil, les
+         années à partir de 24 mois révolus. -->
+    <string name="age_jour_de_naissance">naissance aujourd\'hui</string>
+    <plurals name="age_jours">
+        <item quantity="one">%1$d jour</item>
+        <item quantity="other">%1$d jours</item>
+    </plurals>
+    <plurals name="age_semaines">
+        <item quantity="one">%1$d semaine</item>
+        <item quantity="other">%1$d semaines</item>
+    </plurals>
+    <plurals name="age_mois">
+        <item quantity="one">%1$d mois</item>
+        <item quantity="other">%1$d mois</item>
+    </plurals>
+    <plurals name="age_ans">
+        <item quantity="one">%1$d an</item>
+        <item quantity="other">%1$d ans</item>
+    </plurals>
 
 </resources>

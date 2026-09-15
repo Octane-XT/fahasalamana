@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textes de l'écran Saisie d'un vaccin (tâche B09, US-B3 et US-B4). Fichier distinct de
+  strings.xml : Android fusionne tous les fichiers de res/values/, ce qui permet aux deux
+  développeurs d'ajouter leurs textes en parallèle sans se marcher dessus.
+
+  Ton factuel et non culpabilisant (règle R7). C'est ici que la règle se joue le plus :
+  l'écran où une mère enregistre une dose reçue avec six mois de retard ne doit contenir
+  aucun mot qui ressemble à un reproche. L'avertissement de fenêtre **constate** un écart et
+  rappelle que la saisie est conservée ; il ne dit jamais ce qui aurait dû être fait.
+
+  Chaque tâche ajoute ses clés à la fin de sa section, sans réordonner le fichier.
+-->
+<resources>
+
+    <!-- B09 — Saisie d'un vaccin : barre du haut et états de l'écran -->
+    <string name="saisie_titre">Saisir une dose</string>
+    <string name="saisie_vaccin_titre">%1$s — %2$s</string>
+    <string name="saisie_erreur">Le carnet n\'a pas pu être lu.</string>
+    <string name="saisie_introuvable_titre">Cette dose n\'est plus disponible</string>
+    <string name="saisie_introuvable_detail">L\'enfant ou le vaccin ne figure plus sur ce téléphone.</string>
+    <string name="saisie_introuvable_action">Revenir</string>
+
+    <!-- B09 — En-tête : de quelle dose et de quel enfant il s'agit, et la date prévue.
+         Le parent doit pouvoir vérifier ce qu'il enregistre avant de toucher « Enregistrer ». -->
+    <string name="saisie_entete_prevu">%1$s · prévu le %2$s</string>
+    <string name="saisie_entete_sans_date">%1$s · pas de date prévue</string>
+    <string name="saisie_entete_deja_saisi">Dose déjà enregistrée le %1$s. Vous pouvez corriger cette saisie ou la supprimer.</string>
+
+    <!-- B09 — Formulaire (wireframe §B7.2) : date, lieu facultatif, numéro de lot facultatif -->
+    <string name="saisie_date_label">Date d\'administration</string>
+    <string name="saisie_date_action">Choisir la date</string>
+    <string name="saisie_date_valider">Valider</string>
+    <string name="saisie_annuler">Annuler</string>
+    <string name="saisie_lieu_label">Lieu (facultatif)</string>
+    <string name="saisie_lieu_exemple">CSB2 Ankirihiry</string>
+    <string name="saisie_lot_label">N° de lot (facultatif)</string>
+
+    <!-- B09 — Règle R5 : les deux seules dates refusées, parce qu'elles décrivent un fait
+         impossible. Le message dit ce qui ne va pas dans la date, jamais dans la personne. -->
+    <string name="saisie_refus_avant_naissance">Cette date est antérieure à la naissance (%1$s).</string>
+    <string name="saisie_refus_futur">Cette date est postérieure à aujourd\'hui (%1$s).</string>
+
+    <!-- B09 — Règle R5 : hors de la fenêtre de tolérance, la saisie est **acceptée**.
+         Ces deux messages sont informatifs et n'empêchent jamais l'enregistrement. -->
+    <plurals name="saisie_avertissement_avance">
+        <item quantity="one">Dose reçue %1$d jour avant la date prévue (%2$s). La saisie est enregistrée telle quelle.</item>
+        <item quantity="other">Dose reçue %1$d jours avant la date prévue (%2$s). La saisie est enregistrée telle quelle.</item>
+    </plurals>
+    <plurals name="saisie_avertissement_retard">
+        <item quantity="one">Dose reçue %1$d jour après la date prévue (%2$s). La saisie est enregistrée telle quelle.</item>
+        <item quantity="other">Dose reçue %1$d jours après la date prévue (%2$s). La saisie est enregistrée telle quelle.</item>
+    </plurals>
+
+    <!-- B09 — Actions -->
+    <string name="saisie_action_enregistrer">Enregistrer</string>
+    <string name="saisie_action_supprimer">Supprimer cette saisie</string>
+    <string name="saisie_echec">La modification n\'a pas pu être enregistrée. Vous pouvez réessayer.</string>
+
+    <!-- B09 — Suppression d'une saisie (US-B4) : confirmation factuelle, qui décrit l'effet
+         de l'action et rappelle qu'elle se refait. Aucune dramatisation. -->
+    <string name="saisie_suppression_titre">Supprimer cette saisie ?</string>
+    <string name="saisie_suppression_detail">Cette dose ne sera plus enregistrée comme faite et redeviendra une échéance dans le carnet. Vous pourrez la saisir à nouveau.</string>
+    <string name="saisie_suppression_confirmer">Supprimer</string>
+
+</resources>

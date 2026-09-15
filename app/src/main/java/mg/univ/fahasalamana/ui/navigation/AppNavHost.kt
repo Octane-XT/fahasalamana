@@ -30,9 +30,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import mg.univ.fahasalamana.ui.fiche.FicheEnfantScreen
+import mg.univ.fahasalamana.ui.saisie.SaisieVaccinScreen
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import mg.univ.fahasalamana.R
+import mg.univ.fahasalamana.ui.edition.EditionEnfantScreen
+import mg.univ.fahasalamana.ui.enfants.MesEnfantsScreen
+import mg.univ.fahasalamana.ui.reglages.ReglagesScreen
 import kotlin.reflect.KClass
 
 /*
@@ -50,8 +55,6 @@ import kotlin.reflect.KClass
  */
 
 /** Identifiants fictifs des liens de démonstration, le temps que les vrais écrans arrivent. */
-private const val ENFANT_DEMO = "demo-enfant"
-private const val VACCIN_DEMO = "demo-vaccin"
 private const val CENTRE_DEMO = "demo-centre"
 
 /** Un onglet de la barre du bas : sa racine, son libellé et ses deux icônes. */
@@ -128,70 +131,48 @@ fun AppNavHost(
         ) {
             // --- Onglet Enfants ---
 
+            // (B06) Premier écran réel de l'onglet Enfants. Il ne navigue pas lui-même :
+            // il reçoit deux lambdas, la navigation restant l'affaire de ce fichier.
             composable<MesEnfants> {
-                EcranProvisoire(
-                    nomEcran = "MesEnfants",
-                    tache = "B06",
-                    liens = listOf(
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "EditionEnfant"),
-                            onClic = { navController.navigate(EditionEnfant()) },
-                        ),
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "FicheEnfant"),
-                            onClic = { navController.navigate(FicheEnfant(enfantId = ENFANT_DEMO)) },
-                        ),
-                    ),
+                MesEnfantsScreen(
+                    onAjouterEnfant = { navController.navigate(EditionEnfant()) },
+                    onOuvrirEnfant = { enfantId ->
+                        navController.navigate(FicheEnfant(enfantId = enfantId))
+                    },
                 )
             }
 
-            composable<EditionEnfant> { entree ->
-                val route = entree.toRoute<EditionEnfant>()
-                EcranProvisoire(
-                    nomEcran = "EditionEnfant",
-                    tache = "B07",
-                    arguments = listOf("enfantId" to route.enfantId),
+            // (B07) Création quand `enfantId` est nul, modification sinon. L'argument n'est pas
+            // lu ici : le ViewModel le récupère par SavedStateHandle.toRoute<EditionEnfant>().
+            //
+            // La sortie après suppression ne peut pas être un simple `navigateUp()` : on
+            // arrive sur cet écran depuis la fiche de l'enfant, qui est encore dans la pile et
+            // afficherait « Introuvable ». On remonte donc jusqu'à la liste.
+            composable<EditionEnfant> {
+                EditionEnfantScreen(
                     onRetour = { navController.navigateUp() },
+                    onEnregistre = { navController.navigateUp() },
+                    onSupprime = { navController.popBackStack(route = MesEnfants, inclusive = false) },
                 )
             }
 
             // TODO(B10) : deep link fahasalamana://enfant/{enfantId} sur cette destination,
             // avec l'intent-filter correspondant dans AndroidManifest.xml et la reconstruction
             // de la pile MesEnfants -> FicheEnfant depuis la notification (CDC §B7.1).
-            composable<FicheEnfant> { entree ->
-                val route = entree.toRoute<FicheEnfant>()
-                EcranProvisoire(
-                    nomEcran = "FicheEnfant",
-                    tache = "B08",
-                    arguments = listOf("enfantId" to route.enfantId),
-                    liens = listOf(
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "SaisieVaccin"),
-                            onClic = {
-                                navController.navigate(
-                                    SaisieVaccin(enfantId = route.enfantId, vaccinId = VACCIN_DEMO),
-                                )
-                            },
-                        ),
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "EditionEnfant"),
-                            onClic = { navController.navigate(EditionEnfant(enfantId = route.enfantId)) },
-                        ),
-                    ),
+            composable<FicheEnfant> {
+                FicheEnfantScreen(
                     onRetour = { navController.navigateUp() },
+                    onModifierEnfant = { enfantId -> navController.navigate(EditionEnfant(enfantId)) },
+                    onSaisirVaccin = { enfantId, vaccinId ->
+                        navController.navigate(SaisieVaccin(enfantId = enfantId, vaccinId = vaccinId))
+                    },
                 )
             }
 
-            composable<SaisieVaccin> { entree ->
-                val route = entree.toRoute<SaisieVaccin>()
-                EcranProvisoire(
-                    nomEcran = "SaisieVaccin",
-                    tache = "B09",
-                    arguments = listOf(
-                        "enfantId" to route.enfantId,
-                        "vaccinId" to route.vaccinId,
-                    ),
+            composable<SaisieVaccin> {
+                SaisieVaccinScreen(
                     onRetour = { navController.navigateUp() },
+                    onTermine = { navController.navigateUp() },
                 )
             }
 
@@ -222,17 +203,11 @@ fun AppNavHost(
 
             // --- Onglet Réglages ---
 
+            // TODO(B18) : passer à ReglagesScreen une lambda qui navigue vers Verrouillage,
+            // pour créer ou modifier le code. L'entrée « Code de verrouillage » de l'écran est
+            // encore inactive (B15), et Verrouillage n'a donc plus d'accès depuis l'interface.
             composable<Reglages> {
-                EcranProvisoire(
-                    nomEcran = "Reglages",
-                    tache = "B15",
-                    liens = listOf(
-                        LienProvisoire(
-                            libelle = stringResource(R.string.ecran_provisoire_ouvrir, "Verrouillage"),
-                            onClic = { navController.navigate(Verrouillage) },
-                        ),
-                    ),
-                )
+                ReglagesScreen()
             }
 
             // --- Hors onglets ---

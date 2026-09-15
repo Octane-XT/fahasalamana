@@ -23,8 +23,10 @@ import java.util.UUID
  *
  * Elles ne sont **jamais touchées par une mise à jour du contenu de référence** :
  * aucune fonction de `ReferenceDao` n'écrit dans ces deux tables. Une administration
- * dont le `vaccinId` a disparu d'une nouvelle version du calendrier est conservée et
- * affichée « vaccin retiré du calendrier ».
+ * dont le `vaccinId` a disparu d'une nouvelle version du calendrier est conservée en
+ * base — mais **elle n'est encore affichée nulle part** : l'échéancier est construit à
+ * partir du calendrier seul. Point n° 6 du suivi, à traiter avant la mise à jour
+ * distante (B19), sans quoi une dose correctement saisie deviendrait invisible.
  *
  * Les identifiants sont des **UUID générés côté application** (`nouvelIdentifiant()`)
  * et non des entiers auto-incrémentés : l'import d'un carnet venu d'un autre téléphone
@@ -66,7 +68,9 @@ data class EnfantEntity(
  * annule **tout** le remplacement du calendrier ; l'utilisateur se retrouverait avec un
  * calendrier bloqué à cause d'une dose qu'il a correctement saisie. Une donnée de santé
  * déjà saisie l'emporte sur l'intégrité référentielle d'un contenu remplaçable : la dose
- * est conservée et la fiche l'affiche « vaccin retiré du calendrier ».
+ * est conservée en base. **La contrepartie côté affichage reste à écrire** (point n° 6 du
+ * suivi) : aujourd'hui la fiche ne montre que les lignes du calendrier, donc une telle dose
+ * ne se voit plus. La moitié de la décision B04 est en place, pas l'autre.
  *
  * L'index sur `vaccinId` reste, lui : il sert les jointures avec `vaccins_reference` et la
  * recherche des administrations d'un vaccin donné. Ce qui disparaît, c'est la contrainte,

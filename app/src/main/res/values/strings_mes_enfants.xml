@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textes de l'écran « Mes enfants » (B06). Fichier séparé de strings.xml, et non une
+  section de plus dedans : Android fusionne tous les fichiers de res/values/, et deux
+  développeurs qui écrivent un écran en parallèle ne s'écrasent alors pas l'un l'autre.
+  Mêmes règles que strings.xml : interface en français, ton factuel et non culpabilisant
+  (règle R7) — « À faire », « Prochain : … », jamais « Vous avez oublié ».
+-->
+<resources>
+
+    <!-- B06 — Écran Mes enfants : liste et actions (US-B8) -->
+    <string name="mes_enfants_titre">Mes enfants</string>
+    <string name="mes_enfants_action_ajouter">Ajouter un enfant</string>
+
+    <!-- B06 — État vide : premier lancement, aucun enfant enregistré -->
+    <string name="mes_enfants_vide_titre">Ajoutez votre premier enfant</string>
+    <string name="mes_enfants_vide_description">Le carnet se remplit tout seul : à partir de la date de naissance, l\'application calcule la date de chaque vaccin.</string>
+
+    <!-- B06 — État d'erreur : aucune donnée personnelle dans ce message -->
+    <string name="mes_enfants_erreur">La liste des enfants n\'a pas pu être lue.</string>
+
+    <!-- B06 — Résumé par enfant (règle R6). Chaque puce est doublée d'une icône. -->
+    <string name="mes_enfants_a_jour">À jour</string>
+    <plurals name="mes_enfants_nb_en_retard">
+        <item quantity="one">%1$d en retard</item>
+        <item quantity="other">%1$d en retard</item>
+    </plurals>
+    <plurals name="mes_enfants_nb_a_faire">
+        <item quantity="one">%1$d à faire</item>
+        <item quantity="other">%1$d à faire</item>
+    </plurals>
+
+    <!-- B06 — Prochaine échéance : %1$s nom du vaccin, %2$s dose, %3$s date -->
+    <string name="mes_enfants_prochain">Prochain : %1$s %2$s, le %3$s</string>
+    <string name="mes_enfants_prochain_date_seule">Prochain : le %1$s</string>
+    <string name="mes_enfants_prochain_aucun">Toutes les doses du calendrier sont faites</string>
+
+    <!-- B06 — Âge de l'enfant : les clés `mes_enfants_age_*` ont été retirées. La fiche
+         enfant écrivait les mêmes âges avec ses propres textes et son propre seuil, et les
+         deux écrans se contredisaient. Un seul jeu de clés désormais, `age_*` dans
+         strings.xml, écrit par `ui/components/TexteAge.kt`. -->
+
+</resources>
