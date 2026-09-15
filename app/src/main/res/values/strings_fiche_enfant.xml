@@ -26,7 +26,10 @@
     <string name="fiche_naissance_neutre">Naissance le %1$s</string>
     <!-- Assemble « Né le 01/01/2026 » et « 9 mois » : un seul texte à réordonner si besoin. -->
     <string name="fiche_entete_naissance_age">%1$s · %2$s</string>
-    <string name="fiche_age_aujourdhui">né aujourd\'hui</string>
+    <!-- L'âge lui-même n'est plus écrit ici : il vient des clés `age_*` de strings.xml,
+         partagées avec la liste des enfants (`ui/components/TexteAge.kt`). L'ancienne clé
+         `fiche_age_aujourdhui` disait « né aujourd'hui » là où la liste affichait
+         « 0 jour » pour le même enfant. -->
     <string name="fiche_badge_a_faire">%1$d à faire</string>
     <string name="fiche_badge_en_retard">%1$d en retard</string>
     <string name="fiche_badge_a_jour">Carnet à jour</string>
@@ -64,9 +67,13 @@
     <string name="fiche_source_version">Version %1$d, publiée le %2$s</string>
     <string name="fiche_source_inconnue">Version du calendrier inconnue sur ce téléphone</string>
 
-    <!-- B08 — Fiche enfant : durées écrites. Préfixées fiche_ pour ne pas entrer en collision
-         avec des clés que les autres écrans ajouteraient dans strings.xml ; à mutualiser en
-         B23 si « Mes enfants » affiche les mêmes. -->
+    <!-- B08 — Fiche enfant : durées écrites. Elles ne servent plus à l'âge de l'enfant —
+         mutualisé dans les clés `age_*` de strings.xml — mais aux durées propres à cet
+         écran : les en-têtes de tranche d'âge du calendrier (« 6 semaines », « 9 mois »,
+         valeurs théoriques arrondies) et le décompte « dans 23 jours » d'une dose à venir.
+         Préfixées fiche_ pour ne pas entrer en collision avec les clés partagées.
+         `fiche_duree_ans` a été retirée avec l'ancien calcul d'âge : aucune tranche du
+         calendrier n'atteint l'année (il s'arrête à 15 mois). -->
     <plurals name="fiche_duree_jours">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
@@ -78,10 +85,6 @@
     <plurals name="fiche_duree_mois">
         <item quantity="one">%1$d mois</item>
         <item quantity="other">%1$d mois</item>
-    </plurals>
-    <plurals name="fiche_duree_ans">
-        <item quantity="one">%1$d an</item>
-        <item quantity="other">%1$d ans</item>
     </plurals>
     <plurals name="fiche_dans_jours">
         <item quantity="one">dans %1$d jour</item>

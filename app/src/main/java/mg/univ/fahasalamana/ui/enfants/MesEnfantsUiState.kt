@@ -1,12 +1,13 @@
 package mg.univ.fahasalamana.ui.enfants
 
 import androidx.compose.runtime.Immutable
+import mg.univ.fahasalamana.domain.AgeEnfant
 import mg.univ.fahasalamana.domain.Enfant
 import mg.univ.fahasalamana.domain.LigneEcheancier
 import mg.univ.fahasalamana.domain.ResumeEnfant
 import mg.univ.fahasalamana.domain.StatutVaccin
+import mg.univ.fahasalamana.domain.ageDepuis
 import java.time.LocalDate
-import java.time.Period
 
 /**
  * État de l'écran « Mes enfants » (US-B8, wireframe §B7.2).
@@ -61,26 +62,13 @@ data class LigneEnfant(
 }
 
 /**
- * Âge décomposé, tel que `Period` le calcule. L'écran choisit l'unité qu'il affiche
- * (« 8 mois », « 2 ans ») ; garder les trois composantes évite de figer ce choix ici.
- */
-@Immutable
-data class AgeEnfant(
-    val annees: Int,
-    val mois: Int,
-    val jours: Int,
-) {
-    /** Nombre de mois entiers écoulés depuis la naissance, toutes années comprises. */
-    val moisTotaux: Int get() = annees * 12 + mois
-}
-
-/**
  * Assemble la carte d'un enfant à partir de son échéancier déjà calculé.
  *
  * Fonction pure, hors ViewModel et hors composable : elle ne calcule aucune règle métier —
- * [resume] arrive tel quel du `CalculateurEcheancier` (R6) et [echeancier] aussi (R1, R2).
- * Ce qu'elle fait tient en deux gestes d'affichage : décomposer l'âge, et retrouver de
- * quel vaccin il s'agit à la date de la prochaine échéance, que R6 ne renvoie pas.
+ * [resume] arrive tel quel du `CalculateurEcheancier` (R6), [echeancier] aussi (R1, R2) et
+ * l'âge de `domain.ageDepuis`, partagé avec la fiche enfant. Ce qu'elle fait tient en un
+ * geste d'affichage : retrouver de quel vaccin il s'agit à la date de la prochaine
+ * échéance, que R6 ne renvoie pas.
  *
  * @param aujourdHui jour de référence, venu de `horlogeJour()` : l'âge affiché change à
  *   minuit comme les statuts, sans qu'il faille rouvrir l'application.
@@ -107,17 +95,4 @@ internal fun ligneEnfant(
         prochainVaccinNom = prochain?.vaccin?.nom,
         prochainVaccinDose = prochain?.vaccin?.dose,
     )
-}
-
-/**
- * Âge à la date [aujourdHui].
- *
- * Renvoie un âge nul plutôt que des valeurs négatives si la date de naissance est dans le
- * futur : la validation du formulaire l'interdit (US-B1), mais un carnet importé (B17)
- * peut contenir n'importe quoi et la liste ne doit pas afficher « -3 mois ».
- */
-private fun ageDepuis(naissance: LocalDate, aujourdHui: LocalDate): AgeEnfant {
-    if (naissance.isAfter(aujourdHui)) return AgeEnfant(annees = 0, mois = 0, jours = 0)
-    val periode = Period.between(naissance, aujourdHui)
-    return AgeEnfant(annees = periode.years, mois = periode.months, jours = periode.days)
 }

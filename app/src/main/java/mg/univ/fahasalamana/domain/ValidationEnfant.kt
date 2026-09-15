@@ -20,7 +20,7 @@ import java.time.LocalDate
  * Portée : c'est la validation **du formulaire**, pas celle de la base. Un carnet importé
  * (B17) peut contenir des valeurs qui ne passeraient pas ici ; elles ne sont pas rejetées
  * pour autant, les écrans de lecture savent les afficher (voir `ageDepuis` dans
- * `MesEnfantsUiState`). Ce fichier empêche de *saisir* une aberration, il ne prétend pas
+ * `AgeEnfant.kt`). Ce fichier empêche de *saisir* une aberration, il ne prétend pas
  * en interdire l'existence.
  */
 

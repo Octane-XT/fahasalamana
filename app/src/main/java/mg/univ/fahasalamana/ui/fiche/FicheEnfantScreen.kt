@@ -67,18 +67,19 @@ import mg.univ.fahasalamana.domain.Sexe
 import mg.univ.fahasalamana.domain.StatutVaccin
 import mg.univ.fahasalamana.domain.VaccinAdministre
 import mg.univ.fahasalamana.domain.VaccinReference
+import mg.univ.fahasalamana.domain.ageDepuis
 import mg.univ.fahasalamana.domain.dosesHorsCalendrier
 import mg.univ.fahasalamana.domain.grouperParAge
 import mg.univ.fahasalamana.domain.nbFaits
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.components.EtatVide
+import mg.univ.fahasalamana.ui.components.texteAge
 import mg.univ.fahasalamana.ui.theme.CouleurStatut
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -103,7 +104,15 @@ import kotlin.math.roundToInt
 /** Dates affichées en jour/mois/année, comme dans les wireframes (§B7.2). */
 private val FORMAT_JOUR: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
 
-/** En dessous de deux semaines, un âge se dit en jours ; au-delà de six mois, en mois. */
+/*
+ * Seuils des **en-têtes de tranche d'âge** du calendrier (« 6 semaines », « 9 mois ») : en
+ * dessous de deux semaines la tranche se dit en jours, au-delà de six mois en mois.
+ *
+ * Ils ne servent plus à l'âge de l'enfant : celui-ci vient de `domain.ageDepuis`, partagé
+ * avec la liste des enfants. Une tranche est un âge théorique en jours, arrondi au plus
+ * proche pour retomber sur le libellé du calendrier ; l'âge d'un enfant, lui, se compte en
+ * unités révolues. Deux calculs différents parce que ce sont deux choses différentes.
+ */
 private const val JOURS_MIN_SEMAINES = 14
 private const val JOURS_MIN_MOIS = 183
 private const val JOURS_PAR_SEMAINE = 7.0
@@ -301,7 +310,9 @@ private fun EnteteEnfant(state: FicheEnfantUiState.Pret) {
             text = stringResource(
                 R.string.fiche_entete_naissance_age,
                 naissance,
-                libelleAge(state.enfant.dateNaissance, state.aujourdHui),
+                // Même calcul et mêmes textes que la carte de la liste des enfants : la
+                // fiche ne peut plus écrire « 18 mois » là où la liste écrit « 1 an ».
+                texteAge(ageDepuis(state.enfant.dateNaissance, state.aujourdHui)),
             ),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -699,25 +710,13 @@ private fun libelleTranche(ageJours: Int?): String = when {
     }
 }
 
-/** Âge de l'enfant au jour de calcul : « 3 jours », « 8 mois », « 2 ans ». */
-@Composable
-private fun libelleAge(naissance: LocalDate, aujourdHui: LocalDate): String {
-    val jours = ChronoUnit.DAYS.between(naissance, aujourdHui).coerceAtLeast(0L).toInt()
-    val mois = ChronoUnit.MONTHS.between(naissance, aujourdHui).coerceAtLeast(0L).toInt()
-    val ans = mois / 12
-
-    return when {
-        jours == 0 -> stringResource(R.string.fiche_age_aujourdhui)
-        ans >= 2 -> pluralStringResource(R.plurals.fiche_duree_ans, ans, ans)
-        mois >= 1 -> pluralStringResource(R.plurals.fiche_duree_mois, mois, mois)
-        jours >= JOURS_MIN_SEMAINES -> {
-            val semaines = (jours / JOURS_PAR_SEMAINE).roundToInt()
-            pluralStringResource(R.plurals.fiche_duree_semaines, semaines, semaines)
-        }
-
-        else -> pluralStringResource(R.plurals.fiche_duree_jours, jours, jours)
-    }
-}
+/*
+ * L'âge de l'enfant s'écrivait ici, avec ses propres seuils et ses propres textes, alors que
+ * la liste des enfants l'écrivait de son côté avec les siens : le même enfant de 18 mois se
+ * lisait « 18 mois » sur cette fiche et « 1 an » sur la carte qui y mène (revue statique du
+ * 15/09, point n° 9). Le calcul est maintenant dans `domain/AgeEnfant.kt` et la mise en mots
+ * dans `ui/components/TexteAge.kt` ; l'en-tête les appelle tous les deux.
+ */
 
 // --- Aperçus -----------------------------------------------------------------
 

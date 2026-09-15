@@ -44,10 +44,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mg.univ.fahasalamana.R
+import mg.univ.fahasalamana.domain.AgeEnfant
 import mg.univ.fahasalamana.domain.ResumeEnfant
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.components.EtatVide
+import mg.univ.fahasalamana.ui.components.texteAge
 import mg.univ.fahasalamana.ui.theme.CouleurStatut
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
 import org.koin.androidx.compose.koinViewModel
@@ -324,16 +326,6 @@ private fun Pastille(initiale: Char?, modifier: Modifier = Modifier) {
     }
 }
 
-/** « 8 mois », « 2 ans », « 12 jours » : l'unité la plus parlante pour l'âge atteint. */
-@Composable
-private fun texteAge(age: AgeEnfant): String = when {
-    age.annees >= 1 -> pluralStringResource(R.plurals.mes_enfants_age_ans, age.annees, age.annees)
-    age.moisTotaux >= 1 ->
-        pluralStringResource(R.plurals.mes_enfants_age_mois, age.moisTotaux, age.moisTotaux)
-
-    else -> pluralStringResource(R.plurals.mes_enfants_age_jours, age.jours, age.jours)
-}
-
 /**
  * « Prochain : Rougeole-Rubéole 1re dose, le 28/09/2026 ».
  *
@@ -360,7 +352,7 @@ private fun texteProchaineEcheance(enfant: LigneEnfant): String {
 private val FalyEnRetard = LigneEnfant(
     id = "faly",
     prenom = "Faly",
-    age = AgeEnfant(annees = 0, mois = 8, jours = 14),
+    age = AgeEnfant.Mois(8),
     resume = ResumeEnfant(nbEnRetard = 1, nbAFaire = 1, prochaineEcheance = LocalDate.of(2026, 9, 28)),
     prochainVaccinNom = "Rougeole-Rubéole",
     prochainVaccinDose = "1re dose",
@@ -369,7 +361,7 @@ private val FalyEnRetard = LigneEnfant(
 private val SoaAJour = LigneEnfant(
     id = "soa",
     prenom = "Soa",
-    age = AgeEnfant(annees = 2, mois = 1, jours = 3),
+    age = AgeEnfant.Annees(2),
     resume = ResumeEnfant(nbEnRetard = 0, nbAFaire = 0, prochaineEcheance = null),
     prochainVaccinNom = null,
     prochainVaccinDose = null,
@@ -378,7 +370,7 @@ private val SoaAJour = LigneEnfant(
 private val NouveauNe = LigneEnfant(
     id = "hasina",
     prenom = "Hasina",
-    age = AgeEnfant(annees = 0, mois = 0, jours = 12),
+    age = AgeEnfant.Jours(12),
     resume = ResumeEnfant(nbEnRetard = 0, nbAFaire = 2, prochaineEcheance = LocalDate.of(2026, 10, 27)),
     prochainVaccinNom = "Pentavalent",
     prochainVaccinDose = "1re dose",
