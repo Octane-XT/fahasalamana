@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.isActive
 import java.time.Duration
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.ZoneId
 
 /** Fuseau de Madagascar : UTC+3, sans heure d'été (CDC §0.2). */
@@ -59,6 +58,3 @@ private fun dureeJusquAuProchainMinuit(zone: ZoneId): Duration {
     val prochainMinuit = maintenant.toLocalDate().plusDays(1).atStartOfDay(zone)
     return Duration.between(maintenant, prochainMinuit).plusSeconds(1)
 }
-
-/** Heure d'envoi des rappels (règle R3) : 9 h, heure locale. */
-val HEURE_RAPPEL: LocalTime = LocalTime.of(9, 0)
