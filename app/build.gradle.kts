@@ -56,6 +56,12 @@ android {
     }
 }
 
+// Schéma Room exporté et versionné (B02) : c'est lui qui permettra d'écrire une migration
+// le jour où le schéma change, au lieu d'effacer la base des utilisateurs.
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
@@ -94,6 +100,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
 
+    androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
