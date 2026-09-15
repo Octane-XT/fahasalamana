@@ -13,6 +13,7 @@ import mg.univ.fahasalamana.data.repository.ReferenceRepository
 import mg.univ.fahasalamana.data.repository.ReferenceRepositoryImpl
 import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.platform.horlogeJour
+import mg.univ.fahasalamana.ui.edition.EditionEnfantViewModel
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
@@ -108,5 +109,17 @@ val appModule = module {
         )
     }
 
-    // TODO(B07) à TODO(B18) : un viewModel par écran restant.
+    // (B07) Édition d'un enfant : enfantId (nullable) lu par
+    // SavedStateHandle.toRoute<EditionEnfant>(). Pas de `ReferenceRepository` ni de
+    // `CalculateurEcheancier` ici — le formulaire n'affiche aucun échéancier ; il a besoin
+    // du jour courant pour la seule validation de la date de naissance.
+    viewModel {
+        EditionEnfantViewModel(
+            savedStateHandle = get(),
+            enfants = get(),
+            horlogeJour = get(),
+        )
+    }
+
+    // TODO(B09) à TODO(B18) : un viewModel par écran restant.
 }
