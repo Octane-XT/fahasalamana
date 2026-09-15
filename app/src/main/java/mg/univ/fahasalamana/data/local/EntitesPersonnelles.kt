@@ -57,20 +57,24 @@ data class EnfantEntity(
  *
  * Contraintes portées par la base plutôt que par le code appelant :
  * - suppression d'un enfant → suppression de ses administrations (`CASCADE`) ;
- * - **une seule administration par couple (enfant, vaccin)** (index unique, règle R5) ;
- * - le `vaccinId` référence le calendrier de référence.
+ * - **une seule administration par couple (enfant, vaccin)** (index unique, règle R5).
  *
- * La clé étrangère vers `vaccins_reference` est **différée** (`deferred = true`) :
- * `ReferenceDao.remplacerCalendrier` vide puis réécrit la table de référence dans une
- * seule transaction, et sans report du contrôle au `COMMIT` le simple `DELETE` échouerait
- * alors qu'aucune administration n'est réellement orpheline à la fin de la transaction.
+ * **Aucune clé étrangère sur `vaccinId`**, et c'est un choix, tranché par le binôme en B04
+ * (point n° 5 du suivi). Le §B5.2 en demandait une, tout en exigeant qu'une administration
+ * survive au retrait de son vaccin du calendrier : les deux sont incompatibles. Avec la clé
+ * étrangère, une mise à jour qui retire un vaccin déjà administré échoue au `COMMIT` et
+ * annule **tout** le remplacement du calendrier ; l'utilisateur se retrouverait avec un
+ * calendrier bloqué à cause d'une dose qu'il a correctement saisie. Une donnée de santé
+ * déjà saisie l'emporte sur l'intégrité référentielle d'un contenu remplaçable : la dose
+ * est conservée et la fiche l'affiche « vaccin retiré du calendrier ».
  *
- * TODO(B04) : point à trancher à deux. Tel qu'écrit, si une nouvelle version du calendrier
- * **retire** un vaccin déjà administré, le contrôle différé échoue au `COMMIT` et la mise à
- * jour est annulée en bloc — alors que §B5.2 demande de conserver l'administration et de
- * l'afficher « vaccin retiré du calendrier ». Deux sorties possibles : retirer cette clé
- * étrangère en ne gardant que l'index, ou conserver dans le calendrier les vaccins retirés
- * mais encore référencés. Ne pas trancher seul : le CDC se contredit sur ce point.
+ * L'index sur `vaccinId` reste, lui : il sert les jointures avec `vaccins_reference` et la
+ * recherche des administrations d'un vaccin donné. Ce qui disparaît, c'est la contrainte,
+ * pas le chemin d'accès.
+ *
+ * Conséquence assumée : un `vaccinId` inconnu du calendrier est possible en base. Tout
+ * lecteur doit donc traiter le cas « référence introuvable » — c'est déjà ce que fait
+ * `VaccinReferenceDao.lireVaccin`, qui renvoie `null`.
  */
 @Entity(
     tableName = "vaccins_administres",
@@ -81,17 +85,13 @@ data class EnfantEntity(
             childColumns = ["enfantId"],
             onDelete = ForeignKey.CASCADE,
         ),
-        ForeignKey(
-            entity = VaccinReferenceEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["vaccinId"],
-            deferred = true,
-        ),
     ],
     indices = [
         // Unicité (enfant, vaccin) de R5. `enfantId` étant la colonne de tête de cet index,
         // il sert aussi d'index de la clé étrangère vers `enfants` : pas d'index séparé.
         Index(value = ["enfantId", "vaccinId"], unique = true),
+        // Conservé bien qu'aucune clé étrangère ne porte plus sur cette colonne : c'est
+        // l'index de jointure avec `vaccins_reference` (voir la note ci-dessus).
         Index(value = ["vaccinId"]),
     ],
 )

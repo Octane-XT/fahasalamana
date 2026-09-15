@@ -55,8 +55,41 @@ class PreferencesLocales(context: Context) {
         prefs[Cles.DERNIERE_VERIFICATION]?.let { LocalDate.parse(it) }
     }
 
+    /**
+     * Mention de provenance du calendrier chargé en base (§B5.1), affichée telle quelle.
+     * Chaîne vide tant qu'aucun contenu n'a été chargé.
+     */
+    val calendrierSource: Flow<String> = preferences.map { it[Cles.CALENDRIER_SOURCE].orEmpty() }
+
+    /**
+     * Jour de publication du calendrier chargé en base, `null` tant qu'aucun contenu n'a été chargé.
+     *
+     * C'est la date **du fichier publié**, pas celle de son chargement sur l'appareil.
+     * Texte ISO en DataStore, comme partout ailleurs dans le projet.
+     */
+    val calendrierPublieLe: Flow<LocalDate?> = preferences.map { prefs ->
+        prefs[Cles.CALENDRIER_PUBLIE_LE]?.let { LocalDate.parse(it) }
+    }
+
     suspend fun enregistrerVersionCalendrier(version: Int) {
         datastore.edit { it[Cles.CALENDRIER_VERSION] = version }
+    }
+
+    /**
+     * Écrit d'un seul `edit` la version, la source et la date de publication du calendrier
+     * qui vient d'entrer en base (B04, et B19 après une mise à jour).
+     *
+     * À préférer à [enregistrerVersionCalendrier] : les trois valeurs décrivent le même
+     * fichier et alimentent le même `InfosSource`. Les écrire séparément ouvrirait une
+     * fenêtre où l'écran « À propos des données » annoncerait une version avec la source
+     * de la précédente.
+     */
+    suspend fun enregistrerInfosCalendrier(version: Int, source: String, publieLe: LocalDate) {
+        datastore.edit { prefs ->
+            prefs[Cles.CALENDRIER_VERSION] = version
+            prefs[Cles.CALENDRIER_SOURCE] = source
+            prefs[Cles.CALENDRIER_PUBLIE_LE] = publieLe.toString()
+        }
     }
 
     suspend fun enregistrerVersionAnnuaire(version: Int) {
@@ -105,6 +138,8 @@ class PreferencesLocales(context: Context) {
     /** Noms de clés figés : les renommer perdrait les réglages des installations existantes. */
     private object Cles {
         val CALENDRIER_VERSION = intPreferencesKey("calendrier_version")
+        val CALENDRIER_SOURCE = stringPreferencesKey("calendrier_source")
+        val CALENDRIER_PUBLIE_LE = stringPreferencesKey("calendrier_publie_le")
         val ANNUAIRE_VERSION = intPreferencesKey("annuaire_version")
         val DERNIERE_VERIFICATION = stringPreferencesKey("derniere_verification")
         val PIN_HASH = stringPreferencesKey("pin_hash")

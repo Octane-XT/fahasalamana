@@ -4,6 +4,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import mg.univ.fahasalamana.domain.Centre
+import mg.univ.fahasalamana.domain.District
+import mg.univ.fahasalamana.domain.Region
 import mg.univ.fahasalamana.domain.VaccinReference
 
 /*
@@ -133,7 +136,32 @@ fun VaccinReference.toEntity(): VaccinReferenceEntity = VaccinReferenceEntity(
 @JvmName("vaccinsReferenceToEntity")
 fun List<VaccinReference>.toEntity(): List<VaccinReferenceEntity> = map { it.toEntity() }
 
-// TODO(B04) : `RegionEntity`, `DistrictEntity` et `CentreEntity` n'ont pas encore de
-// modèle correspondant dans `domain/` (`Region`, `District`, `Centre` sont attendus par
-// `CentreRepository`, §B6, mais absents du paquet `domain` livré en B05). Les conversions
-// `toDomain()` de l'annuaire seront ajoutées ici en même temps que `CentreRepositoryImpl`.
+// Annuaire : `Region`, `District` et `Centre` ont été ajoutés au paquet `domain` en B04
+// (fichier `domain/Annuaire.kt`), `CentreRepository` les exigeant d'après le §B6.
+//
+// Pas de `toEntity()` dans l'autre sens pour l'annuaire : rien, dans l'application, ne
+// fabrique un centre. L'annuaire n'entre en base que depuis un fichier publié, et ce
+// chemin-là part des DTO du §B5.1 (voir `MappageReference.kt`), pas du domaine.
+
+fun RegionEntity.toDomain(): Region = Region(id = id, nom = nom)
+
+@JvmName("regionsToDomain")
+fun List<RegionEntity>.toDomain(): List<Region> = map { it.toDomain() }
+
+fun DistrictEntity.toDomain(): District = District(id = id, regionId = regionId, nom = nom)
+
+@JvmName("districtsToDomain")
+fun List<DistrictEntity>.toDomain(): List<District> = map { it.toDomain() }
+
+fun CentreEntity.toDomain(): Centre = Centre(
+    id = id,
+    districtId = districtId,
+    nom = nom,
+    type = type,
+    telephone = telephone,
+    horaires = horaires,
+    adresse = adresse,
+)
+
+@JvmName("centresToDomain")
+fun List<CentreEntity>.toDomain(): List<Centre> = map { it.toDomain() }
