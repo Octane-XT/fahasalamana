@@ -1,0 +1,3818 @@
+{
+ "schemaVersion": 1,
+ "version": 2,
+ "publieLe": "2026-09-14",
+ "source": "Annuaire fictif généré pour un projet universitaire",
+ "regions": [
+  {
+   "id": "analamanga",
+   "nom": "Analamanga",
+   "districts": [
+    {
+     "id": "antananarivo-i",
+     "nom": "Antananarivo I",
+     "centres": [
+      {
+       "id": "antananarivo-i-csb1-ambohivato",
+       "nom": "CSB1 Ambohivato",
+       "type": "CSB1",
+       "telephone": "+261 32 38 242 23",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohivato, Antananarivo I"
+      },
+      {
+       "id": "antananarivo-i-csb1-ampasilava",
+       "nom": "CSB1 Ampasilava",
+       "type": "CSB1",
+       "telephone": "+261 32 58 180 80",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasilava, Antananarivo I"
+      },
+      {
+       "id": "antananarivo-i-csb1-andrafotsy",
+       "nom": "CSB1 Andrafotsy",
+       "type": "CSB1",
+       "telephone": "+261 32 55 967 54",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Andrafotsy, Antananarivo I"
+      },
+      {
+       "id": "antananarivo-i-csb1-ankafotsy",
+       "nom": "CSB1 Ankafotsy",
+       "type": "CSB1",
+       "telephone": "+261 33 45 259 37",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ankafotsy, Antananarivo I"
+      },
+      {
+       "id": "antananarivo-i-csb2-antanlava",
+       "nom": "CSB2 Antanlava",
+       "type": "CSB2",
+       "telephone": "+261 33 38 559 85",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanlava, Antananarivo I"
+      },
+      {
+       "id": "antananarivo-i-csb2-antanvato",
+       "nom": "CSB2 Antanvato",
+       "type": "CSB2",
+       "telephone": "+261 32 39 987 22",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antanvato, Antananarivo I"
+      },
+      {
+       "id": "antananarivo-i-csb2-mahamanga",
+       "nom": "CSB2 Mahamanga",
+       "type": "CSB2",
+       "telephone": "+261 32 21 323 39",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahamanga, Antananarivo I"
+      },
+      {
+       "id": "antananarivo-i-csb2-soarano",
+       "nom": "CSB2 Soarano",
+       "type": "CSB2",
+       "telephone": "+261 34 34 821 18",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Soarano, Antananarivo I"
+      }
+     ]
+    },
+    {
+     "id": "antananarivo-ii",
+     "nom": "Antananarivo II",
+     "centres": [
+      {
+       "id": "antananarivo-ii-csb1-antanmanga",
+       "nom": "CSB1 Antanmanga",
+       "type": "CSB1",
+       "telephone": "+261 33 61 374 18",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antanmanga, Antananarivo II"
+      },
+      {
+       "id": "antananarivo-ii-csb2-andratsimo",
+       "nom": "CSB2 Andratsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 31 646 41",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Andratsimo, Antananarivo II"
+      },
+      {
+       "id": "antananarivo-ii-csb2-mahavato",
+       "nom": "CSB2 Mahavato",
+       "type": "CSB2",
+       "telephone": "+261 34 98 670 38",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Mahavato, Antananarivo II"
+      },
+      {
+       "id": "antananarivo-ii-csb2-tsarabe",
+       "nom": "CSB2 Tsarabe",
+       "type": "CSB2",
+       "telephone": "+261 33 55 314 95",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsarabe, Antananarivo II"
+      },
+      {
+       "id": "antananarivo-ii-csb2-tsarakely",
+       "nom": "CSB2 Tsarakely",
+       "type": "CSB2",
+       "telephone": "+261 34 73 505 92",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsarakely, Antananarivo II"
+      }
+     ]
+    },
+    {
+     "id": "ambohidratrimo",
+     "nom": "Ambohidratrimo",
+     "centres": [
+      {
+       "id": "ambohidratrimo-csb1-andrabe",
+       "nom": "CSB1 Andrabe",
+       "type": "CSB1",
+       "telephone": "+261 34 30 911 97",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andrabe, Ambohidratrimo"
+      },
+      {
+       "id": "ambohidratrimo-csb2-andrafotsy",
+       "nom": "CSB2 Andrafotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 86 579 77",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Andrafotsy, Ambohidratrimo"
+      },
+      {
+       "id": "ambohidratrimo-csb2-ankakely",
+       "nom": "CSB2 Ankakely",
+       "type": "CSB2",
+       "telephone": "+261 34 81 651 43",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankakely, Ambohidratrimo"
+      },
+      {
+       "id": "ambohidratrimo-csb2-maharano",
+       "nom": "CSB2 Maharano",
+       "type": "CSB2",
+       "telephone": "+261 32 27 621 73",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Maharano, Ambohidratrimo"
+      }
+     ]
+    },
+    {
+     "id": "ankazobe",
+     "nom": "Ankazobe",
+     "centres": [
+      {
+       "id": "ankazobe-csb1-ampasitsoa",
+       "nom": "CSB1 Ampasitsoa",
+       "type": "CSB1",
+       "telephone": "+261 34 26 231 94",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasitsoa, Ankazobe"
+      },
+      {
+       "id": "ankazobe-csb1-andralava",
+       "nom": "CSB1 Andralava",
+       "type": "CSB1",
+       "telephone": "+261 33 92 448 24",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Andralava, Ankazobe"
+      },
+      {
+       "id": "ankazobe-csb2-ambatokely",
+       "nom": "CSB2 Ambatokely",
+       "type": "CSB2",
+       "telephone": "+261 32 40 999 82",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambatokely, Ankazobe"
+      },
+      {
+       "id": "ankazobe-csb2-ambatolava",
+       "nom": "CSB2 Ambatolava",
+       "type": "CSB2",
+       "telephone": "+261 34 35 256 57",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambatolava, Ankazobe"
+      },
+      {
+       "id": "ankazobe-csb2-ankamainty",
+       "nom": "CSB2 Ankamainty",
+       "type": "CSB2",
+       "telephone": "+261 32 43 612 32",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankamainty, Ankazobe"
+      },
+      {
+       "id": "ankazobe-csb2-ankavato",
+       "nom": "CSB2 Ankavato",
+       "type": "CSB2",
+       "telephone": "+261 34 87 533 37",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ankavato, Ankazobe"
+      },
+      {
+       "id": "ankazobe-csb2-manjamanga",
+       "nom": "CSB2 Manjamanga",
+       "type": "CSB2",
+       "telephone": "+261 34 51 600 12",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjamanga, Ankazobe"
+      }
+     ]
+    },
+    {
+     "id": "andramasina",
+     "nom": "Andramasina",
+     "centres": [
+      {
+       "id": "andramasina-csb1-andramanga",
+       "nom": "CSB1 Andramanga",
+       "type": "CSB1",
+       "telephone": "+261 32 18 132 52",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Andramanga, Andramasina"
+      },
+      {
+       "id": "andramasina-csb1-andrarano",
+       "nom": "CSB1 Andrarano",
+       "type": "CSB1",
+       "telephone": "+261 32 85 667 39",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Andrarano, Andramasina"
+      },
+      {
+       "id": "andramasina-csb1-andratsoa",
+       "nom": "CSB1 Andratsoa",
+       "type": "CSB1",
+       "telephone": "+261 34 65 462 64",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andratsoa, Andramasina"
+      },
+      {
+       "id": "andramasina-csb1-antankely",
+       "nom": "CSB1 Antankely",
+       "type": "CSB1",
+       "telephone": "+261 34 67 243 64",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antankely, Andramasina"
+      },
+      {
+       "id": "andramasina-csb2-ambohitsoa",
+       "nom": "CSB2 Ambohitsoa",
+       "type": "CSB2",
+       "telephone": "+261 32 61 845 53",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohitsoa, Andramasina"
+      },
+      {
+       "id": "andramasina-csb2-antanvato",
+       "nom": "CSB2 Antanvato",
+       "type": "CSB2",
+       "telephone": "+261 34 72 319 79",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antanvato, Andramasina"
+      },
+      {
+       "id": "andramasina-csb2-maharano",
+       "nom": "CSB2 Maharano",
+       "type": "CSB2",
+       "telephone": "+261 33 76 562 25",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Maharano, Andramasina"
+      },
+      {
+       "id": "andramasina-csb2-soatsimo",
+       "nom": "CSB2 Soatsimo",
+       "type": "CSB2",
+       "telephone": "+261 33 41 903 70",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Soatsimo, Andramasina"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vakinankaratra",
+   "nom": "Vakinankaratra",
+   "districts": [
+    {
+     "id": "antsirabe-i",
+     "nom": "Antsirabe I",
+     "centres": [
+      {
+       "id": "antsirabe-i-csb1-ankafotsy",
+       "nom": "CSB1 Ankafotsy",
+       "type": "CSB1",
+       "telephone": "+261 32 59 371 68",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ankafotsy, Antsirabe I"
+      },
+      {
+       "id": "antsirabe-i-csb1-antanbe",
+       "nom": "CSB1 Antanbe",
+       "type": "CSB1",
+       "telephone": "+261 33 72 592 37",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antanbe, Antsirabe I"
+      },
+      {
+       "id": "antsirabe-i-csb2-antantsoa",
+       "nom": "CSB2 Antantsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 80 200 16",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Antantsoa, Antsirabe I"
+      },
+      {
+       "id": "antsirabe-i-csb2-manjamainty",
+       "nom": "CSB2 Manjamainty",
+       "type": "CSB2",
+       "telephone": "+261 32 34 403 37",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjamainty, Antsirabe I"
+      },
+      {
+       "id": "antsirabe-i-csb2-manjamanga",
+       "nom": "CSB2 Manjamanga",
+       "type": "CSB2",
+       "telephone": "+261 34 50 158 16",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjamanga, Antsirabe I"
+      }
+     ]
+    },
+    {
+     "id": "antsirabe-ii",
+     "nom": "Antsirabe II",
+     "centres": [
+      {
+       "id": "antsirabe-ii-csb1-manjakely",
+       "nom": "CSB1 Manjakely",
+       "type": "CSB1",
+       "telephone": "+261 34 43 235 54",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjakely, Antsirabe II"
+      },
+      {
+       "id": "antsirabe-ii-csb1-tsaravato",
+       "nom": "CSB1 Tsaravato",
+       "type": "CSB1",
+       "telephone": "+261 32 66 953 79",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsaravato, Antsirabe II"
+      },
+      {
+       "id": "antsirabe-ii-csb2-andrafotsy",
+       "nom": "CSB2 Andrafotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 84 678 76",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Andrafotsy, Antsirabe II"
+      },
+      {
+       "id": "antsirabe-ii-csb2-andrakely",
+       "nom": "CSB2 Andrakely",
+       "type": "CSB2",
+       "telephone": "+261 33 25 683 41",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Andrakely, Antsirabe II"
+      },
+      {
+       "id": "antsirabe-ii-csb2-ankamanga",
+       "nom": "CSB2 Ankamanga",
+       "type": "CSB2",
+       "telephone": "+261 34 20 971 33",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankamanga, Antsirabe II"
+      },
+      {
+       "id": "antsirabe-ii-csb2-antanrano",
+       "nom": "CSB2 Antanrano",
+       "type": "CSB2",
+       "telephone": "+261 32 43 505 26",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanrano, Antsirabe II"
+      },
+      {
+       "id": "antsirabe-ii-csb2-tsaratsoa",
+       "nom": "CSB2 Tsaratsoa",
+       "type": "CSB2",
+       "telephone": "+261 32 68 736 82",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsaratsoa, Antsirabe II"
+      }
+     ]
+    },
+    {
+     "id": "betafo",
+     "nom": "Betafo",
+     "centres": [
+      {
+       "id": "betafo-csb1-ambatotsoa",
+       "nom": "CSB1 Ambatotsoa",
+       "type": "CSB1",
+       "telephone": "+261 32 80 259 44",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatotsoa, Betafo"
+      },
+      {
+       "id": "betafo-csb1-tsarabe",
+       "nom": "CSB1 Tsarabe",
+       "type": "CSB1",
+       "telephone": "+261 34 43 265 66",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsarabe, Betafo"
+      },
+      {
+       "id": "betafo-csb2-ambohitsoa",
+       "nom": "CSB2 Ambohitsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 64 949 45",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohitsoa, Betafo"
+      },
+      {
+       "id": "betafo-csb2-andrabe",
+       "nom": "CSB2 Andrabe",
+       "type": "CSB2",
+       "telephone": "+261 34 14 954 57",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Andrabe, Betafo"
+      },
+      {
+       "id": "betafo-csb2-ankamanga",
+       "nom": "CSB2 Ankamanga",
+       "type": "CSB2",
+       "telephone": "+261 33 56 915 15",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ankamanga, Betafo"
+      },
+      {
+       "id": "betafo-csb2-antanrano",
+       "nom": "CSB2 Antanrano",
+       "type": "CSB2",
+       "telephone": "+261 32 97 749 43",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antanrano, Betafo"
+      },
+      {
+       "id": "betafo-csb2-manjamanga",
+       "nom": "CSB2 Manjamanga",
+       "type": "CSB2",
+       "telephone": "+261 34 80 406 94",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjamanga, Betafo"
+      }
+     ]
+    },
+    {
+     "id": "faratsiho",
+     "nom": "Faratsiho",
+     "centres": [
+      {
+       "id": "faratsiho-csb1-ankabe",
+       "nom": "CSB1 Ankabe",
+       "type": "CSB1",
+       "telephone": "+261 33 13 283 52",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankabe, Faratsiho"
+      },
+      {
+       "id": "faratsiho-csb2-antankely",
+       "nom": "CSB2 Antankely",
+       "type": "CSB2",
+       "telephone": "+261 33 54 412 39",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antankely, Faratsiho"
+      },
+      {
+       "id": "faratsiho-csb2-antantsoa",
+       "nom": "CSB2 Antantsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 81 995 62",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antantsoa, Faratsiho"
+      },
+      {
+       "id": "faratsiho-csb2-antanvato",
+       "nom": "CSB2 Antanvato",
+       "type": "CSB2",
+       "telephone": "+261 32 99 210 58",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Antanvato, Faratsiho"
+      }
+     ]
+    },
+    {
+     "id": "ambatolampy",
+     "nom": "Ambatolampy",
+     "centres": [
+      {
+       "id": "ambatolampy-csb2-ankatsimo",
+       "nom": "CSB2 Ankatsimo",
+       "type": "CSB2",
+       "telephone": "+261 33 14 211 86",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankatsimo, Ambatolampy"
+      },
+      {
+       "id": "ambatolampy-csb2-antanfotsy",
+       "nom": "CSB2 Antanfotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 45 985 18",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanfotsy, Ambatolampy"
+      },
+      {
+       "id": "ambatolampy-csb2-manjafotsy",
+       "nom": "CSB2 Manjafotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 78 439 13",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjafotsy, Ambatolampy"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "itasy",
+   "nom": "Itasy",
+   "districts": [
+    {
+     "id": "miarinarivo",
+     "nom": "Miarinarivo",
+     "centres": [
+      {
+       "id": "miarinarivo-csb2-ambatolava",
+       "nom": "CSB2 Ambatolava",
+       "type": "CSB2",
+       "telephone": "+261 33 95 518 51",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatolava, Miarinarivo"
+      },
+      {
+       "id": "miarinarivo-csb2-ambohifotsy",
+       "nom": "CSB2 Ambohifotsy",
+       "type": "CSB2",
+       "telephone": "+261 32 76 925 78",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambohifotsy, Miarinarivo"
+      },
+      {
+       "id": "miarinarivo-csb2-ankakely",
+       "nom": "CSB2 Ankakely",
+       "type": "CSB2",
+       "telephone": "+261 33 95 488 96",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ankakely, Miarinarivo"
+      },
+      {
+       "id": "miarinarivo-csb2-mahatsoa",
+       "nom": "CSB2 Mahatsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 52 738 50",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahatsoa, Miarinarivo"
+      },
+      {
+       "id": "miarinarivo-csb2-tsarafotsy",
+       "nom": "CSB2 Tsarafotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 75 218 59",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsarafotsy, Miarinarivo"
+      }
+     ]
+    },
+    {
+     "id": "soavinandriana",
+     "nom": "Soavinandriana",
+     "centres": [
+      {
+       "id": "soavinandriana-csb1-andrafotsy",
+       "nom": "CSB1 Andrafotsy",
+       "type": "CSB1",
+       "telephone": "+261 32 32 923 99",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andrafotsy, Soavinandriana"
+      },
+      {
+       "id": "soavinandriana-csb1-ankamanga",
+       "nom": "CSB1 Ankamanga",
+       "type": "CSB1",
+       "telephone": "+261 32 41 586 88",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankamanga, Soavinandriana"
+      },
+      {
+       "id": "soavinandriana-csb2-ambatofotsy",
+       "nom": "CSB2 Ambatofotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 10 411 46",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambatofotsy, Soavinandriana"
+      },
+      {
+       "id": "soavinandriana-csb2-antanlava",
+       "nom": "CSB2 Antanlava",
+       "type": "CSB2",
+       "telephone": "+261 33 31 774 20",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanlava, Soavinandriana"
+      },
+      {
+       "id": "soavinandriana-csb2-mahatsimo",
+       "nom": "CSB2 Mahatsimo",
+       "type": "CSB2",
+       "telephone": "+261 32 99 493 73",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahatsimo, Soavinandriana"
+      },
+      {
+       "id": "soavinandriana-csb2-soarano",
+       "nom": "CSB2 Soarano",
+       "type": "CSB2",
+       "telephone": "+261 32 40 788 49",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Soarano, Soavinandriana"
+      },
+      {
+       "id": "soavinandriana-csb2-soatsimo",
+       "nom": "CSB2 Soatsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 51 576 66",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Soatsimo, Soavinandriana"
+      }
+     ]
+    },
+    {
+     "id": "arivonimamo",
+     "nom": "Arivonimamo",
+     "centres": [
+      {
+       "id": "arivonimamo-csb2-ambatokely",
+       "nom": "CSB2 Ambatokely",
+       "type": "CSB2",
+       "telephone": "+261 34 45 884 76",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatokely, Arivonimamo"
+      },
+      {
+       "id": "arivonimamo-csb2-antantsoa",
+       "nom": "CSB2 Antantsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 27 920 69",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antantsoa, Arivonimamo"
+      },
+      {
+       "id": "arivonimamo-csb2-soalava",
+       "nom": "CSB2 Soalava",
+       "type": "CSB2",
+       "telephone": "+261 33 80 556 30",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Soalava, Arivonimamo"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bongolava",
+   "nom": "Bongolava",
+   "districts": [
+    {
+     "id": "tsiroanomandidy",
+     "nom": "Tsiroanomandidy",
+     "centres": [
+      {
+       "id": "tsiroanomandidy-csb1-ambatomainty",
+       "nom": "CSB1 Ambatomainty",
+       "type": "CSB1",
+       "telephone": "+261 32 46 340 44",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatomainty, Tsiroanomandidy"
+      },
+      {
+       "id": "tsiroanomandidy-csb2-ambohifotsy",
+       "nom": "CSB2 Ambohifotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 95 795 61",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambohifotsy, Tsiroanomandidy"
+      },
+      {
+       "id": "tsiroanomandidy-csb2-ambohikely",
+       "nom": "CSB2 Ambohikely",
+       "type": "CSB2",
+       "telephone": "+261 33 59 888 84",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohikely, Tsiroanomandidy"
+      },
+      {
+       "id": "tsiroanomandidy-csb2-ankatsimo",
+       "nom": "CSB2 Ankatsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 13 503 85",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankatsimo, Tsiroanomandidy"
+      },
+      {
+       "id": "tsiroanomandidy-csb2-antantsoa",
+       "nom": "CSB2 Antantsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 62 438 79",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antantsoa, Tsiroanomandidy"
+      },
+      {
+       "id": "tsiroanomandidy-csb2-mahamainty",
+       "nom": "CSB2 Mahamainty",
+       "type": "CSB2",
+       "telephone": "+261 32 55 405 59",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahamainty, Tsiroanomandidy"
+      },
+      {
+       "id": "tsiroanomandidy-csb2-manjatsimo",
+       "nom": "CSB2 Manjatsimo",
+       "type": "CSB2",
+       "telephone": "+261 32 72 324 44",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjatsimo, Tsiroanomandidy"
+      },
+      {
+       "id": "tsiroanomandidy-csb2-manjatsoa",
+       "nom": "CSB2 Manjatsoa",
+       "type": "CSB2",
+       "telephone": "+261 32 29 336 59",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Manjatsoa, Tsiroanomandidy"
+      }
+     ]
+    },
+    {
+     "id": "fenoarivobe",
+     "nom": "Fenoarivobe",
+     "centres": [
+      {
+       "id": "fenoarivobe-csb2-ambatotsoa",
+       "nom": "CSB2 Ambatotsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 12 867 79",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambatotsoa, Fenoarivobe"
+      },
+      {
+       "id": "fenoarivobe-csb2-antanmainty",
+       "nom": "CSB2 Antanmainty",
+       "type": "CSB2",
+       "telephone": "+261 33 53 879 58",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanmainty, Fenoarivobe"
+      },
+      {
+       "id": "fenoarivobe-csb2-mahabe",
+       "nom": "CSB2 Mahabe",
+       "type": "CSB2",
+       "telephone": "+261 33 33 151 43",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahabe, Fenoarivobe"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atsinanana",
+   "nom": "Atsinanana",
+   "districts": [
+    {
+     "id": "toamasina-i",
+     "nom": "Toamasina I",
+     "centres": [
+      {
+       "id": "toamasina-i-csb1-andramanga",
+       "nom": "CSB1 Andramanga",
+       "type": "CSB1",
+       "telephone": "+261 32 41 304 12",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Andramanga, Toamasina I"
+      },
+      {
+       "id": "toamasina-i-csb1-ankamainty",
+       "nom": "CSB1 Ankamainty",
+       "type": "CSB1",
+       "telephone": "+261 34 24 677 37",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankamainty, Toamasina I"
+      },
+      {
+       "id": "toamasina-i-csb2-ambatorano",
+       "nom": "CSB2 Ambatorano",
+       "type": "CSB2",
+       "telephone": "+261 32 87 721 24",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambatorano, Toamasina I"
+      },
+      {
+       "id": "toamasina-i-csb2-andratsimo",
+       "nom": "CSB2 Andratsimo",
+       "type": "CSB2",
+       "telephone": "+261 32 49 689 96",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andratsimo, Toamasina I"
+      },
+      {
+       "id": "toamasina-i-csb2-antantsoa",
+       "nom": "CSB2 Antantsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 98 950 90",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antantsoa, Toamasina I"
+      }
+     ]
+    },
+    {
+     "id": "toamasina-ii",
+     "nom": "Toamasina II",
+     "centres": [
+      {
+       "id": "toamasina-ii-csb2-ambatotsimo",
+       "nom": "CSB2 Ambatotsimo",
+       "type": "CSB2",
+       "telephone": "+261 32 82 901 15",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatotsimo, Toamasina II"
+      },
+      {
+       "id": "toamasina-ii-csb2-ampasitsoa",
+       "nom": "CSB2 Ampasitsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 56 750 68",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasitsoa, Toamasina II"
+      },
+      {
+       "id": "toamasina-ii-csb2-maharano",
+       "nom": "CSB2 Maharano",
+       "type": "CSB2",
+       "telephone": "+261 32 74 763 53",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Maharano, Toamasina II"
+      }
+     ]
+    },
+    {
+     "id": "vatomandry",
+     "nom": "Vatomandry",
+     "centres": [
+      {
+       "id": "vatomandry-csb1-ampasirano",
+       "nom": "CSB1 Ampasirano",
+       "type": "CSB1",
+       "telephone": "+261 32 72 317 55",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasirano, Vatomandry"
+      },
+      {
+       "id": "vatomandry-csb1-antanfotsy",
+       "nom": "CSB1 Antanfotsy",
+       "type": "CSB1",
+       "telephone": "+261 33 81 876 40",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antanfotsy, Vatomandry"
+      },
+      {
+       "id": "vatomandry-csb1-manjavato",
+       "nom": "CSB1 Manjavato",
+       "type": "CSB1",
+       "telephone": "+261 34 78 893 71",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjavato, Vatomandry"
+      },
+      {
+       "id": "vatomandry-csb2-ambatotsimo",
+       "nom": "CSB2 Ambatotsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 45 669 11",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambatotsimo, Vatomandry"
+      },
+      {
+       "id": "vatomandry-csb2-antanmainty",
+       "nom": "CSB2 Antanmainty",
+       "type": "CSB2",
+       "telephone": "+261 34 88 784 58",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanmainty, Vatomandry"
+      },
+      {
+       "id": "vatomandry-csb2-soavato",
+       "nom": "CSB2 Soavato",
+       "type": "CSB2",
+       "telephone": "+261 33 41 950 21",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Soavato, Vatomandry"
+      }
+     ]
+    },
+    {
+     "id": "brickaville",
+     "nom": "Brickaville",
+     "centres": [
+      {
+       "id": "brickaville-csb1-antanmainty",
+       "nom": "CSB1 Antanmainty",
+       "type": "CSB1",
+       "telephone": "+261 33 85 878 77",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanmainty, Brickaville"
+      },
+      {
+       "id": "brickaville-csb1-antanvato",
+       "nom": "CSB1 Antanvato",
+       "type": "CSB1",
+       "telephone": "+261 32 56 283 48",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Antanvato, Brickaville"
+      },
+      {
+       "id": "brickaville-csb2-ampasimainty",
+       "nom": "CSB2 Ampasimainty",
+       "type": "CSB2",
+       "telephone": "+261 32 21 401 38",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasimainty, Brickaville"
+      },
+      {
+       "id": "brickaville-csb2-ankamainty",
+       "nom": "CSB2 Ankamainty",
+       "type": "CSB2",
+       "telephone": "+261 32 11 687 46",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankamainty, Brickaville"
+      },
+      {
+       "id": "brickaville-csb2-antantsoa",
+       "nom": "CSB2 Antantsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 34 423 25",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antantsoa, Brickaville"
+      },
+      {
+       "id": "brickaville-csb2-antanvato",
+       "nom": "CSB2 Antanvato",
+       "type": "CSB2",
+       "telephone": "+261 34 84 477 70",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanvato, Brickaville"
+      },
+      {
+       "id": "brickaville-csb2-manjabe",
+       "nom": "CSB2 Manjabe",
+       "type": "CSB2",
+       "telephone": "+261 33 15 155 80",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjabe, Brickaville"
+      },
+      {
+       "id": "brickaville-csb2-manjarano",
+       "nom": "CSB2 Manjarano",
+       "type": "CSB2",
+       "telephone": "+261 33 99 564 44",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjarano, Brickaville"
+      }
+     ]
+    },
+    {
+     "id": "mahanoro",
+     "nom": "Mahanoro",
+     "centres": [
+      {
+       "id": "mahanoro-csb1-ankatsimo",
+       "nom": "CSB1 Ankatsimo",
+       "type": "CSB1",
+       "telephone": "+261 33 20 354 25",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankatsimo, Mahanoro"
+      },
+      {
+       "id": "mahanoro-csb1-antanvato",
+       "nom": "CSB1 Antanvato",
+       "type": "CSB1",
+       "telephone": "+261 34 20 260 40",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antanvato, Mahanoro"
+      },
+      {
+       "id": "mahanoro-csb1-mahamainty",
+       "nom": "CSB1 Mahamainty",
+       "type": "CSB1",
+       "telephone": "+261 32 83 744 97",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahamainty, Mahanoro"
+      },
+      {
+       "id": "mahanoro-csb2-soafotsy",
+       "nom": "CSB2 Soafotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 82 735 17",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Soafotsy, Mahanoro"
+      },
+      {
+       "id": "mahanoro-csb2-soatsimo",
+       "nom": "CSB2 Soatsimo",
+       "type": "CSB2",
+       "telephone": "+261 32 76 489 67",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Soatsimo, Mahanoro"
+      },
+      {
+       "id": "mahanoro-csb2-tsarabe",
+       "nom": "CSB2 Tsarabe",
+       "type": "CSB2",
+       "telephone": "+261 32 42 982 71",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsarabe, Mahanoro"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "analanjirofo",
+   "nom": "Analanjirofo",
+   "districts": [
+    {
+     "id": "fenoarivo-atsinanana",
+     "nom": "Fenoarivo Atsinanana",
+     "centres": [
+      {
+       "id": "fenoarivo-atsinanana-csb1-ankamanga",
+       "nom": "CSB1 Ankamanga",
+       "type": "CSB1",
+       "telephone": "+261 33 67 805 86",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankamanga, Fenoarivo Atsinanana"
+      },
+      {
+       "id": "fenoarivo-atsinanana-csb1-ankavato",
+       "nom": "CSB1 Ankavato",
+       "type": "CSB1",
+       "telephone": "+261 34 82 395 66",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankavato, Fenoarivo Atsinanana"
+      },
+      {
+       "id": "fenoarivo-atsinanana-csb1-manjakely",
+       "nom": "CSB1 Manjakely",
+       "type": "CSB1",
+       "telephone": "+261 34 29 372 28",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjakely, Fenoarivo Atsinanana"
+      },
+      {
+       "id": "fenoarivo-atsinanana-csb1-soamanga",
+       "nom": "CSB1 Soamanga",
+       "type": "CSB1",
+       "telephone": "+261 33 51 718 42",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Soamanga, Fenoarivo Atsinanana"
+      },
+      {
+       "id": "fenoarivo-atsinanana-csb2-ambatofotsy",
+       "nom": "CSB2 Ambatofotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 74 652 73",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatofotsy, Fenoarivo Atsinanana"
+      },
+      {
+       "id": "fenoarivo-atsinanana-csb2-ambohikely",
+       "nom": "CSB2 Ambohikely",
+       "type": "CSB2",
+       "telephone": "+261 33 46 819 68",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohikely, Fenoarivo Atsinanana"
+      },
+      {
+       "id": "fenoarivo-atsinanana-csb2-antanvato",
+       "nom": "CSB2 Antanvato",
+       "type": "CSB2",
+       "telephone": "+261 34 85 777 35",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antanvato, Fenoarivo Atsinanana"
+      }
+     ]
+    },
+    {
+     "id": "soanierana-ivongo",
+     "nom": "Soanierana Ivongo",
+     "centres": [
+      {
+       "id": "soanierana-ivongo-csb1-ampasilava",
+       "nom": "CSB1 Ampasilava",
+       "type": "CSB1",
+       "telephone": "+261 34 66 384 33",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasilava, Soanierana Ivongo"
+      },
+      {
+       "id": "soanierana-ivongo-csb1-soatsimo",
+       "nom": "CSB1 Soatsimo",
+       "type": "CSB1",
+       "telephone": "+261 32 96 941 44",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Soatsimo, Soanierana Ivongo"
+      },
+      {
+       "id": "soanierana-ivongo-csb2-ampasitsoa",
+       "nom": "CSB2 Ampasitsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 54 518 52",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasitsoa, Soanierana Ivongo"
+      }
+     ]
+    },
+    {
+     "id": "sainte-marie",
+     "nom": "Sainte-Marie",
+     "centres": [
+      {
+       "id": "sainte-marie-csb1-ambatolava",
+       "nom": "CSB1 Ambatolava",
+       "type": "CSB1",
+       "telephone": "+261 32 46 548 99",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatolava, Sainte-Marie"
+      },
+      {
+       "id": "sainte-marie-csb1-ambohitsimo",
+       "nom": "CSB1 Ambohitsimo",
+       "type": "CSB1",
+       "telephone": "+261 32 30 418 80",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohitsimo, Sainte-Marie"
+      },
+      {
+       "id": "sainte-marie-csb1-ankarano",
+       "nom": "CSB1 Ankarano",
+       "type": "CSB1",
+       "telephone": "+261 33 98 607 46",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankarano, Sainte-Marie"
+      },
+      {
+       "id": "sainte-marie-csb1-manjarano",
+       "nom": "CSB1 Manjarano",
+       "type": "CSB1",
+       "telephone": "+261 34 73 740 66",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjarano, Sainte-Marie"
+      },
+      {
+       "id": "sainte-marie-csb2-ambatolava",
+       "nom": "CSB2 Ambatolava",
+       "type": "CSB2",
+       "telephone": "+261 34 44 525 71",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatolava, Sainte-Marie"
+      },
+      {
+       "id": "sainte-marie-csb2-ambohimainty",
+       "nom": "CSB2 Ambohimainty",
+       "type": "CSB2",
+       "telephone": "+261 32 50 358 51",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohimainty, Sainte-Marie"
+      },
+      {
+       "id": "sainte-marie-csb2-mahatsoa",
+       "nom": "CSB2 Mahatsoa",
+       "type": "CSB2",
+       "telephone": "+261 32 24 572 25",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Mahatsoa, Sainte-Marie"
+      },
+      {
+       "id": "sainte-marie-csb2-manjamanga",
+       "nom": "CSB2 Manjamanga",
+       "type": "CSB2",
+       "telephone": "+261 34 79 573 62",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjamanga, Sainte-Marie"
+      }
+     ]
+    },
+    {
+     "id": "vavatenina",
+     "nom": "Vavatenina",
+     "centres": [
+      {
+       "id": "vavatenina-csb1-ambatofotsy",
+       "nom": "CSB1 Ambatofotsy",
+       "type": "CSB1",
+       "telephone": "+261 33 74 373 10",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatofotsy, Vavatenina"
+      },
+      {
+       "id": "vavatenina-csb2-ambatotsimo",
+       "nom": "CSB2 Ambatotsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 94 601 29",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatotsimo, Vavatenina"
+      },
+      {
+       "id": "vavatenina-csb2-ampasirano",
+       "nom": "CSB2 Ampasirano",
+       "type": "CSB2",
+       "telephone": "+261 33 80 881 79",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasirano, Vavatenina"
+      },
+      {
+       "id": "vavatenina-csb2-manjabe",
+       "nom": "CSB2 Manjabe",
+       "type": "CSB2",
+       "telephone": "+261 33 34 713 75",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Manjabe, Vavatenina"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "alaotra-mangoro",
+   "nom": "Alaotra-Mangoro",
+   "districts": [
+    {
+     "id": "ambatondrazaka",
+     "nom": "Ambatondrazaka",
+     "centres": [
+      {
+       "id": "ambatondrazaka-csb1-ampasivato",
+       "nom": "CSB1 Ampasivato",
+       "type": "CSB1",
+       "telephone": "+261 33 89 809 60",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ampasivato, Ambatondrazaka"
+      },
+      {
+       "id": "ambatondrazaka-csb1-manjamainty",
+       "nom": "CSB1 Manjamainty",
+       "type": "CSB1",
+       "telephone": "+261 32 28 519 93",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Manjamainty, Ambatondrazaka"
+      },
+      {
+       "id": "ambatondrazaka-csb2-ambohibe",
+       "nom": "CSB2 Ambohibe",
+       "type": "CSB2",
+       "telephone": "+261 34 85 439 22",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambohibe, Ambatondrazaka"
+      },
+      {
+       "id": "ambatondrazaka-csb2-ampasifotsy",
+       "nom": "CSB2 Ampasifotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 94 911 93",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasifotsy, Ambatondrazaka"
+      },
+      {
+       "id": "ambatondrazaka-csb2-antankely",
+       "nom": "CSB2 Antankely",
+       "type": "CSB2",
+       "telephone": "+261 34 59 339 62",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Antankely, Ambatondrazaka"
+      },
+      {
+       "id": "ambatondrazaka-csb2-manjafotsy",
+       "nom": "CSB2 Manjafotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 90 835 72",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjafotsy, Ambatondrazaka"
+      }
+     ]
+    },
+    {
+     "id": "moramanga",
+     "nom": "Moramanga",
+     "centres": [
+      {
+       "id": "moramanga-csb1-ankatsoa",
+       "nom": "CSB1 Ankatsoa",
+       "type": "CSB1",
+       "telephone": "+261 34 58 734 97",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ankatsoa, Moramanga"
+      },
+      {
+       "id": "moramanga-csb1-antanvato",
+       "nom": "CSB1 Antanvato",
+       "type": "CSB1",
+       "telephone": "+261 32 21 544 22",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Antanvato, Moramanga"
+      },
+      {
+       "id": "moramanga-csb2-ambohimainty",
+       "nom": "CSB2 Ambohimainty",
+       "type": "CSB2",
+       "telephone": "+261 33 96 659 30",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohimainty, Moramanga"
+      },
+      {
+       "id": "moramanga-csb2-ankavato",
+       "nom": "CSB2 Ankavato",
+       "type": "CSB2",
+       "telephone": "+261 32 15 432 17",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ankavato, Moramanga"
+      },
+      {
+       "id": "moramanga-csb2-soabe",
+       "nom": "CSB2 Soabe",
+       "type": "CSB2",
+       "telephone": "+261 32 69 753 42",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Soabe, Moramanga"
+      },
+      {
+       "id": "moramanga-csb2-tsarafotsy",
+       "nom": "CSB2 Tsarafotsy",
+       "type": "CSB2",
+       "telephone": "+261 32 41 643 62",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsarafotsy, Moramanga"
+      },
+      {
+       "id": "moramanga-csb2-tsaratsimo",
+       "nom": "CSB2 Tsaratsimo",
+       "type": "CSB2",
+       "telephone": "+261 33 91 534 98",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsaratsimo, Moramanga"
+      }
+     ]
+    },
+    {
+     "id": "amparafaravola",
+     "nom": "Amparafaravola",
+     "centres": [
+      {
+       "id": "amparafaravola-csb2-ambatovato",
+       "nom": "CSB2 Ambatovato",
+       "type": "CSB2",
+       "telephone": "+261 32 94 505 45",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambatovato, Amparafaravola"
+      },
+      {
+       "id": "amparafaravola-csb2-ambohitsimo",
+       "nom": "CSB2 Ambohitsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 73 952 46",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambohitsimo, Amparafaravola"
+      },
+      {
+       "id": "amparafaravola-csb2-andramanga",
+       "nom": "CSB2 Andramanga",
+       "type": "CSB2",
+       "telephone": "+261 33 66 134 84",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Andramanga, Amparafaravola"
+      },
+      {
+       "id": "amparafaravola-csb2-ankatsoa",
+       "nom": "CSB2 Ankatsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 51 865 63",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ankatsoa, Amparafaravola"
+      },
+      {
+       "id": "amparafaravola-csb2-antanfotsy",
+       "nom": "CSB2 Antanfotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 23 342 58",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanfotsy, Amparafaravola"
+      },
+      {
+       "id": "amparafaravola-csb2-tsarakely",
+       "nom": "CSB2 Tsarakely",
+       "type": "CSB2",
+       "telephone": "+261 34 34 735 42",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsarakely, Amparafaravola"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "haute-matsiatra",
+   "nom": "Haute Matsiatra",
+   "districts": [
+    {
+     "id": "fianarantsoa-i",
+     "nom": "Fianarantsoa I",
+     "centres": [
+      {
+       "id": "fianarantsoa-i-csb1-manjarano",
+       "nom": "CSB1 Manjarano",
+       "type": "CSB1",
+       "telephone": "+261 34 74 379 31",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjarano, Fianarantsoa I"
+      },
+      {
+       "id": "fianarantsoa-i-csb2-ambatorano",
+       "nom": "CSB2 Ambatorano",
+       "type": "CSB2",
+       "telephone": "+261 32 69 177 28",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambatorano, Fianarantsoa I"
+      },
+      {
+       "id": "fianarantsoa-i-csb2-mahalava",
+       "nom": "CSB2 Mahalava",
+       "type": "CSB2",
+       "telephone": "+261 33 21 909 60",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahalava, Fianarantsoa I"
+      },
+      {
+       "id": "fianarantsoa-i-csb2-manjatsoa",
+       "nom": "CSB2 Manjatsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 57 788 96",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjatsoa, Fianarantsoa I"
+      }
+     ]
+    },
+    {
+     "id": "fianarantsoa-ii",
+     "nom": "Fianarantsoa II",
+     "centres": [
+      {
+       "id": "fianarantsoa-ii-csb1-ankamanga",
+       "nom": "CSB1 Ankamanga",
+       "type": "CSB1",
+       "telephone": "+261 32 48 604 24",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankamanga, Fianarantsoa II"
+      },
+      {
+       "id": "fianarantsoa-ii-csb1-manjabe",
+       "nom": "CSB1 Manjabe",
+       "type": "CSB1",
+       "telephone": "+261 33 68 479 95",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjabe, Fianarantsoa II"
+      },
+      {
+       "id": "fianarantsoa-ii-csb1-tsaralava",
+       "nom": "CSB1 Tsaralava",
+       "type": "CSB1",
+       "telephone": "+261 34 55 162 60",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsaralava, Fianarantsoa II"
+      },
+      {
+       "id": "fianarantsoa-ii-csb2-ambohirano",
+       "nom": "CSB2 Ambohirano",
+       "type": "CSB2",
+       "telephone": "+261 32 66 555 40",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambohirano, Fianarantsoa II"
+      },
+      {
+       "id": "fianarantsoa-ii-csb2-ankafotsy",
+       "nom": "CSB2 Ankafotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 22 953 72",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankafotsy, Fianarantsoa II"
+      },
+      {
+       "id": "fianarantsoa-ii-csb2-antantsoa",
+       "nom": "CSB2 Antantsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 69 817 48",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antantsoa, Fianarantsoa II"
+      },
+      {
+       "id": "fianarantsoa-ii-csb2-tsaratsoa",
+       "nom": "CSB2 Tsaratsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 39 582 13",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsaratsoa, Fianarantsoa II"
+      }
+     ]
+    },
+    {
+     "id": "ambalavao",
+     "nom": "Ambalavao",
+     "centres": [
+      {
+       "id": "ambalavao-csb1-ampasitsoa",
+       "nom": "CSB1 Ampasitsoa",
+       "type": "CSB1",
+       "telephone": "+261 34 37 757 91",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ampasitsoa, Ambalavao"
+      },
+      {
+       "id": "ambalavao-csb1-tsarakely",
+       "nom": "CSB1 Tsarakely",
+       "type": "CSB1",
+       "telephone": "+261 32 82 310 18",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsarakely, Ambalavao"
+      },
+      {
+       "id": "ambalavao-csb2-ankabe",
+       "nom": "CSB2 Ankabe",
+       "type": "CSB2",
+       "telephone": "+261 34 42 917 32",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankabe, Ambalavao"
+      },
+      {
+       "id": "ambalavao-csb2-antankely",
+       "nom": "CSB2 Antankely",
+       "type": "CSB2",
+       "telephone": "+261 33 28 907 86",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Antankely, Ambalavao"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "amoron-i-mania",
+   "nom": "Amoron'i Mania",
+   "districts": [
+    {
+     "id": "ambositra",
+     "nom": "Ambositra",
+     "centres": [
+      {
+       "id": "ambositra-csb1-ambatomanga",
+       "nom": "CSB1 Ambatomanga",
+       "type": "CSB1",
+       "telephone": "+261 32 63 638 24",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambatomanga, Ambositra"
+      },
+      {
+       "id": "ambositra-csb1-andralava",
+       "nom": "CSB1 Andralava",
+       "type": "CSB1",
+       "telephone": "+261 34 37 540 67",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Andralava, Ambositra"
+      },
+      {
+       "id": "ambositra-csb1-ankamanga",
+       "nom": "CSB1 Ankamanga",
+       "type": "CSB1",
+       "telephone": "+261 33 40 702 51",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankamanga, Ambositra"
+      },
+      {
+       "id": "ambositra-csb1-tsaratsimo",
+       "nom": "CSB1 Tsaratsimo",
+       "type": "CSB1",
+       "telephone": "+261 32 18 229 45",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsaratsimo, Ambositra"
+      },
+      {
+       "id": "ambositra-csb2-ambohilava",
+       "nom": "CSB2 Ambohilava",
+       "type": "CSB2",
+       "telephone": "+261 33 68 758 13",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohilava, Ambositra"
+      },
+      {
+       "id": "ambositra-csb2-ampasirano",
+       "nom": "CSB2 Ampasirano",
+       "type": "CSB2",
+       "telephone": "+261 34 85 211 67",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasirano, Ambositra"
+      },
+      {
+       "id": "ambositra-csb2-mahafotsy",
+       "nom": "CSB2 Mahafotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 23 602 66",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahafotsy, Ambositra"
+      },
+      {
+       "id": "ambositra-csb2-soalava",
+       "nom": "CSB2 Soalava",
+       "type": "CSB2",
+       "telephone": "+261 33 68 617 87",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Soalava, Ambositra"
+      }
+     ]
+    },
+    {
+     "id": "fandriana",
+     "nom": "Fandriana",
+     "centres": [
+      {
+       "id": "fandriana-csb1-andrafotsy",
+       "nom": "CSB1 Andrafotsy",
+       "type": "CSB1",
+       "telephone": "+261 32 57 931 26",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Andrafotsy, Fandriana"
+      },
+      {
+       "id": "fandriana-csb2-ambatorano",
+       "nom": "CSB2 Ambatorano",
+       "type": "CSB2",
+       "telephone": "+261 32 97 585 18",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambatorano, Fandriana"
+      },
+      {
+       "id": "fandriana-csb2-ampasifotsy",
+       "nom": "CSB2 Ampasifotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 22 420 64",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasifotsy, Fandriana"
+      },
+      {
+       "id": "fandriana-csb2-mahamanga",
+       "nom": "CSB2 Mahamanga",
+       "type": "CSB2",
+       "telephone": "+261 33 86 419 55",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahamanga, Fandriana"
+      },
+      {
+       "id": "fandriana-csb2-manjakely",
+       "nom": "CSB2 Manjakely",
+       "type": "CSB2",
+       "telephone": "+261 32 94 593 38",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjakely, Fandriana"
+      },
+      {
+       "id": "fandriana-csb2-manjalava",
+       "nom": "CSB2 Manjalava",
+       "type": "CSB2",
+       "telephone": "+261 33 95 225 62",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjalava, Fandriana"
+      }
+     ]
+    },
+    {
+     "id": "manandriana",
+     "nom": "Manandriana",
+     "centres": [
+      {
+       "id": "manandriana-csb1-ambohitsoa",
+       "nom": "CSB1 Ambohitsoa",
+       "type": "CSB1",
+       "telephone": "+261 34 77 320 58",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambohitsoa, Manandriana"
+      },
+      {
+       "id": "manandriana-csb2-ambatomanga",
+       "nom": "CSB2 Ambatomanga",
+       "type": "CSB2",
+       "telephone": "+261 32 44 819 49",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatomanga, Manandriana"
+      },
+      {
+       "id": "manandriana-csb2-ambohibe",
+       "nom": "CSB2 Ambohibe",
+       "type": "CSB2",
+       "telephone": "+261 32 82 773 61",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohibe, Manandriana"
+      },
+      {
+       "id": "manandriana-csb2-tsarabe",
+       "nom": "CSB2 Tsarabe",
+       "type": "CSB2",
+       "telephone": "+261 33 49 838 51",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsarabe, Manandriana"
+      },
+      {
+       "id": "manandriana-csb2-tsaratsoa",
+       "nom": "CSB2 Tsaratsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 83 331 64",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsaratsoa, Manandriana"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vatovavy",
+   "nom": "Vatovavy",
+   "districts": [
+    {
+     "id": "mananjary",
+     "nom": "Mananjary",
+     "centres": [
+      {
+       "id": "mananjary-csb1-ankatsimo",
+       "nom": "CSB1 Ankatsimo",
+       "type": "CSB1",
+       "telephone": "+261 32 96 183 44",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankatsimo, Mananjary"
+      },
+      {
+       "id": "mananjary-csb2-andrarano",
+       "nom": "CSB2 Andrarano",
+       "type": "CSB2",
+       "telephone": "+261 33 24 390 96",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andrarano, Mananjary"
+      },
+      {
+       "id": "mananjary-csb2-mahamainty",
+       "nom": "CSB2 Mahamainty",
+       "type": "CSB2",
+       "telephone": "+261 34 66 524 44",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Mahamainty, Mananjary"
+      }
+     ]
+    },
+    {
+     "id": "nosy-varika",
+     "nom": "Nosy Varika",
+     "centres": [
+      {
+       "id": "nosy-varika-csb1-ambatokely",
+       "nom": "CSB1 Ambatokely",
+       "type": "CSB1",
+       "telephone": "+261 32 42 396 51",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambatokely, Nosy Varika"
+      },
+      {
+       "id": "nosy-varika-csb1-ampasifotsy",
+       "nom": "CSB1 Ampasifotsy",
+       "type": "CSB1",
+       "telephone": "+261 32 26 489 78",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasifotsy, Nosy Varika"
+      },
+      {
+       "id": "nosy-varika-csb1-ampasitsoa",
+       "nom": "CSB1 Ampasitsoa",
+       "type": "CSB1",
+       "telephone": "+261 33 83 539 83",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasitsoa, Nosy Varika"
+      },
+      {
+       "id": "nosy-varika-csb2-ambatomanga",
+       "nom": "CSB2 Ambatomanga",
+       "type": "CSB2",
+       "telephone": "+261 32 60 713 17",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambatomanga, Nosy Varika"
+      },
+      {
+       "id": "nosy-varika-csb2-ampasirano",
+       "nom": "CSB2 Ampasirano",
+       "type": "CSB2",
+       "telephone": "+261 32 65 964 23",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasirano, Nosy Varika"
+      },
+      {
+       "id": "nosy-varika-csb2-mahavato",
+       "nom": "CSB2 Mahavato",
+       "type": "CSB2",
+       "telephone": "+261 32 61 121 51",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Mahavato, Nosy Varika"
+      },
+      {
+       "id": "nosy-varika-csb2-manjarano",
+       "nom": "CSB2 Manjarano",
+       "type": "CSB2",
+       "telephone": "+261 32 60 982 15",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjarano, Nosy Varika"
+      }
+     ]
+    },
+    {
+     "id": "ifanadiana",
+     "nom": "Ifanadiana",
+     "centres": [
+      {
+       "id": "ifanadiana-csb1-soabe",
+       "nom": "CSB1 Soabe",
+       "type": "CSB1",
+       "telephone": "+261 34 19 281 90",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Soabe, Ifanadiana"
+      },
+      {
+       "id": "ifanadiana-csb1-tsarabe",
+       "nom": "CSB1 Tsarabe",
+       "type": "CSB1",
+       "telephone": "+261 32 75 748 24",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsarabe, Ifanadiana"
+      },
+      {
+       "id": "ifanadiana-csb2-ampasitsoa",
+       "nom": "CSB2 Ampasitsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 66 746 48",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasitsoa, Ifanadiana"
+      },
+      {
+       "id": "ifanadiana-csb2-mahalava",
+       "nom": "CSB2 Mahalava",
+       "type": "CSB2",
+       "telephone": "+261 32 60 991 49",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Mahalava, Ifanadiana"
+      },
+      {
+       "id": "ifanadiana-csb2-soatsimo",
+       "nom": "CSB2 Soatsimo",
+       "type": "CSB2",
+       "telephone": "+261 33 97 678 92",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Soatsimo, Ifanadiana"
+      },
+      {
+       "id": "ifanadiana-csb2-tsarabe",
+       "nom": "CSB2 Tsarabe",
+       "type": "CSB2",
+       "telephone": "+261 32 23 249 42",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsarabe, Ifanadiana"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "fitovinany",
+   "nom": "Fitovinany",
+   "districts": [
+    {
+     "id": "manakara",
+     "nom": "Manakara",
+     "centres": [
+      {
+       "id": "manakara-csb1-tsaralava",
+       "nom": "CSB1 Tsaralava",
+       "type": "CSB1",
+       "telephone": "+261 32 49 572 67",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsaralava, Manakara"
+      },
+      {
+       "id": "manakara-csb1-tsaravato",
+       "nom": "CSB1 Tsaravato",
+       "type": "CSB1",
+       "telephone": "+261 32 92 984 21",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsaravato, Manakara"
+      },
+      {
+       "id": "manakara-csb2-andralava",
+       "nom": "CSB2 Andralava",
+       "type": "CSB2",
+       "telephone": "+261 34 32 140 41",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andralava, Manakara"
+      },
+      {
+       "id": "manakara-csb2-maharano",
+       "nom": "CSB2 Maharano",
+       "type": "CSB2",
+       "telephone": "+261 34 86 153 90",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Maharano, Manakara"
+      },
+      {
+       "id": "manakara-csb2-manjalava",
+       "nom": "CSB2 Manjalava",
+       "type": "CSB2",
+       "telephone": "+261 34 30 472 57",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjalava, Manakara"
+      },
+      {
+       "id": "manakara-csb2-soalava",
+       "nom": "CSB2 Soalava",
+       "type": "CSB2",
+       "telephone": "+261 34 15 560 83",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Soalava, Manakara"
+      },
+      {
+       "id": "manakara-csb2-soamainty",
+       "nom": "CSB2 Soamainty",
+       "type": "CSB2",
+       "telephone": "+261 34 29 163 67",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Soamainty, Manakara"
+      }
+     ]
+    },
+    {
+     "id": "vohipeno",
+     "nom": "Vohipeno",
+     "centres": [
+      {
+       "id": "vohipeno-csb1-soatsoa",
+       "nom": "CSB1 Soatsoa",
+       "type": "CSB1",
+       "telephone": "+261 33 81 485 92",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Soatsoa, Vohipeno"
+      },
+      {
+       "id": "vohipeno-csb2-andralava",
+       "nom": "CSB2 Andralava",
+       "type": "CSB2",
+       "telephone": "+261 34 59 390 42",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Andralava, Vohipeno"
+      },
+      {
+       "id": "vohipeno-csb2-andratsimo",
+       "nom": "CSB2 Andratsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 28 458 49",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andratsimo, Vohipeno"
+      }
+     ]
+    },
+    {
+     "id": "ikongo",
+     "nom": "Ikongo",
+     "centres": [
+      {
+       "id": "ikongo-csb1-ankabe",
+       "nom": "CSB1 Ankabe",
+       "type": "CSB1",
+       "telephone": "+261 32 47 964 22",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankabe, Ikongo"
+      },
+      {
+       "id": "ikongo-csb1-tsaravato",
+       "nom": "CSB1 Tsaravato",
+       "type": "CSB1",
+       "telephone": "+261 32 37 449 72",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsaravato, Ikongo"
+      },
+      {
+       "id": "ikongo-csb2-manjatsoa",
+       "nom": "CSB2 Manjatsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 95 533 75",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjatsoa, Ikongo"
+      },
+      {
+       "id": "ikongo-csb2-tsaratsimo",
+       "nom": "CSB2 Tsaratsimo",
+       "type": "CSB2",
+       "telephone": "+261 32 86 485 29",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsaratsimo, Ikongo"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atsimo-atsinanana",
+   "nom": "Atsimo-Atsinanana",
+   "districts": [
+    {
+     "id": "farafangana",
+     "nom": "Farafangana",
+     "centres": [
+      {
+       "id": "farafangana-csb2-ambatofotsy",
+       "nom": "CSB2 Ambatofotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 77 528 30",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambatofotsy, Farafangana"
+      },
+      {
+       "id": "farafangana-csb2-antanmainty",
+       "nom": "CSB2 Antanmainty",
+       "type": "CSB2",
+       "telephone": "+261 34 46 870 67",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antanmainty, Farafangana"
+      },
+      {
+       "id": "farafangana-csb2-antanvato",
+       "nom": "CSB2 Antanvato",
+       "type": "CSB2",
+       "telephone": "+261 33 34 476 96",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antanvato, Farafangana"
+      },
+      {
+       "id": "farafangana-csb2-soabe",
+       "nom": "CSB2 Soabe",
+       "type": "CSB2",
+       "telephone": "+261 34 66 144 62",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Soabe, Farafangana"
+      }
+     ]
+    },
+    {
+     "id": "vangaindrano",
+     "nom": "Vangaindrano",
+     "centres": [
+      {
+       "id": "vangaindrano-csb1-ambatomanga",
+       "nom": "CSB1 Ambatomanga",
+       "type": "CSB1",
+       "telephone": "+261 34 71 995 57",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambatomanga, Vangaindrano"
+      },
+      {
+       "id": "vangaindrano-csb1-ankamanga",
+       "nom": "CSB1 Ankamanga",
+       "type": "CSB1",
+       "telephone": "+261 33 70 812 27",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankamanga, Vangaindrano"
+      },
+      {
+       "id": "vangaindrano-csb1-mahamanga",
+       "nom": "CSB1 Mahamanga",
+       "type": "CSB1",
+       "telephone": "+261 33 74 482 40",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahamanga, Vangaindrano"
+      },
+      {
+       "id": "vangaindrano-csb1-tsarakely",
+       "nom": "CSB1 Tsarakely",
+       "type": "CSB1",
+       "telephone": "+261 32 50 201 93",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsarakely, Vangaindrano"
+      },
+      {
+       "id": "vangaindrano-csb2-manjabe",
+       "nom": "CSB2 Manjabe",
+       "type": "CSB2",
+       "telephone": "+261 33 21 327 67",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjabe, Vangaindrano"
+      },
+      {
+       "id": "vangaindrano-csb2-manjatsoa",
+       "nom": "CSB2 Manjatsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 20 881 30",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjatsoa, Vangaindrano"
+      },
+      {
+       "id": "vangaindrano-csb2-soamanga",
+       "nom": "CSB2 Soamanga",
+       "type": "CSB2",
+       "telephone": "+261 32 12 362 37",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Soamanga, Vangaindrano"
+      }
+     ]
+    },
+    {
+     "id": "midongy-atsimo",
+     "nom": "Midongy-Atsimo",
+     "centres": [
+      {
+       "id": "midongy-atsimo-csb1-andramainty",
+       "nom": "CSB1 Andramainty",
+       "type": "CSB1",
+       "telephone": "+261 34 78 116 90",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Andramainty, Midongy-Atsimo"
+      },
+      {
+       "id": "midongy-atsimo-csb1-manjalava",
+       "nom": "CSB1 Manjalava",
+       "type": "CSB1",
+       "telephone": "+261 34 74 667 12",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjalava, Midongy-Atsimo"
+      },
+      {
+       "id": "midongy-atsimo-csb2-ambohifotsy",
+       "nom": "CSB2 Ambohifotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 42 865 12",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambohifotsy, Midongy-Atsimo"
+      },
+      {
+       "id": "midongy-atsimo-csb2-andramanga",
+       "nom": "CSB2 Andramanga",
+       "type": "CSB2",
+       "telephone": "+261 32 63 754 89",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andramanga, Midongy-Atsimo"
+      },
+      {
+       "id": "midongy-atsimo-csb2-ankavato",
+       "nom": "CSB2 Ankavato",
+       "type": "CSB2",
+       "telephone": "+261 33 10 729 55",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ankavato, Midongy-Atsimo"
+      },
+      {
+       "id": "midongy-atsimo-csb2-mahabe",
+       "nom": "CSB2 Mahabe",
+       "type": "CSB2",
+       "telephone": "+261 34 95 187 77",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Mahabe, Midongy-Atsimo"
+      },
+      {
+       "id": "midongy-atsimo-csb2-soalava",
+       "nom": "CSB2 Soalava",
+       "type": "CSB2",
+       "telephone": "+261 33 24 894 46",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Soalava, Midongy-Atsimo"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ihorombe",
+   "nom": "Ihorombe",
+   "districts": [
+    {
+     "id": "ihosy",
+     "nom": "Ihosy",
+     "centres": [
+      {
+       "id": "ihosy-csb1-andramainty",
+       "nom": "CSB1 Andramainty",
+       "type": "CSB1",
+       "telephone": "+261 32 47 306 15",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Andramainty, Ihosy"
+      },
+      {
+       "id": "ihosy-csb2-antantsoa",
+       "nom": "CSB2 Antantsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 52 236 15",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antantsoa, Ihosy"
+      },
+      {
+       "id": "ihosy-csb2-tsarabe",
+       "nom": "CSB2 Tsarabe",
+       "type": "CSB2",
+       "telephone": "+261 34 69 812 71",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsarabe, Ihosy"
+      }
+     ]
+    },
+    {
+     "id": "ivohibe",
+     "nom": "Ivohibe",
+     "centres": [
+      {
+       "id": "ivohibe-csb2-ambatolava",
+       "nom": "CSB2 Ambatolava",
+       "type": "CSB2",
+       "telephone": "+261 33 79 584 42",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambatolava, Ivohibe"
+      },
+      {
+       "id": "ivohibe-csb2-andrarano",
+       "nom": "CSB2 Andrarano",
+       "type": "CSB2",
+       "telephone": "+261 33 61 861 66",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andrarano, Ivohibe"
+      },
+      {
+       "id": "ivohibe-csb2-antanvato",
+       "nom": "CSB2 Antanvato",
+       "type": "CSB2",
+       "telephone": "+261 33 16 986 93",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanvato, Ivohibe"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "boeny",
+   "nom": "Boeny",
+   "districts": [
+    {
+     "id": "mahajanga-i",
+     "nom": "Mahajanga I",
+     "centres": [
+      {
+       "id": "mahajanga-i-csb1-ampasimainty",
+       "nom": "CSB1 Ampasimainty",
+       "type": "CSB1",
+       "telephone": "+261 33 76 373 20",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasimainty, Mahajanga I"
+      },
+      {
+       "id": "mahajanga-i-csb1-mahatsimo",
+       "nom": "CSB1 Mahatsimo",
+       "type": "CSB1",
+       "telephone": "+261 32 79 400 51",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahatsimo, Mahajanga I"
+      },
+      {
+       "id": "mahajanga-i-csb1-tsaravato",
+       "nom": "CSB1 Tsaravato",
+       "type": "CSB1",
+       "telephone": "+261 33 67 717 64",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsaravato, Mahajanga I"
+      },
+      {
+       "id": "mahajanga-i-csb2-ambohitsoa",
+       "nom": "CSB2 Ambohitsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 91 515 56",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambohitsoa, Mahajanga I"
+      },
+      {
+       "id": "mahajanga-i-csb2-ampasirano",
+       "nom": "CSB2 Ampasirano",
+       "type": "CSB2",
+       "telephone": "+261 33 15 844 55",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasirano, Mahajanga I"
+      }
+     ]
+    },
+    {
+     "id": "mahajanga-ii",
+     "nom": "Mahajanga II",
+     "centres": [
+      {
+       "id": "mahajanga-ii-csb1-soamainty",
+       "nom": "CSB1 Soamainty",
+       "type": "CSB1",
+       "telephone": "+261 32 26 168 40",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Soamainty, Mahajanga II"
+      },
+      {
+       "id": "mahajanga-ii-csb2-mahatsimo",
+       "nom": "CSB2 Mahatsimo",
+       "type": "CSB2",
+       "telephone": "+261 32 87 257 96",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahatsimo, Mahajanga II"
+      },
+      {
+       "id": "mahajanga-ii-csb2-tsaramainty",
+       "nom": "CSB2 Tsaramainty",
+       "type": "CSB2",
+       "telephone": "+261 32 83 240 77",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsaramainty, Mahajanga II"
+      }
+     ]
+    },
+    {
+     "id": "marovoay",
+     "nom": "Marovoay",
+     "centres": [
+      {
+       "id": "marovoay-csb1-ampasibe",
+       "nom": "CSB1 Ampasibe",
+       "type": "CSB1",
+       "telephone": "+261 34 66 189 97",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasibe, Marovoay"
+      },
+      {
+       "id": "marovoay-csb1-soavato",
+       "nom": "CSB1 Soavato",
+       "type": "CSB1",
+       "telephone": "+261 34 72 304 25",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Soavato, Marovoay"
+      },
+      {
+       "id": "marovoay-csb2-ambatokely",
+       "nom": "CSB2 Ambatokely",
+       "type": "CSB2",
+       "telephone": "+261 32 13 853 33",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatokely, Marovoay"
+      },
+      {
+       "id": "marovoay-csb2-ankarano",
+       "nom": "CSB2 Ankarano",
+       "type": "CSB2",
+       "telephone": "+261 34 38 224 35",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ankarano, Marovoay"
+      },
+      {
+       "id": "marovoay-csb2-mahalava",
+       "nom": "CSB2 Mahalava",
+       "type": "CSB2",
+       "telephone": "+261 32 43 893 43",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahalava, Marovoay"
+      },
+      {
+       "id": "marovoay-csb2-tsaratsoa",
+       "nom": "CSB2 Tsaratsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 79 397 48",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsaratsoa, Marovoay"
+      }
+     ]
+    },
+    {
+     "id": "ambato-boeny",
+     "nom": "Ambato-Boeny",
+     "centres": [
+      {
+       "id": "ambato-boeny-csb2-ambohirano",
+       "nom": "CSB2 Ambohirano",
+       "type": "CSB2",
+       "telephone": "+261 34 83 477 69",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambohirano, Ambato-Boeny"
+      },
+      {
+       "id": "ambato-boeny-csb2-andratsoa",
+       "nom": "CSB2 Andratsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 60 834 71",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andratsoa, Ambato-Boeny"
+      },
+      {
+       "id": "ambato-boeny-csb2-manjarano",
+       "nom": "CSB2 Manjarano",
+       "type": "CSB2",
+       "telephone": "+261 32 80 755 85",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Manjarano, Ambato-Boeny"
+      },
+      {
+       "id": "ambato-boeny-csb2-soatsoa",
+       "nom": "CSB2 Soatsoa",
+       "type": "CSB2",
+       "telephone": "+261 32 50 757 19",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Soatsoa, Ambato-Boeny"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sofia",
+   "nom": "Sofia",
+   "districts": [
+    {
+     "id": "antsohihy",
+     "nom": "Antsohihy",
+     "centres": [
+      {
+       "id": "antsohihy-csb1-manjavato",
+       "nom": "CSB1 Manjavato",
+       "type": "CSB1",
+       "telephone": "+261 32 90 410 88",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjavato, Antsohihy"
+      },
+      {
+       "id": "antsohihy-csb1-tsarakely",
+       "nom": "CSB1 Tsarakely",
+       "type": "CSB1",
+       "telephone": "+261 33 76 390 20",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsarakely, Antsohihy"
+      },
+      {
+       "id": "antsohihy-csb2-ankatsimo",
+       "nom": "CSB2 Ankatsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 29 275 94",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ankatsimo, Antsohihy"
+      },
+      {
+       "id": "antsohihy-csb2-manjamanga",
+       "nom": "CSB2 Manjamanga",
+       "type": "CSB2",
+       "telephone": "+261 32 76 256 48",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Manjamanga, Antsohihy"
+      }
+     ]
+    },
+    {
+     "id": "bealanana",
+     "nom": "Bealanana",
+     "centres": [
+      {
+       "id": "bealanana-csb1-ambohitsoa",
+       "nom": "CSB1 Ambohitsoa",
+       "type": "CSB1",
+       "telephone": "+261 32 92 889 83",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambohitsoa, Bealanana"
+      },
+      {
+       "id": "bealanana-csb2-ampasikely",
+       "nom": "CSB2 Ampasikely",
+       "type": "CSB2",
+       "telephone": "+261 33 87 247 50",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasikely, Bealanana"
+      },
+      {
+       "id": "bealanana-csb2-ampasitsoa",
+       "nom": "CSB2 Ampasitsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 17 261 66",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasitsoa, Bealanana"
+      },
+      {
+       "id": "bealanana-csb2-antanmainty",
+       "nom": "CSB2 Antanmainty",
+       "type": "CSB2",
+       "telephone": "+261 32 44 560 41",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antanmainty, Bealanana"
+      },
+      {
+       "id": "bealanana-csb2-antantsimo",
+       "nom": "CSB2 Antantsimo",
+       "type": "CSB2",
+       "telephone": "+261 33 89 754 13",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antantsimo, Bealanana"
+      },
+      {
+       "id": "bealanana-csb2-manjavato",
+       "nom": "CSB2 Manjavato",
+       "type": "CSB2",
+       "telephone": "+261 34 48 594 41",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjavato, Bealanana"
+      },
+      {
+       "id": "bealanana-csb2-tsarafotsy",
+       "nom": "CSB2 Tsarafotsy",
+       "type": "CSB2",
+       "telephone": "+261 32 57 627 81",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsarafotsy, Bealanana"
+      }
+     ]
+    },
+    {
+     "id": "mandritsara",
+     "nom": "Mandritsara",
+     "centres": [
+      {
+       "id": "mandritsara-csb1-ambatofotsy",
+       "nom": "CSB1 Ambatofotsy",
+       "type": "CSB1",
+       "telephone": "+261 34 63 354 30",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatofotsy, Mandritsara"
+      },
+      {
+       "id": "mandritsara-csb2-ampasimanga",
+       "nom": "CSB2 Ampasimanga",
+       "type": "CSB2",
+       "telephone": "+261 32 60 617 68",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasimanga, Mandritsara"
+      },
+      {
+       "id": "mandritsara-csb2-tsarakely",
+       "nom": "CSB2 Tsarakely",
+       "type": "CSB2",
+       "telephone": "+261 32 73 627 69",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsarakely, Mandritsara"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "betsiboka",
+   "nom": "Betsiboka",
+   "districts": [
+    {
+     "id": "maevatanana",
+     "nom": "Maevatanana",
+     "centres": [
+      {
+       "id": "maevatanana-csb1-mahalava",
+       "nom": "CSB1 Mahalava",
+       "type": "CSB1",
+       "telephone": "+261 33 80 386 89",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahalava, Maevatanana"
+      },
+      {
+       "id": "maevatanana-csb2-mahamanga",
+       "nom": "CSB2 Mahamanga",
+       "type": "CSB2",
+       "telephone": "+261 34 81 299 56",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Mahamanga, Maevatanana"
+      },
+      {
+       "id": "maevatanana-csb2-manjamanga",
+       "nom": "CSB2 Manjamanga",
+       "type": "CSB2",
+       "telephone": "+261 32 65 237 43",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjamanga, Maevatanana"
+      },
+      {
+       "id": "maevatanana-csb2-tsaramanga",
+       "nom": "CSB2 Tsaramanga",
+       "type": "CSB2",
+       "telephone": "+261 32 46 606 86",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsaramanga, Maevatanana"
+      }
+     ]
+    },
+    {
+     "id": "tsaratanana",
+     "nom": "Tsaratanana",
+     "centres": [
+      {
+       "id": "tsaratanana-csb1-maharano",
+       "nom": "CSB1 Maharano",
+       "type": "CSB1",
+       "telephone": "+261 33 81 474 28",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Maharano, Tsaratanana"
+      },
+      {
+       "id": "tsaratanana-csb2-manjafotsy",
+       "nom": "CSB2 Manjafotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 15 146 14",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Manjafotsy, Tsaratanana"
+      },
+      {
+       "id": "tsaratanana-csb2-soarano",
+       "nom": "CSB2 Soarano",
+       "type": "CSB2",
+       "telephone": "+261 32 60 731 48",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Soarano, Tsaratanana"
+      },
+      {
+       "id": "tsaratanana-csb2-tsaramainty",
+       "nom": "CSB2 Tsaramainty",
+       "type": "CSB2",
+       "telephone": "+261 34 68 252 87",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsaramainty, Tsaratanana"
+      }
+     ]
+    },
+    {
+     "id": "kandreho",
+     "nom": "Kandreho",
+     "centres": [
+      {
+       "id": "kandreho-csb1-antanmanga",
+       "nom": "CSB1 Antanmanga",
+       "type": "CSB1",
+       "telephone": "+261 34 99 212 34",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Antanmanga, Kandreho"
+      },
+      {
+       "id": "kandreho-csb2-ampasibe",
+       "nom": "CSB2 Ampasibe",
+       "type": "CSB2",
+       "telephone": "+261 34 90 838 89",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasibe, Kandreho"
+      },
+      {
+       "id": "kandreho-csb2-ampasivato",
+       "nom": "CSB2 Ampasivato",
+       "type": "CSB2",
+       "telephone": "+261 34 84 691 39",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ampasivato, Kandreho"
+      },
+      {
+       "id": "kandreho-csb2-manjamainty",
+       "nom": "CSB2 Manjamainty",
+       "type": "CSB2",
+       "telephone": "+261 34 82 406 70",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjamainty, Kandreho"
+      },
+      {
+       "id": "kandreho-csb2-soamainty",
+       "nom": "CSB2 Soamainty",
+       "type": "CSB2",
+       "telephone": "+261 34 17 822 27",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Soamainty, Kandreho"
+      },
+      {
+       "id": "kandreho-csb2-tsarafotsy",
+       "nom": "CSB2 Tsarafotsy",
+       "type": "CSB2",
+       "telephone": "+261 32 62 807 36",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsarafotsy, Kandreho"
+      },
+      {
+       "id": "kandreho-csb2-tsaratsoa",
+       "nom": "CSB2 Tsaratsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 84 415 98",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsaratsoa, Kandreho"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "melaky",
+   "nom": "Melaky",
+   "districts": [
+    {
+     "id": "maintirano",
+     "nom": "Maintirano",
+     "centres": [
+      {
+       "id": "maintirano-csb2-ambatobe",
+       "nom": "CSB2 Ambatobe",
+       "type": "CSB2",
+       "telephone": "+261 32 88 858 85",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambatobe, Maintirano"
+      },
+      {
+       "id": "maintirano-csb2-ambatokely",
+       "nom": "CSB2 Ambatokely",
+       "type": "CSB2",
+       "telephone": "+261 33 46 821 36",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatokely, Maintirano"
+      },
+      {
+       "id": "maintirano-csb2-ambatomainty",
+       "nom": "CSB2 Ambatomainty",
+       "type": "CSB2",
+       "telephone": "+261 32 35 947 78",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatomainty, Maintirano"
+      },
+      {
+       "id": "maintirano-csb2-ampasilava",
+       "nom": "CSB2 Ampasilava",
+       "type": "CSB2",
+       "telephone": "+261 33 50 277 68",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasilava, Maintirano"
+      },
+      {
+       "id": "maintirano-csb2-ampasirano",
+       "nom": "CSB2 Ampasirano",
+       "type": "CSB2",
+       "telephone": "+261 34 45 394 25",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasirano, Maintirano"
+      },
+      {
+       "id": "maintirano-csb2-tsarabe",
+       "nom": "CSB2 Tsarabe",
+       "type": "CSB2",
+       "telephone": "+261 33 15 394 20",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsarabe, Maintirano"
+      },
+      {
+       "id": "maintirano-csb2-tsaravato",
+       "nom": "CSB2 Tsaravato",
+       "type": "CSB2",
+       "telephone": "+261 34 71 296 41",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsaravato, Maintirano"
+      }
+     ]
+    },
+    {
+     "id": "besalampy",
+     "nom": "Besalampy",
+     "centres": [
+      {
+       "id": "besalampy-csb1-manjakely",
+       "nom": "CSB1 Manjakely",
+       "type": "CSB1",
+       "telephone": "+261 34 39 153 22",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjakely, Besalampy"
+      },
+      {
+       "id": "besalampy-csb2-ambohitsoa",
+       "nom": "CSB2 Ambohitsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 83 337 78",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohitsoa, Besalampy"
+      },
+      {
+       "id": "besalampy-csb2-ampasimainty",
+       "nom": "CSB2 Ampasimainty",
+       "type": "CSB2",
+       "telephone": "+261 34 35 874 46",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasimainty, Besalampy"
+      },
+      {
+       "id": "besalampy-csb2-ampasitsoa",
+       "nom": "CSB2 Ampasitsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 27 105 80",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasitsoa, Besalampy"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atsimo-andrefana",
+   "nom": "Atsimo-Andrefana",
+   "districts": [
+    {
+     "id": "toliara-i",
+     "nom": "Toliara I",
+     "centres": [
+      {
+       "id": "toliara-i-csb1-ambatotsimo",
+       "nom": "CSB1 Ambatotsimo",
+       "type": "CSB1",
+       "telephone": "+261 34 23 443 46",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatotsimo, Toliara I"
+      },
+      {
+       "id": "toliara-i-csb2-ankamanga",
+       "nom": "CSB2 Ankamanga",
+       "type": "CSB2",
+       "telephone": "+261 33 73 290 47",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankamanga, Toliara I"
+      },
+      {
+       "id": "toliara-i-csb2-antantsoa",
+       "nom": "CSB2 Antantsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 30 848 68",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antantsoa, Toliara I"
+      },
+      {
+       "id": "toliara-i-csb2-manjalava",
+       "nom": "CSB2 Manjalava",
+       "type": "CSB2",
+       "telephone": "+261 33 27 971 74",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjalava, Toliara I"
+      }
+     ]
+    },
+    {
+     "id": "toliara-ii",
+     "nom": "Toliara II",
+     "centres": [
+      {
+       "id": "toliara-ii-csb1-ambohirano",
+       "nom": "CSB1 Ambohirano",
+       "type": "CSB1",
+       "telephone": "+261 33 82 790 34",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambohirano, Toliara II"
+      },
+      {
+       "id": "toliara-ii-csb1-ampasivato",
+       "nom": "CSB1 Ampasivato",
+       "type": "CSB1",
+       "telephone": "+261 33 48 696 83",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ampasivato, Toliara II"
+      },
+      {
+       "id": "toliara-ii-csb1-ankamainty",
+       "nom": "CSB1 Ankamainty",
+       "type": "CSB1",
+       "telephone": "+261 33 41 106 43",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankamainty, Toliara II"
+      },
+      {
+       "id": "toliara-ii-csb1-mahalava",
+       "nom": "CSB1 Mahalava",
+       "type": "CSB1",
+       "telephone": "+261 34 49 806 25",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Mahalava, Toliara II"
+      },
+      {
+       "id": "toliara-ii-csb2-mahafotsy",
+       "nom": "CSB2 Mahafotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 51 188 61",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahafotsy, Toliara II"
+      },
+      {
+       "id": "toliara-ii-csb2-soakely",
+       "nom": "CSB2 Soakely",
+       "type": "CSB2",
+       "telephone": "+261 32 27 589 29",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Soakely, Toliara II"
+      },
+      {
+       "id": "toliara-ii-csb2-soarano",
+       "nom": "CSB2 Soarano",
+       "type": "CSB2",
+       "telephone": "+261 33 99 662 70",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Soarano, Toliara II"
+      },
+      {
+       "id": "toliara-ii-csb2-tsarakely",
+       "nom": "CSB2 Tsarakely",
+       "type": "CSB2",
+       "telephone": "+261 32 95 221 69",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsarakely, Toliara II"
+      }
+     ]
+    },
+    {
+     "id": "sakaraha",
+     "nom": "Sakaraha",
+     "centres": [
+      {
+       "id": "sakaraha-csb1-manjamainty",
+       "nom": "CSB1 Manjamainty",
+       "type": "CSB1",
+       "telephone": "+261 32 68 235 75",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjamainty, Sakaraha"
+      },
+      {
+       "id": "sakaraha-csb1-tsaralava",
+       "nom": "CSB1 Tsaralava",
+       "type": "CSB1",
+       "telephone": "+261 33 24 796 36",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsaralava, Sakaraha"
+      },
+      {
+       "id": "sakaraha-csb2-andramanga",
+       "nom": "CSB2 Andramanga",
+       "type": "CSB2",
+       "telephone": "+261 34 74 307 83",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Andramanga, Sakaraha"
+      },
+      {
+       "id": "sakaraha-csb2-soatsoa",
+       "nom": "CSB2 Soatsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 67 640 56",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Soatsoa, Sakaraha"
+      }
+     ]
+    },
+    {
+     "id": "morombe",
+     "nom": "Morombe",
+     "centres": [
+      {
+       "id": "morombe-csb2-ambatomanga",
+       "nom": "CSB2 Ambatomanga",
+       "type": "CSB2",
+       "telephone": "+261 34 37 692 19",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambatomanga, Morombe"
+      },
+      {
+       "id": "morombe-csb2-ambohilava",
+       "nom": "CSB2 Ambohilava",
+       "type": "CSB2",
+       "telephone": "+261 33 96 926 49",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ambohilava, Morombe"
+      },
+      {
+       "id": "morombe-csb2-ankalava",
+       "nom": "CSB2 Ankalava",
+       "type": "CSB2",
+       "telephone": "+261 33 77 230 38",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankalava, Morombe"
+      },
+      {
+       "id": "morombe-csb2-mahabe",
+       "nom": "CSB2 Mahabe",
+       "type": "CSB2",
+       "telephone": "+261 32 92 846 92",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahabe, Morombe"
+      },
+      {
+       "id": "morombe-csb2-mahamainty",
+       "nom": "CSB2 Mahamainty",
+       "type": "CSB2",
+       "telephone": "+261 33 58 182 97",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Mahamainty, Morombe"
+      },
+      {
+       "id": "morombe-csb2-tsaratsoa",
+       "nom": "CSB2 Tsaratsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 17 170 70",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsaratsoa, Morombe"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "androy",
+   "nom": "Androy",
+   "districts": [
+    {
+     "id": "ambovombe",
+     "nom": "Ambovombe",
+     "centres": [
+      {
+       "id": "ambovombe-csb2-ampasilava",
+       "nom": "CSB2 Ampasilava",
+       "type": "CSB2",
+       "telephone": "+261 33 78 488 39",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasilava, Ambovombe"
+      },
+      {
+       "id": "ambovombe-csb2-mahatsimo",
+       "nom": "CSB2 Mahatsimo",
+       "type": "CSB2",
+       "telephone": "+261 32 40 311 18",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahatsimo, Ambovombe"
+      },
+      {
+       "id": "ambovombe-csb2-tsarabe",
+       "nom": "CSB2 Tsarabe",
+       "type": "CSB2",
+       "telephone": "+261 33 34 996 24",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsarabe, Ambovombe"
+      }
+     ]
+    },
+    {
+     "id": "beloha",
+     "nom": "Beloha",
+     "centres": [
+      {
+       "id": "beloha-csb1-ambatobe",
+       "nom": "CSB1 Ambatobe",
+       "type": "CSB1",
+       "telephone": "+261 34 76 326 62",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatobe, Beloha"
+      },
+      {
+       "id": "beloha-csb1-ampasitsimo",
+       "nom": "CSB1 Ampasitsimo",
+       "type": "CSB1",
+       "telephone": "+261 34 16 350 15",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasitsimo, Beloha"
+      },
+      {
+       "id": "beloha-csb1-soarano",
+       "nom": "CSB1 Soarano",
+       "type": "CSB1",
+       "telephone": "+261 34 86 891 96",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Soarano, Beloha"
+      },
+      {
+       "id": "beloha-csb2-ambohilava",
+       "nom": "CSB2 Ambohilava",
+       "type": "CSB2",
+       "telephone": "+261 34 32 741 96",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambohilava, Beloha"
+      },
+      {
+       "id": "beloha-csb2-ampasimanga",
+       "nom": "CSB2 Ampasimanga",
+       "type": "CSB2",
+       "telephone": "+261 33 92 787 58",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasimanga, Beloha"
+      },
+      {
+       "id": "beloha-csb2-antanlava",
+       "nom": "CSB2 Antanlava",
+       "type": "CSB2",
+       "telephone": "+261 32 17 243 74",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Antanlava, Beloha"
+      },
+      {
+       "id": "beloha-csb2-mahafotsy",
+       "nom": "CSB2 Mahafotsy",
+       "type": "CSB2",
+       "telephone": "+261 32 48 485 33",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahafotsy, Beloha"
+      }
+     ]
+    },
+    {
+     "id": "tsihombe",
+     "nom": "Tsihombe",
+     "centres": [
+      {
+       "id": "tsihombe-csb1-ambatobe",
+       "nom": "CSB1 Ambatobe",
+       "type": "CSB1",
+       "telephone": "+261 33 17 675 62",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatobe, Tsihombe"
+      },
+      {
+       "id": "tsihombe-csb2-andramainty",
+       "nom": "CSB2 Andramainty",
+       "type": "CSB2",
+       "telephone": "+261 33 21 648 34",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Andramainty, Tsihombe"
+      },
+      {
+       "id": "tsihombe-csb2-mahatsimo",
+       "nom": "CSB2 Mahatsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 15 994 19",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Mahatsimo, Tsihombe"
+      },
+      {
+       "id": "tsihombe-csb2-manjabe",
+       "nom": "CSB2 Manjabe",
+       "type": "CSB2",
+       "telephone": "+261 33 41 361 36",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjabe, Tsihombe"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "anosy",
+   "nom": "Anosy",
+   "districts": [
+    {
+     "id": "taolagnaro",
+     "nom": "Taolagnaro",
+     "centres": [
+      {
+       "id": "taolagnaro-csb1-ambatolava",
+       "nom": "CSB1 Ambatolava",
+       "type": "CSB1",
+       "telephone": "+261 34 84 837 63",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatolava, Taolagnaro"
+      },
+      {
+       "id": "taolagnaro-csb1-antankely",
+       "nom": "CSB1 Antankely",
+       "type": "CSB1",
+       "telephone": "+261 34 25 864 71",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antankely, Taolagnaro"
+      },
+      {
+       "id": "taolagnaro-csb2-ampasilava",
+       "nom": "CSB2 Ampasilava",
+       "type": "CSB2",
+       "telephone": "+261 34 55 415 43",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasilava, Taolagnaro"
+      },
+      {
+       "id": "taolagnaro-csb2-ampasimainty",
+       "nom": "CSB2 Ampasimainty",
+       "type": "CSB2",
+       "telephone": "+261 32 70 879 50",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasimainty, Taolagnaro"
+      },
+      {
+       "id": "taolagnaro-csb2-manjakely",
+       "nom": "CSB2 Manjakely",
+       "type": "CSB2",
+       "telephone": "+261 33 36 990 52",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjakely, Taolagnaro"
+      },
+      {
+       "id": "taolagnaro-csb2-soakely",
+       "nom": "CSB2 Soakely",
+       "type": "CSB2",
+       "telephone": "+261 33 40 665 51",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Soakely, Taolagnaro"
+      },
+      {
+       "id": "taolagnaro-csb2-tsarafotsy",
+       "nom": "CSB2 Tsarafotsy",
+       "type": "CSB2",
+       "telephone": "+261 32 82 984 38",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsarafotsy, Taolagnaro"
+      }
+     ]
+    },
+    {
+     "id": "amboasary-atsimo",
+     "nom": "Amboasary Atsimo",
+     "centres": [
+      {
+       "id": "amboasary-atsimo-csb1-tsarabe",
+       "nom": "CSB1 Tsarabe",
+       "type": "CSB1",
+       "telephone": "+261 32 79 600 33",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsarabe, Amboasary Atsimo"
+      },
+      {
+       "id": "amboasary-atsimo-csb1-tsarakely",
+       "nom": "CSB1 Tsarakely",
+       "type": "CSB1",
+       "telephone": "+261 33 82 953 41",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsarakely, Amboasary Atsimo"
+      },
+      {
+       "id": "amboasary-atsimo-csb2-ambohitsoa",
+       "nom": "CSB2 Ambohitsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 16 882 10",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambohitsoa, Amboasary Atsimo"
+      },
+      {
+       "id": "amboasary-atsimo-csb2-tsaravato",
+       "nom": "CSB2 Tsaravato",
+       "type": "CSB2",
+       "telephone": "+261 33 92 857 72",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsaravato, Amboasary Atsimo"
+      }
+     ]
+    },
+    {
+     "id": "betroka",
+     "nom": "Betroka",
+     "centres": [
+      {
+       "id": "betroka-csb1-ambohilava",
+       "nom": "CSB1 Ambohilava",
+       "type": "CSB1",
+       "telephone": "+261 34 62 112 12",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambohilava, Betroka"
+      },
+      {
+       "id": "betroka-csb2-ambatomanga",
+       "nom": "CSB2 Ambatomanga",
+       "type": "CSB2",
+       "telephone": "+261 34 99 790 65",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambatomanga, Betroka"
+      },
+      {
+       "id": "betroka-csb2-ambohitsimo",
+       "nom": "CSB2 Ambohitsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 95 731 71",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambohitsimo, Betroka"
+      },
+      {
+       "id": "betroka-csb2-antantsoa",
+       "nom": "CSB2 Antantsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 29 109 37",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antantsoa, Betroka"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "menabe",
+   "nom": "Menabe",
+   "districts": [
+    {
+     "id": "morondava",
+     "nom": "Morondava",
+     "centres": [
+      {
+       "id": "morondava-csb1-manjabe",
+       "nom": "CSB1 Manjabe",
+       "type": "CSB1",
+       "telephone": "+261 32 34 734 77",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Manjabe, Morondava"
+      },
+      {
+       "id": "morondava-csb2-ambatofotsy",
+       "nom": "CSB2 Ambatofotsy",
+       "type": "CSB2",
+       "telephone": "+261 32 57 515 68",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambatofotsy, Morondava"
+      },
+      {
+       "id": "morondava-csb2-antanvato",
+       "nom": "CSB2 Antanvato",
+       "type": "CSB2",
+       "telephone": "+261 34 20 769 93",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Antanvato, Morondava"
+      }
+     ]
+    },
+    {
+     "id": "miandrivazo",
+     "nom": "Miandrivazo",
+     "centres": [
+      {
+       "id": "miandrivazo-csb2-ambohikely",
+       "nom": "CSB2 Ambohikely",
+       "type": "CSB2",
+       "telephone": "+261 32 98 680 70",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambohikely, Miandrivazo"
+      },
+      {
+       "id": "miandrivazo-csb2-ankatsoa",
+       "nom": "CSB2 Ankatsoa",
+       "type": "CSB2",
+       "telephone": "+261 33 65 760 52",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ankatsoa, Miandrivazo"
+      },
+      {
+       "id": "miandrivazo-csb2-mahafotsy",
+       "nom": "CSB2 Mahafotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 70 157 91",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Mahafotsy, Miandrivazo"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "diana",
+   "nom": "Diana",
+   "districts": [
+    {
+     "id": "antsiranana-i",
+     "nom": "Antsiranana I",
+     "centres": [
+      {
+       "id": "antsiranana-i-csb1-ambatolava",
+       "nom": "CSB1 Ambatolava",
+       "type": "CSB1",
+       "telephone": "+261 34 94 133 32",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatolava, Antsiranana I"
+      },
+      {
+       "id": "antsiranana-i-csb1-antantsimo",
+       "nom": "CSB1 Antantsimo",
+       "type": "CSB1",
+       "telephone": "+261 32 60 178 48",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antantsimo, Antsiranana I"
+      },
+      {
+       "id": "antsiranana-i-csb2-antantsimo",
+       "nom": "CSB2 Antantsimo",
+       "type": "CSB2",
+       "telephone": "+261 33 96 653 52",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antantsimo, Antsiranana I"
+      }
+     ]
+    },
+    {
+     "id": "antsiranana-ii",
+     "nom": "Antsiranana II",
+     "centres": [
+      {
+       "id": "antsiranana-ii-csb1-ambatomainty",
+       "nom": "CSB1 Ambatomainty",
+       "type": "CSB1",
+       "telephone": "+261 33 39 464 80",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambatomainty, Antsiranana II"
+      },
+      {
+       "id": "antsiranana-ii-csb1-andralava",
+       "nom": "CSB1 Andralava",
+       "type": "CSB1",
+       "telephone": "+261 34 54 154 22",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andralava, Antsiranana II"
+      },
+      {
+       "id": "antsiranana-ii-csb1-andrarano",
+       "nom": "CSB1 Andrarano",
+       "type": "CSB1",
+       "telephone": "+261 34 88 709 60",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Andrarano, Antsiranana II"
+      },
+      {
+       "id": "antsiranana-ii-csb1-andratsoa",
+       "nom": "CSB1 Andratsoa",
+       "type": "CSB1",
+       "telephone": "+261 33 29 489 91",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Andratsoa, Antsiranana II"
+      },
+      {
+       "id": "antsiranana-ii-csb2-ankatsimo",
+       "nom": "CSB2 Ankatsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 58 187 89",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ankatsimo, Antsiranana II"
+      },
+      {
+       "id": "antsiranana-ii-csb2-maharano",
+       "nom": "CSB2 Maharano",
+       "type": "CSB2",
+       "telephone": "+261 33 23 193 10",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Maharano, Antsiranana II"
+      },
+      {
+       "id": "antsiranana-ii-csb2-manjalava",
+       "nom": "CSB2 Manjalava",
+       "type": "CSB2",
+       "telephone": "+261 34 62 205 13",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjalava, Antsiranana II"
+      },
+      {
+       "id": "antsiranana-ii-csb2-tsaravato",
+       "nom": "CSB2 Tsaravato",
+       "type": "CSB2",
+       "telephone": "+261 32 26 189 33",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsaravato, Antsiranana II"
+      }
+     ]
+    },
+    {
+     "id": "nosy-be",
+     "nom": "Nosy Be",
+     "centres": [
+      {
+       "id": "nosy-be-csb1-andrabe",
+       "nom": "CSB1 Andrabe",
+       "type": "CSB1",
+       "telephone": "+261 33 45 531 48",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Andrabe, Nosy Be"
+      },
+      {
+       "id": "nosy-be-csb1-tsaravato",
+       "nom": "CSB1 Tsaravato",
+       "type": "CSB1",
+       "telephone": "+261 32 90 607 86",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsaravato, Nosy Be"
+      },
+      {
+       "id": "nosy-be-csb2-andratsimo",
+       "nom": "CSB2 Andratsimo",
+       "type": "CSB2",
+       "telephone": "+261 34 51 984 59",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Andratsimo, Nosy Be"
+      },
+      {
+       "id": "nosy-be-csb2-mahabe",
+       "nom": "CSB2 Mahabe",
+       "type": "CSB2",
+       "telephone": "+261 32 44 408 44",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahabe, Nosy Be"
+      },
+      {
+       "id": "nosy-be-csb2-mahafotsy",
+       "nom": "CSB2 Mahafotsy",
+       "type": "CSB2",
+       "telephone": "+261 32 81 348 83",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Mahafotsy, Nosy Be"
+      }
+     ]
+    },
+    {
+     "id": "ambanja",
+     "nom": "Ambanja",
+     "centres": [
+      {
+       "id": "ambanja-csb1-ankavato",
+       "nom": "CSB1 Ankavato",
+       "type": "CSB1",
+       "telephone": "+261 32 60 440 89",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankavato, Ambanja"
+      },
+      {
+       "id": "ambanja-csb2-ampasikely",
+       "nom": "CSB2 Ampasikely",
+       "type": "CSB2",
+       "telephone": "+261 33 47 951 98",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Ampasikely, Ambanja"
+      },
+      {
+       "id": "ambanja-csb2-ampasirano",
+       "nom": "CSB2 Ampasirano",
+       "type": "CSB2",
+       "telephone": "+261 33 93 708 27",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ampasirano, Ambanja"
+      },
+      {
+       "id": "ambanja-csb2-ampasitsimo",
+       "nom": "CSB2 Ampasitsimo",
+       "type": "CSB2",
+       "telephone": "+261 32 51 485 45",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ampasitsimo, Ambanja"
+      },
+      {
+       "id": "ambanja-csb2-andratsimo",
+       "nom": "CSB2 Andratsimo",
+       "type": "CSB2",
+       "telephone": "+261 32 85 658 33",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Andratsimo, Ambanja"
+      },
+      {
+       "id": "ambanja-csb2-soakely",
+       "nom": "CSB2 Soakely",
+       "type": "CSB2",
+       "telephone": "+261 33 50 281 60",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Soakely, Ambanja"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sava",
+   "nom": "Sava",
+   "districts": [
+    {
+     "id": "sambava",
+     "nom": "Sambava",
+     "centres": [
+      {
+       "id": "sambava-csb1-antanrano",
+       "nom": "CSB1 Antanrano",
+       "type": "CSB1",
+       "telephone": "+261 32 92 727 15",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antanrano, Sambava"
+      },
+      {
+       "id": "sambava-csb2-ampasibe",
+       "nom": "CSB2 Ampasibe",
+       "type": "CSB2",
+       "telephone": "+261 34 48 347 42",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasibe, Sambava"
+      },
+      {
+       "id": "sambava-csb2-mahafotsy",
+       "nom": "CSB2 Mahafotsy",
+       "type": "CSB2",
+       "telephone": "+261 32 67 712 71",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahafotsy, Sambava"
+      },
+      {
+       "id": "sambava-csb2-mahatsoa",
+       "nom": "CSB2 Mahatsoa",
+       "type": "CSB2",
+       "telephone": "+261 32 22 364 38",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Mahatsoa, Sambava"
+      },
+      {
+       "id": "sambava-csb2-manjafotsy",
+       "nom": "CSB2 Manjafotsy",
+       "type": "CSB2",
+       "telephone": "+261 34 14 909 56",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Manjafotsy, Sambava"
+      },
+      {
+       "id": "sambava-csb2-tsarafotsy",
+       "nom": "CSB2 Tsarafotsy",
+       "type": "CSB2",
+       "telephone": "+261 33 96 702 98",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsarafotsy, Sambava"
+      }
+     ]
+    },
+    {
+     "id": "antalaha",
+     "nom": "Antalaha",
+     "centres": [
+      {
+       "id": "antalaha-csb1-ampasitsoa",
+       "nom": "CSB1 Ampasitsoa",
+       "type": "CSB1",
+       "telephone": "+261 33 63 187 24",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ampasitsoa, Antalaha"
+      },
+      {
+       "id": "antalaha-csb2-ambatorano",
+       "nom": "CSB2 Ambatorano",
+       "type": "CSB2",
+       "telephone": "+261 33 36 633 71",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ambatorano, Antalaha"
+      },
+      {
+       "id": "antalaha-csb2-ambohitsoa",
+       "nom": "CSB2 Ambohitsoa",
+       "type": "CSB2",
+       "telephone": "+261 32 53 763 23",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Ambohitsoa, Antalaha"
+      },
+      {
+       "id": "antalaha-csb2-andramainty",
+       "nom": "CSB2 Andramainty",
+       "type": "CSB2",
+       "telephone": "+261 34 99 563 50",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Andramainty, Antalaha"
+      },
+      {
+       "id": "antalaha-csb2-antanlava",
+       "nom": "CSB2 Antanlava",
+       "type": "CSB2",
+       "telephone": "+261 32 80 263 52",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Antanlava, Antalaha"
+      }
+     ]
+    },
+    {
+     "id": "vohemar",
+     "nom": "Vohemar",
+     "centres": [
+      {
+       "id": "vohemar-csb1-mahabe",
+       "nom": "CSB1 Mahabe",
+       "type": "CSB1",
+       "telephone": "+261 32 91 773 65",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Mahabe, Vohemar"
+      },
+      {
+       "id": "vohemar-csb1-soakely",
+       "nom": "CSB1 Soakely",
+       "type": "CSB1",
+       "telephone": "+261 33 85 539 59",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Soakely, Vohemar"
+      },
+      {
+       "id": "vohemar-csb2-antankely",
+       "nom": "CSB2 Antankely",
+       "type": "CSB2",
+       "telephone": "+261 33 18 691 23",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Antankely, Vohemar"
+      },
+      {
+       "id": "vohemar-csb2-tsarakely",
+       "nom": "CSB2 Tsarakely",
+       "type": "CSB2",
+       "telephone": "+261 33 24 368 95",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Tsarakely, Vohemar"
+      },
+      {
+       "id": "vohemar-csb2-tsaramainty",
+       "nom": "CSB2 Tsaramainty",
+       "type": "CSB2",
+       "telephone": "+261 34 32 933 96",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Tsaramainty, Vohemar"
+      },
+      {
+       "id": "vohemar-csb2-tsaratsimo",
+       "nom": "CSB2 Tsaratsimo",
+       "type": "CSB2",
+       "telephone": "+261 33 88 501 85",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Tsaratsimo, Vohemar"
+      }
+     ]
+    },
+    {
+     "id": "andapa",
+     "nom": "Andapa",
+     "centres": [
+      {
+       "id": "andapa-csb1-tsarabe",
+       "nom": "CSB1 Tsarabe",
+       "type": "CSB1",
+       "telephone": "+261 34 59 528 86",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Tsarabe, Andapa"
+      },
+      {
+       "id": "andapa-csb2-ambohirano",
+       "nom": "CSB2 Ambohirano",
+       "type": "CSB2",
+       "telephone": "+261 32 72 239 34",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ambohirano, Andapa"
+      },
+      {
+       "id": "andapa-csb2-andrabe",
+       "nom": "CSB2 Andrabe",
+       "type": "CSB2",
+       "telephone": "+261 33 25 344 49",
+       "horaires": "Lun–Ven 7h30–16h00, vaccination mardi et jeudi matin",
+       "adresse": "Andrabe, Andapa"
+      },
+      {
+       "id": "andapa-csb2-ankamainty",
+       "nom": "CSB2 Ankamainty",
+       "type": "CSB2",
+       "telephone": "+261 33 27 291 50",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Ankamainty, Andapa"
+      },
+      {
+       "id": "andapa-csb2-ankatsoa",
+       "nom": "CSB2 Ankatsoa",
+       "type": "CSB2",
+       "telephone": "+261 34 13 914 38",
+       "horaires": "Lun–Ven 8h00–16h00, vaccination mercredi",
+       "adresse": "Ankatsoa, Andapa"
+      },
+      {
+       "id": "andapa-csb2-mahafotsy",
+       "nom": "CSB2 Mahafotsy",
+       "type": "CSB2",
+       "telephone": "+261 32 72 750 78",
+       "horaires": "Lun–Sam 8h00–15h00, vaccination lundi matin",
+       "adresse": "Mahafotsy, Andapa"
+      },
+      {
+       "id": "andapa-csb2-manjamainty",
+       "nom": "CSB2 Manjamainty",
+       "type": "CSB2",
+       "telephone": "+261 33 97 603 63",
+       "horaires": "Lun–Ven 7h00–15h30, vaccination vendredi matin",
+       "adresse": "Manjamainty, Andapa"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
