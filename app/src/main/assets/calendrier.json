@@ -1,0 +1,168 @@
+{
+ "schemaVersion": 1,
+ "version": 3,
+ "publieLe": "2026-09-14",
+ "source": "Calendrier de démonstration — projet universitaire. À valider auprès du Ministère de la Santé Publique.",
+ "vaccins": [
+  {
+   "id": "bcg",
+   "nom": "BCG",
+   "dose": "dose unique",
+   "ordre": 1,
+   "ageJours": 0,
+   "dependDe": null,
+   "toleranceJours": 30,
+   "description": "À la naissance"
+  },
+  {
+   "id": "vpo0",
+   "nom": "Polio oral",
+   "dose": "dose 0",
+   "ordre": 2,
+   "ageJours": 0,
+   "dependDe": null,
+   "toleranceJours": 14,
+   "description": "À la naissance"
+  },
+  {
+   "id": "penta1",
+   "nom": "Pentavalent",
+   "dose": "1re dose",
+   "ordre": 3,
+   "ageJours": 42,
+   "dependDe": null,
+   "toleranceJours": 14,
+   "description": "6 semaines"
+  },
+  {
+   "id": "vpo1",
+   "nom": "Polio oral",
+   "dose": "1re dose",
+   "ordre": 4,
+   "ageJours": 42,
+   "dependDe": null,
+   "toleranceJours": 14,
+   "description": "6 semaines"
+  },
+  {
+   "id": "pcv1",
+   "nom": "Pneumocoque",
+   "dose": "1re dose",
+   "ordre": 5,
+   "ageJours": 42,
+   "dependDe": null,
+   "toleranceJours": 14,
+   "description": "6 semaines"
+  },
+  {
+   "id": "rota1",
+   "nom": "Rotavirus",
+   "dose": "1re dose",
+   "ordre": 6,
+   "ageJours": 42,
+   "dependDe": null,
+   "toleranceJours": 14,
+   "description": "6 semaines"
+  },
+  {
+   "id": "penta2",
+   "nom": "Pentavalent",
+   "dose": "2e dose",
+   "ordre": 7,
+   "ageJours": 28,
+   "dependDe": "penta1",
+   "toleranceJours": 14,
+   "description": "4 semaines après la 1re dose"
+  },
+  {
+   "id": "vpo2",
+   "nom": "Polio oral",
+   "dose": "2e dose",
+   "ordre": 8,
+   "ageJours": 28,
+   "dependDe": "vpo1",
+   "toleranceJours": 14,
+   "description": "4 semaines après la 1re dose"
+  },
+  {
+   "id": "pcv2",
+   "nom": "Pneumocoque",
+   "dose": "2e dose",
+   "ordre": 9,
+   "ageJours": 28,
+   "dependDe": "pcv1",
+   "toleranceJours": 14,
+   "description": "4 semaines après la 1re dose"
+  },
+  {
+   "id": "rota2",
+   "nom": "Rotavirus",
+   "dose": "2e dose",
+   "ordre": 10,
+   "ageJours": 28,
+   "dependDe": "rota1",
+   "toleranceJours": 14,
+   "description": "4 semaines après la 1re dose"
+  },
+  {
+   "id": "penta3",
+   "nom": "Pentavalent",
+   "dose": "3e dose",
+   "ordre": 11,
+   "ageJours": 28,
+   "dependDe": "penta2",
+   "toleranceJours": 14,
+   "description": "4 semaines après la 2e dose"
+  },
+  {
+   "id": "vpo3",
+   "nom": "Polio oral",
+   "dose": "3e dose",
+   "ordre": 12,
+   "ageJours": 28,
+   "dependDe": "vpo2",
+   "toleranceJours": 14,
+   "description": "4 semaines après la 2e dose"
+  },
+  {
+   "id": "pcv3",
+   "nom": "Pneumocoque",
+   "dose": "3e dose",
+   "ordre": 13,
+   "ageJours": 28,
+   "dependDe": "pcv2",
+   "toleranceJours": 14,
+   "description": "4 semaines après la 2e dose"
+  },
+  {
+   "id": "vpi",
+   "nom": "Polio injectable",
+   "dose": "dose unique",
+   "ordre": 14,
+   "ageJours": 98,
+   "dependDe": null,
+   "toleranceJours": 14,
+   "description": "14 semaines"
+  },
+  {
+   "id": "rr1",
+   "nom": "Rougeole-Rubéole",
+   "dose": "1re dose",
+   "ordre": 15,
+   "ageJours": 270,
+   "dependDe": null,
+   "toleranceJours": 30,
+   "description": "9 mois"
+  },
+  {
+   "id": "rr2",
+   "nom": "Rougeole-Rubéole",
+   "dose": "2e dose",
+   "ordre": 16,
+   "ageJours": 450,
+   "dependDe": null,
+   "toleranceJours": 30,
+   "description": "15 mois"
+  }
+ ]
+}
