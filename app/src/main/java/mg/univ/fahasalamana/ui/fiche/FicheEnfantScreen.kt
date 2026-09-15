@@ -295,15 +295,19 @@ private fun EnteteEnfant(state: FicheEnfantUiState.Pret) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            BadgeResume(
-                couleur = couleurs.fait,
-                icone = Icons.Outlined.CheckCircle,
-                libelle = pluralStringResource(
-                    R.plurals.fiche_badge_faits,
-                    state.nbFaits,
-                    state.nbFaits,
-                ),
-            )
+            // Comme dans la liste des enfants, un compteur à zéro ne s'affiche pas :
+            // une fiche neuve n'a pas à annoncer « 0 fait ».
+            if (state.nbFaits > 0) {
+                BadgeResume(
+                    couleur = couleurs.fait,
+                    icone = Icons.Outlined.CheckCircle,
+                    libelle = pluralStringResource(
+                        R.plurals.fiche_badge_faits,
+                        state.nbFaits,
+                        state.nbFaits,
+                    ),
+                )
+            }
             if (state.resume.nbAFaire > 0) {
                 BadgeResume(
                     couleur = couleurs.aFaire,

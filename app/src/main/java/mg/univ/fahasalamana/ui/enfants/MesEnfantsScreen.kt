@@ -21,8 +21,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ChildCare
-import androidx.compose.material.icons.outlined.ErrorOutline
-import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.EventAvailable
+import androidx.compose.material.icons.outlined.PriorityHigh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -250,7 +250,7 @@ private fun PucesResume(enfant: LigneEnfant, modifier: Modifier = Modifier) {
                         enfant.resume.nbEnRetard,
                         enfant.resume.nbEnRetard,
                     ),
-                    icone = Icons.Outlined.ErrorOutline,
+                    icone = Icons.Outlined.PriorityHigh,
                     couleur = couleurs.enRetard,
                 )
             }
@@ -261,7 +261,7 @@ private fun PucesResume(enfant: LigneEnfant, modifier: Modifier = Modifier) {
                         enfant.resume.nbAFaire,
                         enfant.resume.nbAFaire,
                     ),
-                    icone = Icons.Outlined.Schedule,
+                    icone = Icons.Outlined.EventAvailable,
                     couleur = couleurs.aFaire,
                 )
             }
