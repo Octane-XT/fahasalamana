@@ -9,7 +9,6 @@
 
     <!-- Général -->
     <string name="app_name">Fahasalamana Zaza</string>
-    <string name="socle_provisoire">Socle en place — écrans à venir</string>
 
     <!-- B01 — Navigation : libellés des trois onglets de la barre du bas -->
     <string name="onglet_enfants">Enfants</string>
