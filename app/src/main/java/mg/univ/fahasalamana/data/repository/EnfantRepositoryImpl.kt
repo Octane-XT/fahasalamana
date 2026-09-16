@@ -4,9 +4,13 @@ import kotlinx.coroutines.flow.Flow
 import mg.univ.fahasalamana.data.local.EnfantAvecVaccins
 import mg.univ.fahasalamana.data.local.EnfantDao
 import mg.univ.fahasalamana.data.local.VaccinAdministreDao
+import mg.univ.fahasalamana.data.local.toDomain
 import mg.univ.fahasalamana.data.local.toEntity
+import mg.univ.fahasalamana.domain.CarnetExport
 import mg.univ.fahasalamana.domain.Enfant
 import mg.univ.fahasalamana.domain.VaccinAdministre
+import mg.univ.fahasalamana.domain.carnetExport
+import java.time.LocalDate
 
 /**
  * Implémentation de [EnfantRepository] : deux DAO, aucune règle métier.
@@ -56,4 +60,24 @@ class EnfantRepositoryImpl(
         vaccinAdministreDao.upsert(v.toEntity())
 
     override suspend fun supprimerAdministration(id: String) = vaccinAdministreDao.supprimer(id)
+
+    /**
+     * Une seule lecture, puis une traduction vers le format de fichier (US-B9, scénario 1).
+     *
+     * `lireToutAvecVaccins()` est annotée `@Transaction` : les enfants et leurs doses sont
+     * lus dans le même instantané de la base. Sans cela, une saisie faite pendant l'export
+     * pourrait produire un fichier où une dose manque à un enfant déjà écrit.
+     *
+     * L'assemblage lui-même (regroupement des doses sous leur enfant, tris, en-tête) est
+     * dans `domain/ExportImportCarnet.kt` : ce repository n'écrit pas le format, il fournit
+     * la matière. C'est ce qui rend le format testable en JVM sans base.
+     */
+    override suspend fun exporter(jour: LocalDate): CarnetExport {
+        val carnet = enfantDao.lireToutAvecVaccins()
+        return carnetExport(
+            enfants = carnet.map { it.enfant.toDomain() },
+            doses = carnet.flatMap { it.administres.toDomain() },
+            exporteLe = jour,
+        )
+    }
 }

@@ -2,8 +2,10 @@ package mg.univ.fahasalamana.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import mg.univ.fahasalamana.data.local.EnfantAvecVaccins
+import mg.univ.fahasalamana.domain.CarnetExport
 import mg.univ.fahasalamana.domain.Enfant
 import mg.univ.fahasalamana.domain.VaccinAdministre
+import java.time.LocalDate
 
 /**
  * Les enfants du carnet et leurs doses reçues (§B6).
@@ -62,22 +64,42 @@ interface EnfantRepository {
     /** Supprime une dose saisie par erreur (US-B4). */
     suspend fun supprimerAdministration(id: String)
 
-    /*
-     * TODO(B16) / TODO(B17) — export et import du carnet, tâches de Dev A.
+    /**
+     * Tout le carnet de ce téléphone, sous la forme écrite dans le fichier d'export
+     * (US-B9, scénario 1).
      *
-     * Signatures prévues par le §B6, à ajouter ici telles quelles :
+     * **Une lecture, rien d'autre** : ni écriture de fichier, ni choix d'emplacement, ni
+     * message. L'écriture dans le document désigné par l'utilisateur est faite par
+     * `platform/ExportCarnetSaf.kt`, à partir du texte produit par `ecrireCarnet()`.
+     * C'est ce découpage qui permet de tester le format en JVM sans Android.
+     *
+     * @param jour jour de l'export, repris tel quel dans [CarnetExport.exporteLe] **et**
+     *   dans le nom du fichier proposé (`nomFichierCarnet`), pour que les deux ne puissent
+     *   pas désigner deux jours différents.
+     *
+     *   Ce paramètre est un **écart assumé au §B6**, qui écrit `exporter(): CarnetExport`.
+     *   Le jour courant vient de l'horloge injectée (`platform/HorlogeJour.kt`) partout
+     *   dans le projet, jamais d'un `LocalDate.now()` enfoui dans une couche basse :
+     *   sans lui, ce repository lirait l'heure système, et l'export deviendrait le seul
+     *   endroit du code où la date du jour n'est ni injectée ni testable.
+     */
+    suspend fun exporter(jour: LocalDate): CarnetExport
+
+    /*
+     * TODO(B17) — import du carnet, tâche de Dev A.
+     *
+     * Signature prévue par le §B6, à ajouter ici telle quelle :
      *
      *     suspend fun importer(carnet: CarnetExport): ResultatImport
-     *     suspend fun exporter(): CarnetExport
      *
-     * Elles ne sont pas déclarées tant que `CarnetExport` et `ResultatImport` n'existent
-     * pas : ces deux types sont le format de fichier de l'export (B16) et le rapport de
-     * fusion de l'import (B17), et leur forme relève de ces tâches. Les inventer ici pour
-     * que la signature compile obligerait à les refaire — c'est le même choix que celui
-     * fait en B04 pour `ReferenceRepository.mettreAJour()` et son `ResultatSync`.
+     * Elle n'est pas déclarée tant que `ResultatImport` n'existe pas : ce type est le
+     * rapport de fusion de l'import (ajoutés / mis à jour / ignorés) et sa forme relève
+     * de B17. L'inventer ici pour que la signature compile obligerait à la refaire —
+     * c'est le même choix que celui fait en B04 pour `ReferenceRepository.mettreAJour()`
+     * et son `ResultatSync`.
      *
-     * Le reste est déjà en place : `EnfantDao.lireToutAvecVaccins` lit tout le carnet en
-     * une fois pour l'export, et `enregistrerTous` / `upsertTous` fusionnent par
-     * identifiant à l'import.
+     * Le reste est déjà en place : `CarnetExport` et `lireCarnet()` sont écrits (B16),
+     * et `EnfantDao.enregistrerTous` / `VaccinAdministreDao.upsert` fusionnent par
+     * identifiant.
      */
 }
