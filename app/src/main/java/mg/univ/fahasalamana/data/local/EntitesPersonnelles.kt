@@ -68,9 +68,10 @@ data class EnfantEntity(
  * annule **tout** le remplacement du calendrier ; l'utilisateur se retrouverait avec un
  * calendrier bloqué à cause d'une dose qu'il a correctement saisie. Une donnée de santé
  * déjà saisie l'emporte sur l'intégrité référentielle d'un contenu remplaçable : la dose
- * est conservée en base. **La contrepartie côté affichage reste à écrire** (point n° 6 du
- * suivi) : aujourd'hui la fiche ne montre que les lignes du calendrier, donc une telle dose
- * ne se voit plus. La moitié de la décision B04 est en place, pas l'autre.
+ * est conservée en base, **et la fiche la montre** : `domain.dosesHorsCalendrier` la retrouve
+ * à partir des administrations, et l'écran l'affiche dans une section « Doses hors
+ * calendrier » où elle compte aussi parmi les doses reçues. Les deux moitiés de la décision
+ * B04 sont en place, et un test instrumenté les garde (`RemplacementReferenceTest`).
  *
  * L'index sur `vaccinId` reste, lui : il sert les jointures avec `vaccins_reference` et la
  * recherche des administrations d'un vaccin donné. Ce qui disparaît, c'est la contrainte,
