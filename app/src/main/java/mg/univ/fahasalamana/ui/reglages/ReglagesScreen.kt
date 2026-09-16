@@ -42,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mg.univ.fahasalamana.R
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
+import mg.univ.fahasalamana.ui.export.LigneExportCarnet
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
@@ -68,7 +69,6 @@ import java.util.Locale
 /** Dates affichées en jour/mois/année, comme dans les wireframes (§B7.2). */
 private val FORMAT_JOUR: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
 
-import mg.univ.fahasalamana.ui.export.LigneExportCarnet
 @Composable
 fun ReglagesScreen(
     modifier: Modifier = Modifier,
