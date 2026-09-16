@@ -16,6 +16,7 @@ import mg.univ.fahasalamana.platform.horlogeJour
 import mg.univ.fahasalamana.ui.edition.EditionEnfantViewModel
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
 import mg.univ.fahasalamana.ui.centres.CentresViewModel
+import mg.univ.fahasalamana.ui.detailcentre.DetailCentreViewModel
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinViewModel
@@ -138,6 +139,9 @@ val appModule = module {
     // tout de même — il retient la région et le district choisis, qui survivent ainsi à la
     // rotation et à la mort du processus.
     viewModel { CentresViewModel(savedStateHandle = get(), annuaire = get()) }
+
+    // (B14) Fiche d'un centre : centreId lu par SavedStateHandle.toRoute<DetailCentre>().
+    viewModel { DetailCentreViewModel(savedStateHandle = get(), annuaire = get()) }
 
     // TODO(B10) à TODO(B18) : un viewModel par écran restant.
 }

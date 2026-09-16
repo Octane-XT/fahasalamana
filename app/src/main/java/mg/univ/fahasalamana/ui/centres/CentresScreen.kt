@@ -32,7 +32,6 @@ import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -46,8 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,6 +53,7 @@ import mg.univ.fahasalamana.R
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.components.EtatVide
+import mg.univ.fahasalamana.ui.components.EtiquetteType
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -69,11 +67,12 @@ import org.koin.androidx.compose.koinViewModel
  * Toucher une carte ouvre `DetailCentre(centreId)` par la lambda [CentresScreen.onOuvrirCentre] :
  * la navigation reste dans `AppNavHost`, jamais dans le ViewModel.
  *
- * TODO(B14) : les boutons « Appeler » et « Y aller » vivent sur l'écran de détail. Le
- * wireframe §B7.2 dessine un bouton « 📞 Appeler » sous chaque carte de cette liste, mais
- * §B10.2 attribue `ACTION_DIAL` à B14 et US-B6 scénario 2 part de « la fiche du centre ».
- * Divergence signalée au binôme plutôt que tranchée ici : si le bouton doit revenir dans la
- * liste, il se branchera sur les mêmes `LigneCentre` (il faudra y rajouter le téléphone).
+ * Le bouton « Appeler » vit sur l'écran de détail (B14), pas ici. Le wireframe §B7.2 le
+ * dessine pourtant sous chaque carte de cette liste, mais §B10.2 attribue `ACTION_DIAL` à
+ * B14 et US-B6 scénario 2 part de « la fiche du centre ». B13 puis B14 ont suivi le plan ;
+ * la divergence reste au suivi (n° 15) pour que le binôme tranche. Si le bouton doit
+ * revenir dans la liste, il se branchera sur les mêmes `LigneCentre` (il faudra y rajouter
+ * le téléphone) et appellera `ActionsCentre.appeler`, qui porte déjà le repli du scénario 3.
  */
 
 /**
@@ -399,32 +398,9 @@ private fun CarteCentre(
     }
 }
 
-/**
- * Le niveau du centre (« CSB1 », « CSB2 »…), affiché tel qu'il est publié.
- *
- * Le nom du centre commence souvent par son type dans l'annuaire livré, mais les deux
- * champs sont distincts (§B5.1) et le critère d'acceptation de US-B6 demande le type : il
- * est donc affiché à part, et non déduit du nom. `clearAndSetSemantics` remplace « CSB2 »
- * par une phrase lisible pour TalkBack.
- */
-@Composable
-private fun EtiquetteType(type: String, modifier: Modifier = Modifier) {
-    val description = stringResource(R.string.centres_type_description, type)
-
-    Surface(
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-        shape = MaterialTheme.shapes.small,
-        modifier = modifier.clearAndSetSemantics { contentDescription = description },
-    ) {
-        Text(
-            text = type,
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-            maxLines = 1,
-        )
-    }
-}
+// (B14) `EtiquetteType` vivait ici, en privé. La fiche d'un centre affiche le même badge :
+// il est remonté dans `ui/components/EtiquetteType.kt` plutôt que recopié, pour ne pas
+// rejouer la divergence qu'avait connue l'affichage de l'âge entre la liste et la fiche.
 
 @Composable
 private fun LigneDetail(

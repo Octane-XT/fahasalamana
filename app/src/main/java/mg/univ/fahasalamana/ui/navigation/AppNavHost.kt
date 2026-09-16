@@ -31,10 +31,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import mg.univ.fahasalamana.ui.centres.CentresScreen
+import mg.univ.fahasalamana.ui.detailcentre.DetailCentreScreen
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantScreen
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinScreen
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import mg.univ.fahasalamana.R
 import mg.univ.fahasalamana.ui.edition.EditionEnfantScreen
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsScreen
@@ -185,14 +185,8 @@ fun AppNavHost(
                 )
             }
 
-            composable<DetailCentre> { entree ->
-                val route = entree.toRoute<DetailCentre>()
-                EcranProvisoire(
-                    nomEcran = "DetailCentre",
-                    tache = "B14",
-                    arguments = listOf("centreId" to route.centreId),
-                    onRetour = { navController.navigateUp() },
-                )
+            composable<DetailCentre> {
+                DetailCentreScreen(onRetour = { navController.navigateUp() })
             }
 
             // --- Onglet Réglages ---

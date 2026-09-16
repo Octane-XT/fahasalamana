@@ -53,4 +53,60 @@
     <string name="centres_adresse_label">Adresse</string>
     <string name="centres_type_description">Type de centre : %1$s</string>
 
+    <!-- ===================================================================
+         B14 — Fiche d'un centre (US-B6 scénarios 2 et 3)
+         ===================================================================
+         La fiche réutilise `centres_horaires_label`, `centres_adresse_label` et
+         `centres_type_description` de B13 : ce sont les mêmes informations, et deux
+         libellés séparés finiraient par diverger.
+
+         Aucun de ces textes n'affirme qu'un centre est ouvert, joignable ou compétent :
+         ils rapportent ce que l'annuaire publie et ce que le téléphone sait faire. -->
+
+    <!-- B14 — Barre du haut. Affichée seulement quand le nom du centre est inconnu
+         (chargement, centre introuvable) ; sinon la barre porte le nom du centre. -->
+    <string name="detail_centre_titre">Centre de santé</string>
+
+    <!-- B14 — Les informations publiées. `detail_centre_non_publie` remplace une valeur
+         absente : la ligne reste affichée et dit ce qui manque, plutôt que de disparaître
+         sans explication. -->
+    <string name="detail_centre_telephone_label">Téléphone</string>
+    <string name="detail_centre_non_publie">Non publié dans l\'annuaire</string>
+
+    <!-- B14 — L'action de la fiche. « Appeler » ouvre le composeur avec le numéro déjà
+         saisi (ACTION_DIAL) : c'est le parent qui appuie ensuite sur le bouton d'appel.
+         L'application ne passe jamais l'appel elle-même. -->
+    <string name="detail_centre_action_appeler">Appeler</string>
+
+    <!-- B14 — Ce que fait réellement le bouton. Phrase lue en soutenance : elle décrit le
+         choix d'architecture (déléguer au composeur plutôt que demander une permission
+         d'appel) et la garantie de confidentialité qui va avec. -->
+    <string name="detail_centre_mention_delegation">Cette fiche vient de l\'annuaire enregistré sur ce téléphone. « Appeler » ouvre votre application de téléphone avec le numéro déjà saisi : l\'application ne passe pas l\'appel elle-même et n\'envoie rien sur Internet.</string>
+
+    <!-- B14 — US-B6 scénario 3 : aucune application ne gère l'Intent.
+         Le message constate l'absence, sans reprocher quoi que ce soit (règle R7), et
+         l'action propose de copier le numéro, qu'on colle ensuite dans un SMS. -->
+    <string name="detail_centre_repli_appel">Aucune application de téléphone sur cet appareil.</string>
+    <string name="detail_centre_repli_copier_numero">Copier le numéro</string>
+    <string name="detail_centre_repli_numero_copie">Numéro copié.</string>
+    <string name="detail_centre_repli_echec">La copie n\'a pas pu se faire sur cet appareil.</string>
+
+    <!-- B14 — Étiquette du presse-papiers : certains gestionnaires l'affichent à côté du
+         contenu collé. -->
+    <string name="detail_centre_presse_papier_numero">Numéro du centre</string>
+
+    <!-- B14 — L'annuaire ne publie aucun numéro composable pour ce centre. Distinct du
+         repli ci-dessus : là, il n'y a rien à copier. -->
+    <string name="detail_centre_sans_numero">L\'annuaire ne publie pas de numéro pour ce centre.</string>
+
+    <!-- B14 — Centre absent de l'annuaire : identifiant venu d'une pile de retour
+         restaurée ou d'un lien, alors qu'une mise à jour (B19) a retiré ce centre. Ce
+         n'est pas une panne, d'où un texte distinct de `detail_centre_erreur`. -->
+    <string name="detail_centre_introuvable_titre">Centre introuvable</string>
+    <string name="detail_centre_introuvable_description">Ce centre ne figure pas dans l\'annuaire enregistré sur ce téléphone. Il a pu en être retiré par une mise à jour.</string>
+    <string name="detail_centre_introuvable_action">Revenir à la liste</string>
+
+    <!-- B14 — Échec de lecture de la base. Aucune donnée personnelle dans ce message. -->
+    <string name="detail_centre_erreur">La fiche de ce centre n\'a pas pu être lue.</string>
+
 </resources>

@@ -8,14 +8,13 @@
          Aucune donnée personnelle ne transite par le réseau. -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Intents résolus par l'application : cartes et téléphone (B14). -->
+    <!-- Intent résolu par l'application : le composeur téléphonique (B14). -->
     <queries>
         <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="geo" />
-        </intent>
-        <intent>
             <action android:name="android.intent.action.DIAL" />
+            <!-- Le filtre du composeur exige le schéma tel : sans lui, l'appariement de
+                 visibilité d'Android 11+ ne le trouve pas et resolveActivity renvoie null. -->
+            <data android:scheme="tel" />
         </intent>
     </queries>
 
