@@ -17,7 +17,9 @@ import mg.univ.fahasalamana.data.local.AppDatabase
 import mg.univ.fahasalamana.data.repository.EnfantRepository
 import mg.univ.fahasalamana.data.repository.EnfantRepositoryImpl
 import mg.univ.fahasalamana.data.repository.InfosSource
+import mg.univ.fahasalamana.data.repository.IssueMiseAJour
 import mg.univ.fahasalamana.data.repository.ReferenceRepository
+import mg.univ.fahasalamana.data.repository.ResultatSync
 import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.domain.Enfant
 import mg.univ.fahasalamana.domain.Sexe
@@ -489,4 +491,14 @@ private class CalendrierFige(private val calendrier: List<VaccinReference>) : Re
 
     /** Jamais appelée par le planificateur : la base des tests est peuplée à la main. */
     override suspend fun chargerEmbarqueSiVide() = Unit
+
+    /**
+     * (B19) Jamais appelée non plus : le planificateur ne met rien à jour, il lit le
+     * calendrier. Rendre « tout était déjà à jour » est la seule réponse honnête d'un
+     * calendrier figé — et surtout la seule qui n'écrive rien.
+     */
+    override suspend fun mettreAJour(): ResultatSync = ResultatSync(
+        calendrier = IssueMiseAJour.DejaAJour(version = 1),
+        annuaire = IssueMiseAJour.DejaAJour(version = 1),
+    )
 }

@@ -5,6 +5,7 @@ import mg.univ.fahasalamana.data.local.AppDatabase
 import mg.univ.fahasalamana.data.local.PreferencesLocales
 import mg.univ.fahasalamana.data.local.SourcesEmbarquees
 import mg.univ.fahasalamana.data.local.construireBase
+import mg.univ.fahasalamana.data.remote.construireReferenceApi
 import mg.univ.fahasalamana.data.repository.CentreRepository
 import mg.univ.fahasalamana.data.repository.CentreRepositoryImpl
 import mg.univ.fahasalamana.data.repository.EnfantRepository
@@ -61,6 +62,11 @@ val appModule = module {
     // (B04) Contenu de référence. Liés à l'interface et non à l'implémentation : les
     // ViewModels dépendent du contrat du §B6, et B19 remplacera l'implémentation du
     // calendrier sans toucher à un seul écran.
+    // (B19) Client HTTP des fichiers de référence publiés (§B5.1). `single` : Retrofit et
+    // OkHttp partagent un pool de connexions et de threads ; en construire un par appel
+    // rouvrirait une socket à chaque vérification.
+    single { construireReferenceApi() }
+
     single<ReferenceRepository> {
         ReferenceRepositoryImpl(
             vaccinReferenceDao = get(),
@@ -68,6 +74,8 @@ val appModule = module {
             referenceDao = get(),
             sources = get(),
             preferences = get(),
+            // (B19) Mise à jour des contenus de référence depuis le réseau.
+            api = get(),
         )
     }
     single<CentreRepository> { CentreRepositoryImpl(centreDao = get()) }
@@ -131,7 +139,8 @@ val appModule = module {
 
     // --- ViewModels ---
     // (B15) Réglages : lit la provenance du calendrier et les préférences locales.
-    viewModel { ReglagesViewModel(get(), get()) }
+    // (B19) + PlanificateurRappels : un nouveau calendrier déplace toutes les dates prévues.
+    viewModel { ReglagesViewModel(get(), get(), get()) }
 
     // (B06) Mes enfants : carnet + calendrier + jour courant, résumés par le calculateur (R6).
     viewModel { MesEnfantsViewModel(get(), get(), get(), get()) }

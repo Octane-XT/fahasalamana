@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -25,6 +27,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,13 +35,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mg.univ.fahasalamana.R
+import mg.univ.fahasalamana.data.local.PreferencesLocales
+import mg.univ.fahasalamana.data.repository.IssueMiseAJour
+import mg.univ.fahasalamana.data.repository.ResultatSync
 import mg.univ.fahasalamana.platform.BlocRappelsDebug
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
@@ -64,6 +72,11 @@ import java.util.Locale
  * comme telle à TalkBack, plutôt que branchée sur un écran vide. Le texte de confidentialité
  * décrit ce que le code fait aujourd'hui, et rien de plus : il est lu en soutenance.
  *
+ * (B19) « Vérifier les mises à jour » est actif depuis B19 et rend un compte rendu ligne à
+ * ligne, un contenu de référence par ligne. Ce bouton est le **seul** endroit d'où
+ * l'application emprunte le réseau : il n'y a ni vérification au démarrage, ni tâche de fond,
+ * et c'est ce que dit `maj_description` juste en dessous.
+ *
  * (B10) Le bloc « Rappels » est ajouté en bas de page par `BlocRappelsDebug()`, qui n'existe
  * qu'en build debug : il porte la notification de test de la Definition of Done. L'interrupteur
  * d'activation des notifications, lui, reste à faire — TODO(B12), en même temps que le
@@ -79,13 +92,20 @@ fun ReglagesScreen(
     vm: ReglagesViewModel = koinViewModel(),
 ) {
     val state by vm.uiState.collectAsStateWithLifecycle()
-    ReglagesContenu(state = state, modifier = modifier)
+    ReglagesContenu(
+        state = state,
+        onVerifierMisesAJour = vm::onVerifierMisesAJour,
+        onResultatMiseAJourFerme = vm::onResultatMiseAJourFerme,
+        modifier = modifier,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ReglagesContenu(
     state: ReglagesUiState,
+    onVerifierMisesAJour: () -> Unit,
+    onResultatMiseAJourFerme: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -100,7 +120,11 @@ private fun ReglagesContenu(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
-            BlocDonneesReference(state)
+            BlocDonneesReference(
+                state = state,
+                onVerifierMisesAJour = onVerifierMisesAJour,
+                onResultatMiseAJourFerme = onResultatMiseAJourFerme,
+            )
             BlocConfidentialite()
             BlocCarnet()
             BlocSecurite()
@@ -116,7 +140,11 @@ private fun ReglagesContenu(
 // --- Bloc « Données de référence » (US-B7) -----------------------------------
 
 @Composable
-private fun BlocDonneesReference(state: ReglagesUiState) {
+private fun BlocDonneesReference(
+    state: ReglagesUiState,
+    onVerifierMisesAJour: () -> Unit,
+    onResultatMiseAJourFerme: () -> Unit,
+) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         TitreSection(stringResource(R.string.reglages_section_reference))
 
@@ -134,13 +162,23 @@ private fun BlocDonneesReference(state: ReglagesUiState) {
                     .heightIn(min = 160.dp),
             )
 
-            is ReglagesUiState.Pret -> CarteDonneesReference(state.reference)
+            is ReglagesUiState.Pret -> CarteDonneesReference(
+                donnees = state.reference,
+                miseAJour = state.miseAJour,
+                onVerifierMisesAJour = onVerifierMisesAJour,
+                onResultatMiseAJourFerme = onResultatMiseAJourFerme,
+            )
         }
     }
 }
 
 @Composable
-private fun CarteDonneesReference(donnees: DonneesReference) {
+private fun CarteDonneesReference(
+    donnees: DonneesReference,
+    miseAJour: EtatMiseAJour,
+    onVerifierMisesAJour: () -> Unit,
+    onResultatMiseAJourFerme: () -> Unit,
+) {
     OutlinedCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -196,23 +234,173 @@ private fun CarteDonneesReference(donnees: DonneesReference) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
-            // TODO(B19) : activer ce bouton et appeler ReglagesViewModel.onVerifierMisesAJour().
-            // Laissé visible mais désactivé : la place de la fonction est montrée, sans laisser
-            // croire qu'elle marche déjà pendant la démonstration.
+            // (B19) Le bouton est actif. Il reste inactif pendant une vérification en
+            // cours : un second appui relancerait un téléchargement de 115 Ko pour rien.
             OutlinedButton(
-                onClick = { },
-                enabled = false,
+                onClick = onVerifierMisesAJour,
+                enabled = !miseAJour.enCours,
                 modifier = Modifier.fillMaxWidth(),
             ) {
+                if (miseAJour.enCours) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp,
+                    )
+                    Spacer(Modifier.width(12.dp))
+                }
                 Text(stringResource(R.string.reglages_action_verifier))
             }
+
             Text(
-                text = stringResource(R.string.reglages_action_verifier_indisponible),
+                // L'avancement passe par le texte et pas seulement par l'indicateur qui
+                // tourne : une animation ne s'annonce pas à TalkBack (même règle qu'en B17).
+                text = if (miseAJour.enCours) {
+                    stringResource(R.string.maj_en_cours)
+                } else {
+                    stringResource(R.string.maj_description)
+                },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+
+            miseAJour.resultat?.let { resultat ->
+                PanneauMiseAJour(resultat = resultat, onFermer = onResultatMiseAJourFerme)
+            }
         }
     }
+}
+
+// --- Compte rendu de la mise à jour (B19, US-B11) ----------------------------
+
+/**
+ * Ce qui vient de se passer, un contenu de référence par ligne.
+ *
+ * **Pas un `Snackbar`**, pour les mêmes raisons qu'en B16 et B17 : le compte rendu se lit
+ * ligne à ligne (« calendrier mis à jour, annuaire injoignable »), quatre secondes n'y
+ * suffisent pas, et le `Scaffold` de cet écran n'a pas de `SnackbarHost`.
+ *
+ * `liveRegion` : TalkBack annonce le compte rendu dès qu'il apparaît, sans que le parent
+ * ait à partir à sa recherche.
+ */
+@Composable
+private fun PanneauMiseAJour(
+    resultat: ResultatSync,
+    onFermer: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // Trois apparences, dans l'ordre où on les regarde : quelque chose a changé, rien
+    // n'avait changé, rien n'a pu être vérifié. Le cas mixte (un contenu remplacé, l'autre
+    // en échec) prend le premier : c'est la nouvelle, et le détail est juste en dessous.
+    val couleurFond = when {
+        resultat.contenuRemplace -> MaterialTheme.colorScheme.secondaryContainer
+        resultat.toutEtaitAJour -> MaterialTheme.colorScheme.surfaceVariant
+        else -> MaterialTheme.colorScheme.errorContainer
+    }
+    val couleurTexte = when {
+        resultat.contenuRemplace -> MaterialTheme.colorScheme.onSecondaryContainer
+        resultat.toutEtaitAJour -> MaterialTheme.colorScheme.onSurfaceVariant
+        else -> MaterialTheme.colorScheme.onErrorContainer
+    }
+    val titre = when {
+        resultat.contenuRemplace -> stringResource(R.string.maj_titre_installee)
+        resultat.toutEtaitAJour -> stringResource(R.string.maj_titre_a_jour)
+        else -> stringResource(R.string.maj_titre_echec)
+    }
+
+    Surface(
+        color = couleurFond,
+        contentColor = couleurTexte,
+        shape = MaterialTheme.shapes.medium,
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics { liveRegion = LiveRegionMode.Polite },
+    ) {
+        Column(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(text = titre, style = MaterialTheme.typography.titleSmall)
+
+            // Les deux contenus sont annoncés séparément, toujours, et dans l'ordre de la
+            // carte au-dessus : l'un peut réussir et l'autre échouer.
+            Text(
+                text = ligneMiseAJour(
+                    nomContenu = stringResource(R.string.reglages_calendrier_titre),
+                    issue = resultat.calendrier,
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
+                text = ligneMiseAJour(
+                    nomContenu = stringResource(R.string.reglages_annuaire_titre),
+                    issue = resultat.annuaire,
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+
+            // Un nouveau calendrier déplace les dates prévues : le parent doit savoir que
+            // ses rappels ont suivi et qu'il n'a rien à faire de plus. Phrase réutilisée
+            // telle quelle de B17, où elle dit exactement la même chose après un import.
+            if (resultat.calendrierRemplace) {
+                Text(
+                    text = stringResource(R.string.import_rappels_recalcules),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+
+            // Ce que la mise à jour a touché, et ce qu'elle n'a pas touché (§B8, règle 8 de
+            // CLAUDE.md). Seulement après un remplacement réel : c'est le seul moment où la
+            // question se pose.
+            if (resultat.contenuRemplace) {
+                Text(
+                    text = stringResource(R.string.maj_donnees_personnelles),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+
+            // `export_fermer` réutilisé tel quel : même mot, même geste (B16, B17).
+            TextButton(
+                onClick = onFermer,
+                modifier = Modifier.align(Alignment.End),
+            ) {
+                Text(stringResource(R.string.export_fermer))
+            }
+        }
+    }
+}
+
+/**
+ * La phrase qui décrit ce qu'est devenu **un** contenu de référence.
+ *
+ * `when` sans `else` sur un `sealed interface` (règle 5 de CLAUDE.md) : le jour où une
+ * sixième issue sera ajoutée à `IssueMiseAJour`, le compilateur signalera cet endroit au
+ * lieu de laisser une ligne vide à l'écran.
+ */
+@Composable
+private fun ligneMiseAJour(nomContenu: String, issue: IssueMiseAJour): String = when (issue) {
+    is IssueMiseAJour.DejaAJour ->
+        stringResource(R.string.maj_ligne_a_jour, nomContenu, issue.version)
+
+    is IssueMiseAJour.Remplace -> if (issue.versionPrecedente == PreferencesLocales.VERSION_ABSENTE) {
+        // Aucun contenu n'était chargé : parler d'une « version 0 » remplacée n'aurait
+        // aucun sens pour le parent, et 0 n'est pas une version publiée (§B5.1).
+        stringResource(R.string.maj_ligne_premiere_installation, nomContenu, issue.version)
+    } else {
+        stringResource(
+            R.string.maj_ligne_installee,
+            nomContenu,
+            issue.version,
+            issue.versionPrecedente,
+        )
+    }
+
+    IssueMiseAJour.Echec -> stringResource(R.string.maj_ligne_echec, nomContenu)
+
+    IssueMiseAJour.FormatInvalide ->
+        stringResource(R.string.maj_ligne_format_invalide, nomContenu)
+
+    is IssueMiseAJour.SchemaInconnu ->
+        stringResource(R.string.maj_ligne_schema_inconnu, nomContenu, issue.schemaVersion)
 }
 
 /**
@@ -385,42 +573,139 @@ private val ReferenceDApercu = DonneesReference(
     derniereVerification = null,
 )
 
+/** Les aperçus ne branchent rien : les deux lambdas de B19 y sont vides. */
+@Composable
+private fun ApercuReglages(state: ReglagesUiState) {
+    FahasalamanaTheme {
+        ReglagesContenu(
+            state = state,
+            onVerifierMisesAJour = {},
+            onResultatMiseAJourFerme = {},
+        )
+    }
+}
+
 @Preview(showBackground = true, heightDp = 1400)
 @Preview(showBackground = true, heightDp = 1400, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ApercuReglagesPret() {
-    FahasalamanaTheme {
-        ReglagesContenu(state = ReglagesUiState.Pret(ReferenceDApercu))
-    }
+    ApercuReglages(ReglagesUiState.Pret(ReferenceDApercu))
 }
 
 @Preview(showBackground = true, heightDp = 1400)
 @Composable
 private fun ApercuReglagesAnnuaireAbsent() {
-    FahasalamanaTheme {
-        ReglagesContenu(
-            state = ReglagesUiState.Pret(
-                ReferenceDApercu.copy(
-                    versionAnnuaire = null,
-                    derniereVerification = LocalDate.of(2026, 9, 15),
-                ),
+    ApercuReglages(
+        ReglagesUiState.Pret(
+            ReferenceDApercu.copy(
+                versionAnnuaire = null,
+                derniereVerification = LocalDate.of(2026, 9, 15),
             ),
-        )
-    }
+        ),
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ApercuReglagesChargement() {
-    FahasalamanaTheme {
-        ReglagesContenu(state = ReglagesUiState.Chargement)
-    }
+    ApercuReglages(ReglagesUiState.Chargement)
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ApercuReglagesErreur() {
+    ApercuReglages(ReglagesUiState.Erreur)
+}
+
+// --- Aperçus de la mise à jour (B19) -----------------------------------------
+
+/** La carte des données de référence seule, pour voir le compte rendu sans dérouler la page. */
+@Composable
+private fun ApercuCarte(miseAJour: EtatMiseAJour) {
     FahasalamanaTheme {
-        ReglagesContenu(state = ReglagesUiState.Erreur)
+        Column(modifier = Modifier.padding(16.dp)) {
+            CarteDonneesReference(
+                donnees = ReferenceDApercu,
+                miseAJour = miseAJour,
+                onVerifierMisesAJour = {},
+                onResultatMiseAJourFerme = {},
+            )
+        }
     }
+}
+
+@Preview(showBackground = true, heightDp = 620)
+@Composable
+private fun ApercuMiseAJourEnCours() {
+    ApercuCarte(EtatMiseAJour(enCours = true))
+}
+
+/** Le cas de la soutenance : nouveau calendrier, annuaire déjà à jour. */
+@Preview(showBackground = true, heightDp = 760)
+@Preview(showBackground = true, heightDp = 760, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ApercuMiseAJourCalendrierRemplace() {
+    ApercuCarte(
+        EtatMiseAJour(
+            resultat = ResultatSync(
+                calendrier = IssueMiseAJour.Remplace(
+                    versionPrecedente = 3,
+                    version = 4,
+                    publieLe = LocalDate.of(2026, 10, 20),
+                ),
+                annuaire = IssueMiseAJour.DejaAJour(version = 2),
+            ),
+        ),
+    )
+}
+
+@Preview(showBackground = true, heightDp = 700)
+@Composable
+private fun ApercuMiseAJourRienDeNouveau() {
+    ApercuCarte(
+        EtatMiseAJour(
+            resultat = ResultatSync(
+                calendrier = IssueMiseAJour.DejaAJour(version = 3),
+                annuaire = IssueMiseAJour.DejaAJour(version = 2),
+            ),
+        ),
+    )
+}
+
+/** Téléphone hors réseau : les deux lignes disent que rien n'a changé. */
+@Preview(showBackground = true, heightDp = 700)
+@Composable
+private fun ApercuMiseAJourEchec() {
+    ApercuCarte(EtatMiseAJour(resultat = ResultatSync.echecTotal()))
+}
+
+/** Le cas mixte, celui qui justifie deux issues plutôt qu'une. */
+@Preview(showBackground = true, heightDp = 780)
+@Composable
+private fun ApercuMiseAJourPartielle() {
+    ApercuCarte(
+        EtatMiseAJour(
+            resultat = ResultatSync(
+                calendrier = IssueMiseAJour.FormatInvalide,
+                annuaire = IssueMiseAJour.Remplace(
+                    versionPrecedente = 2,
+                    version = 3,
+                    publieLe = LocalDate.of(2026, 10, 20),
+                ),
+            ),
+        ),
+    )
+}
+
+@Preview(showBackground = true, heightDp = 760)
+@Composable
+private fun ApercuMiseAJourSchemaInconnu() {
+    ApercuCarte(
+        EtatMiseAJour(
+            resultat = ResultatSync(
+                calendrier = IssueMiseAJour.SchemaInconnu(schemaVersion = 2),
+                annuaire = IssueMiseAJour.SchemaInconnu(schemaVersion = 2),
+            ),
+        ),
+    )
 }

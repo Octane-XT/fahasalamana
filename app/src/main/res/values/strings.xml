@@ -43,7 +43,6 @@
     <string name="reglages_derniere_verification">Dernière vérification des mises à jour : %1$s</string>
     <string name="reglages_derniere_verification_jamais">Dernière vérification des mises à jour : jamais</string>
     <string name="reglages_action_verifier">Vérifier les mises à jour</string>
-    <string name="reglages_action_verifier_indisponible">La recherche de mise à jour n\'est pas encore disponible dans cette version.</string>
     <string name="reglages_reference_erreur">Les informations du calendrier n\'ont pas pu être lues.</string>
 
     <!-- B15 — Écran Réglages : confidentialité (CDC §B8, point 7).
