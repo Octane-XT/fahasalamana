@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import mg.univ.fahasalamana.data.local.EnfantAvecVaccins
 import mg.univ.fahasalamana.domain.CarnetExport
 import mg.univ.fahasalamana.domain.Enfant
+import mg.univ.fahasalamana.domain.ResultatImport
 import mg.univ.fahasalamana.domain.VaccinAdministre
 import java.time.LocalDate
 
@@ -85,21 +86,24 @@ interface EnfantRepository {
      */
     suspend fun exporter(jour: LocalDate): CarnetExport
 
-    /*
-     * TODO(B17) — import du carnet, tâche de Dev A.
+    /**
+     * Fusionne un carnet importé avec celui de ce téléphone (US-B9, scénario 2 ; §B6).
      *
-     * Signature prévue par le §B6, à ajouter ici telle quelle :
+     * **Le carnet reçu est déjà validé** : c'est `analyserCarnet()` qui décide qu'un texte
+     * est un carnet lisible d'un format connu, et elle le fait avant tout appel ici. Un
+     * fichier illisible ou d'une version inconnue n'atteint donc jamais la base.
      *
-     *     suspend fun importer(carnet: CarnetExport): ResultatImport
+     * **La fusion n'écrase rien** : elle n'ajoute que les enfants et les doses absents de
+     * ce téléphone, reconnus par leur identifiant (et, pour une dose, par le couple
+     * (enfant, vaccin) de la règle R5). La décision et ses raisons sont écrites en tête de
+     * `domain/ImportCarnet.kt` ; la règle elle-même y vit, sous forme de fonction pure, ce
+     * repository ne faisant que lire l'état courant, appliquer le plan et rendre le rapport.
      *
-     * Elle n'est pas déclarée tant que `ResultatImport` n'existe pas : ce type est le
-     * rapport de fusion de l'import (ajoutés / mis à jour / ignorés) et sa forme relève
-     * de B17. L'inventer ici pour que la signature compile obligerait à la refaire —
-     * c'est le même choix que celui fait en B04 pour `ReferenceRepository.mettreAJour()`
-     * et son `ResultatSync`.
+     * **Ne programme aucun rappel** : l'appel à `PlanificateurRappels.replanifierTout()`
+     * (§B8) appartient à l'appelant, comme pour tous les autres déclencheurs de B12 — un
+     * repository ne connaît pas WorkManager.
      *
-     * Le reste est déjà en place : `CarnetExport` et `lireCarnet()` sont écrits (B16),
-     * et `EnfantDao.enregistrerTous` / `VaccinAdministreDao.upsert` fusionnent par
-     * identifiant.
+     * @return le rapport à afficher au parent : ajoutés, fusionnés, ignorés.
      */
+    suspend fun importer(carnet: CarnetExport): ResultatImport
 }

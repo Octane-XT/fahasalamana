@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FileDownload
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +42,8 @@ import mg.univ.fahasalamana.R
 import mg.univ.fahasalamana.platform.BlocRappelsDebug
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
+import mg.univ.fahasalamana.ui.export.LigneExportCarnet
+import mg.univ.fahasalamana.ui.importation.LigneImportCarnet
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
@@ -57,10 +58,11 @@ import java.util.Locale
  *    mention de démonstration mise en évidence et non enfouie dans un paragraphe ;
  *  - « Confidentialité » : ce que l'application fait des données de santé (§B8, point 7).
  *
- * Les deux blocs suivants n'existent que pour montrer la structure finale : leurs entrées
- * sont visiblement inactives et annoncées comme telles à TalkBack, plutôt que branchées
- * sur un écran vide. Le texte de confidentialité décrit ce que le code fait aujourd'hui,
- * et rien de plus : il est lu en soutenance.
+ * Le bloc « Carnet » est réel depuis B16 (export) et B17 (import) : ses deux lignes sont des
+ * blocs autonomes, posés ici en un appel chacun, avec leur propre ViewModel. Seul le bloc
+ * « Sécurité » reste une place réservée : son entrée est visiblement inactive et annoncée
+ * comme telle à TalkBack, plutôt que branchée sur un écran vide. Le texte de confidentialité
+ * décrit ce que le code fait aujourd'hui, et rien de plus : il est lu en soutenance.
  *
  * (B10) Le bloc « Rappels » est ajouté en bas de page par `BlocRappelsDebug()`, qui n'existe
  * qu'en build debug : il porte la notification de test de la Definition of Done. L'interrupteur
@@ -71,7 +73,6 @@ import java.util.Locale
 /** Dates affichées en jour/mois/année, comme dans les wireframes (§B7.2). */
 private val FORMAT_JOUR: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
 
-import mg.univ.fahasalamana.ui.export.LigneExportCarnet
 @Composable
 fun ReglagesScreen(
     modifier: Modifier = Modifier,
@@ -276,7 +277,7 @@ private fun BlocConfidentialite() {
     }
 }
 
-// --- Blocs encore inactifs ---------------------------------------------------
+// --- Carnet et sécurité ------------------------------------------------------
 
 @Composable
 private fun BlocCarnet() {
@@ -285,11 +286,7 @@ private fun BlocCarnet() {
         OutlinedCard(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(vertical = 4.dp)) {
                 LigneExportCarnet()
-                // TODO(B17) : import par ACTION_OPEN_DOCUMENT, fusion par identifiant.
-                LigneReservee(
-                    icone = Icons.Outlined.FileDownload,
-                    titre = stringResource(R.string.reglages_import),
-                )
+                LigneImportCarnet()
             }
         }
     }

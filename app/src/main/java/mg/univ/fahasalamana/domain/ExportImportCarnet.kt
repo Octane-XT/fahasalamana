@@ -213,17 +213,14 @@ fun ecrireCarnet(carnet: CarnetExport): String = jsonCarnet.encodeToString(carne
  *
  * Lève si le texte n'est pas du JSON valide ou si un champ obligatoire manque.
  *
- * TODO(B17) — ce qui manque ici pour l'import, et qui n'appartient pas à B16 :
- *  - **ouvrir le fichier** choisi par `ActionResultContracts.OpenDocument` et en lire les
- *    octets ; aucune lecture de fichier n'est faite dans B16 ;
- *  - **refuser un `schemaVersion` inconnu** (`carnet.schemaVersion > SCHEMA_VERSION_CARNET`)
- *    au lieu d'importer un fichier à moitié compris ;
- *  - **traduire l'échec** en message « fichier illisible » plutôt qu'en exception ;
- *  - **fusionner par identifiant** dans la base (`EnfantDao.enregistrerTous`,
- *    `VaccinAdministreDao`), produire le `ResultatImport` (ajoutés / mis à jour / ignorés)
- *    et appeler `PlanificateurRappels.replanifierTout()` (§B8).
- *    Point de vigilance déjà relevé au suivi : `INSERT OR REPLACE` ne conserve pas
- *    l'identifiant de la ligne remplacée en cas de conflit sur (enfantId, vaccinId).
+ * **Ne pas l'appeler directement depuis l'import** : c'est `analyserCarnet()`
+ * (`domain/ImportCarnet.kt`, B17) qui est la porte d'entrée d'un fichier venu de
+ * l'extérieur. Elle enveloppe cet appel, rattrape les deux familles d'exceptions
+ * (`SerializationException` et `DateTimeParseException`) et refuse un `schemaVersion`
+ * inconnu — le tout avant la moindre écriture en base. Le reste de la chaîne d'import :
+ * lecture du document choisi dans `platform/ImportCarnetSaf.kt`, fusion par identifiant
+ * dans `EnfantRepository.importer()`, replanification des rappels dans
+ * `ui/importation/ImportCarnetViewModel.kt`.
  */
 fun lireCarnet(texte: String): CarnetExport = jsonCarnet.decodeFromString(texte)
 

@@ -102,6 +102,9 @@ class PlanificateurRappelsTest {
 
         base = Room.inMemoryDatabaseBuilder(contexte, AppDatabase::class.java).build()
         enfants = EnfantRepositoryImpl(
+            // (B17) La base elle-même, en plus des deux DAO : l'import ouvre une transaction
+            // à cheval sur `enfants` et `vaccins_administres`.
+            base = base,
             enfantDao = base.enfantDao(),
             vaccinAdministreDao = base.vaccinAdministreDao(),
         )

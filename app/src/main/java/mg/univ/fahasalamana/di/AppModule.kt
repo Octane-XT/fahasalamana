@@ -17,10 +17,12 @@ import mg.univ.fahasalamana.ui.edition.EditionEnfantViewModel
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
 import androidx.work.WorkManager
 import mg.univ.fahasalamana.platform.EcrivainDocument
+import mg.univ.fahasalamana.platform.LecteurDocument
 import mg.univ.fahasalamana.platform.NotificationHelper
 import mg.univ.fahasalamana.platform.PlanificateurRappels
 import mg.univ.fahasalamana.platform.RappelWorker
 import mg.univ.fahasalamana.ui.export.ExportCarnetViewModel
+import mg.univ.fahasalamana.ui.importation.ImportCarnetViewModel
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinViewModel
@@ -74,6 +76,9 @@ val appModule = module {
     // `vaccins_administres`. Lié à l'interface, comme les deux précédents.
     single<EnfantRepository> {
         EnfantRepositoryImpl(
+            // (B17) La fusion d'un carnet importé lit et écrit les deux tables personnelles
+            // dans une seule transaction : le repository a besoin de la base, pas des seuls DAO.
+            base = get(),
             enfantDao = get(),
             vaccinAdministreDao = get(),
         )
@@ -120,6 +125,9 @@ val appModule = module {
     // (B16) Écriture du carnet dans le document choisi par l'utilisateur (SAF, §B8 point 2).
     // Sans état : il ne porte qu'un Context, d'où `single`.
     single { EcrivainDocument(androidContext()) }
+
+    // (B17) Lecture du document choisi par l'utilisateur (SAF, §B8 point 2).
+    single { LecteurDocument(androidContext()) }
 
     // --- ViewModels ---
     // (B15) Réglages : lit la provenance du calendrier et les préférences locales.
@@ -169,6 +177,9 @@ val appModule = module {
     // (B16) Export du carnet : bloc « Carnet » de l'écran Réglages. ViewModel à part et non
     // ReglagesViewModel, pour garder l'export testable et l'écran des réglages inchangé.
     viewModel { ExportCarnetViewModel(enfants = get(), ecrivain = get(), horlogeJour = get()) }
+
+    // (B17) Import du carnet : fusion par identifiant, puis replanifierTout().
+    viewModel { ImportCarnetViewModel(enfants = get(), lecteur = get(), planificateur = get()) }
 
     // TODO(B10) à TODO(B18) : un viewModel par écran restant.
 }

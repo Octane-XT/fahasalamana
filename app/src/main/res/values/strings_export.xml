@@ -47,4 +47,82 @@
     <string name="export_echec_titre">Le fichier n\'a pas été écrit</string>
     <string name="export_echec_detail">L\'emplacement choisi n\'a pas pu être utilisé. Vous pouvez réessayer et choisir un autre dossier.</string>
 
+    <!-- ===================================================================
+         B17 — Import d'un carnet (US-B9, scénario 2)
+
+         Deux contraintes de ton s'ajoutent à la règle R7 pour ces textes-là.
+
+         1. L'import est la seule opération de l'application qui écrit en masse dans le
+            carnet. Chaque message dit donc ce qui a changé, ou dit explicitement que rien
+            n'a changé : « Rien n'a été modifié dans votre carnet » figure dans les trois
+            messages de refus, parce que c'est la question que se pose le parent.
+         2. La fusion ne remplace jamais rien (voir domain/ImportCarnet.kt). Les textes
+            n'emploient donc ni « mis à jour », ni « remplacé », ni « synchronisé » : le
+            vocabulaire est « ajouté » / « déjà enregistré ». Promettre une mise à jour que
+            le code ne fait pas serait pire qu'un compteur de moins.
+
+         Le bouton de fermeture réutilise `export_fermer` : même mot, même geste.
+         =================================================================== -->
+
+    <!-- Le libellé de l'action est `reglages_import` (« Importer un carnet »), déjà écrit
+         par B15 pour la place réservée et repris tel quel. -->
+    <string name="import_description">Ajoute à votre carnet les enfants et les vaccins d\'un fichier exporté. Ce qui est déjà sur ce téléphone est conservé tel quel.</string>
+    <string name="import_en_cours">Lecture du fichier en cours…</string>
+
+    <!-- Import réussi. Les compteurs décrivent ce qui vient d'entrer dans le carnet. -->
+    <string name="import_reussi_titre">Carnet importé</string>
+    <string name="import_reussi_enfants">Enfants : %1$s, %2$s.</string>
+    <string name="import_reussi_doses">Vaccins : %1$s, %2$s.</string>
+    <plurals name="import_nb_enfants_ajoutes">
+        <item quantity="one">%1$d ajouté</item>
+        <item quantity="other">%1$d ajoutés</item>
+    </plurals>
+    <plurals name="import_nb_enfants_fusionnes">
+        <item quantity="one">%1$d déjà enregistré</item>
+        <item quantity="other">%1$d déjà enregistrés</item>
+    </plurals>
+    <plurals name="import_nb_doses_ajoutees">
+        <item quantity="one">%1$d ajouté</item>
+        <item quantity="other">%1$d ajoutés</item>
+    </plurals>
+    <plurals name="import_nb_doses_fusionnees">
+        <item quantity="one">%1$d déjà enregistré</item>
+        <item quantity="other">%1$d déjà enregistrés</item>
+    </plurals>
+
+    <!-- Lignes en double dans le fichier lui-même : signalées parce qu'elles disent que le
+         fichier est anormal, sans quoi les compteurs sembleraient faux. -->
+    <plurals name="import_nb_lignes_ignorees">
+        <item quantity="one">%1$d ligne était en double dans le fichier : elle n\'a été lue qu\'une fois.</item>
+        <item quantity="other">%1$d lignes étaient en double dans le fichier : elles n\'ont été lues qu\'une fois.</item>
+    </plurals>
+
+    <!-- La replanification des rappels fait partie du scénario 2 (« les rappels sont
+         recalculés ») : le parent doit savoir qu'il n'a rien à faire de plus. -->
+    <string name="import_rappels_recalcules">Les rappels de vaccination ont été recalculés pour tous les enfants.</string>
+
+    <!-- Ce que l'application a fait du fichier, et ce qu'elle n'en a pas fait (§B8). -->
+    <string name="import_reussi_confidentialite">L\'application a seulement lu ce fichier : elle ne l\'a ni déplacé, ni modifié, ni envoyé ailleurs. Il reste là où vous l\'avez enregistré.</string>
+
+    <!-- Tout ce que portait le fichier était déjà là : le carnet n'a pas changé. -->
+    <string name="import_rien_ajoute_titre">Rien de nouveau à importer</string>
+    <string name="import_rien_ajoute_detail">Tout ce que contient ce fichier est déjà dans votre carnet.</string>
+
+    <!-- Fichier lisible, mais sans aucun enfant : sans doute le mauvais fichier. -->
+    <string name="import_vide_titre">Aucun enfant dans ce fichier</string>
+    <string name="import_vide_detail">Ce fichier est bien un carnet, mais il ne contient aucun enfant. Rien n\'a été modifié dans votre carnet.</string>
+
+    <!-- Fichier non reconnu : aucun détail technique, aucun extrait du fichier. -->
+    <string name="import_illisible_titre">Fichier non reconnu</string>
+    <string name="import_illisible_detail">Ce fichier n\'est pas un carnet exporté par l\'application, ou il a été abîmé pendant son transfert. Rien n\'a été modifié dans votre carnet.</string>
+
+    <!-- Format inconnu : le fichier vient d'une version plus récente de l'application. -->
+    <string name="import_version_titre">Fichier d\'une autre version</string>
+    <string name="import_version_detail">Ce carnet est écrit dans un format que cette version de l\'application ne sait pas lire (format %1$d). Rien n\'a été modifié dans votre carnet : installez la dernière version de l\'application, puis réessayez.</string>
+
+    <!-- Échec de lecture du document ou d'écriture en base. Rien n'est écrit à moitié :
+         la fusion est une transaction. -->
+    <string name="import_echec_titre">Le fichier n\'a pas été lu</string>
+    <string name="import_echec_detail">Le fichier choisi n\'a pas pu être ouvert. Votre carnet est resté tel qu\'il était ; vous pouvez réessayer.</string>
+
 </resources>
