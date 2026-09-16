@@ -4,19 +4,33 @@ import androidx.compose.runtime.Immutable
 import java.time.LocalDate
 
 /**
- * État de l'écran Réglages (CDC §B7.2, US-B7).
+ * État de l'écran Réglages (CDC §B7.2, US-B7 et US-B10).
  *
- * Seul le bloc « Données de référence » dépend de données : le texte de confidentialité et
- * les entrées encore inactives (export/import, code de verrouillage) sont statiques et
- * restent affichés quel que soit l'état.
+ * `data class` au niveau de l'écran, et un `sealed interface` à l'intérieur pour le seul bloc
+ * qui peut échouer : deux blocs ont des sorts indépendants. Un `calendrier.json` illisible ne
+ * doit pas emporter le bloc « Sécurité » — c'est justement quand quelque chose ne va pas
+ * qu'il faut pouvoir couper ou remettre le code de verrouillage.
+ *
+ * (B15 avait fait de `ReglagesUiState` lui-même un `sealed interface` : à l'époque un seul
+ * bloc dépendait de données. B18 en ajoute un second, d'où ce niveau supplémentaire.)
+ *
+ * @param reference bloc « Données de référence » (US-B7), avec ses trois états.
+ * @param verrouillageActif un code de verrouillage est configuré sur ce téléphone (US-B10).
  */
-sealed interface ReglagesUiState {
+@Immutable
+data class ReglagesUiState(
+    val reference: EtatReference = EtatReference.Chargement,
+    val verrouillageActif: Boolean = false,
+)
+
+/** Les trois états du bloc « Données de référence ». */
+sealed interface EtatReference {
 
     /** Première lecture du calendrier en base, avant la première valeur du Flow. */
-    data object Chargement : ReglagesUiState
+    data object Chargement : EtatReference
 
     /** Les informations de source sont connues et affichables. */
-    data class Pret(val reference: DonneesReference) : ReglagesUiState
+    data class Pret(val donnees: DonneesReference) : EtatReference
 
     /**
      * La lecture des informations de référence a échoué.
@@ -24,7 +38,7 @@ sealed interface ReglagesUiState {
      * Aucun message n'est porté par l'état : il vient de `strings.xml` côté écran, et il ne
      * doit contenir aucune donnée personnelle.
      */
-    data object Erreur : ReglagesUiState
+    data object Erreur : EtatReference
 }
 
 /**

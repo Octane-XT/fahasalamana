@@ -15,9 +15,11 @@ import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.platform.horlogeJour
 import mg.univ.fahasalamana.ui.edition.EditionEnfantViewModel
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
+import mg.univ.fahasalamana.platform.GardienVerrouillage
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinViewModel
+import mg.univ.fahasalamana.ui.verrouillage.VerrouillageViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -92,6 +94,11 @@ val appModule = module {
     // un second `Flow<…>` doit être déclaré, il faudra un qualificatif nommé sur les deux.
     single<Flow<LocalDate>> { horlogeJour() }
 
+    // (B18) Verrou du carnet : instance unique pour le processus. Elle observe
+    // ProcessLifecycleOwner dès sa construction et tient l'unique réponse à « le carnet
+    // est-il ouvert ? » — deux instances donneraient deux réponses.
+    single { GardienVerrouillage(preferences = get()) }
+
     // --- ViewModels ---
     // (B15) Réglages : lit la provenance du calendrier et les préférences locales.
     viewModel { ReglagesViewModel(get(), get()) }
@@ -133,5 +140,9 @@ val appModule = module {
         )
     }
 
-    // TODO(B10) à TODO(B18) : un viewModel par écran restant.
+    // (B18) Verrouillage : le mode (ouverture, création, modification) est déduit de l'état
+    // du verrou, la route `Verrouillage` n'ayant pas d'argument.
+    viewModel { VerrouillageViewModel(preferences = get(), gardien = get()) }
+
+    // TODO(B14) et TODO(B17) : les deux écrans restants.
 }

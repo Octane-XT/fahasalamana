@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textes du verrouillage par code — tâche B18, US-B10, CDC §B8 point 4.
+
+  Fichier distinct de strings.xml : Android fusionne tous les fichiers de res/values/, ce qui
+  permet aux deux développeurs d'ajouter leurs textes en parallèle sans se marcher dessus.
+  Toutes les clés sont préfixées verrouillage_ ; les deux seules clés réutilisées d'ailleurs
+  sont reglages_section_securite et reglages_code_verrouillage, écrites en B15.
+
+  Deux exigences de fond gouvernent ces phrases, et ce sont elles qui seront lues en
+  soutenance :
+
+  1. **Ne pas laisser croire à un chiffrement.** Le code empêche une personne qui prend le
+     téléphone en main d'ouvrir le carnet. Il ne rend pas la base illisible pour qui accède
+     aux fichiers de l'appareil. Le dire, plutôt que de laisser le mot « sécurité » faire une
+     promesse que le code ne tient pas.
+  2. **Avertir du code oublié AVANT l'activation.** L'utilisateur n'a aucun recours : ni
+     question secrète, ni réinitialisation, ni compte. C'est assumé — mais il doit le savoir
+     au moment de décider, pas au moment de le découvrir. L'avertissement est donc affiché
+     sous l'interrupteur des réglages, visible en permanence, et répété sur l'écran de choix
+     du code.
+
+  Ton factuel et non culpabilisant (règle R7) : un code faux est signalé par « Ce code ne
+  correspond pas », jamais par un reproche ni un décompte de tentatives.
+-->
+<resources>
+
+    <!-- B18 — Écran Verrouillage : titres et consignes selon l'étape -->
+    <string name="verrouillage_titre_ouverture">Carnet verrouillé</string>
+    <string name="verrouillage_titre_creation">Choisir un code</string>
+    <string name="verrouillage_titre_modification">Modifier le code</string>
+    <string name="verrouillage_consigne_code_actuel">Saisissez votre code pour ouvrir le carnet.</string>
+    <string name="verrouillage_consigne_ancien_code">Saisissez votre code actuel.</string>
+    <string name="verrouillage_consigne_nouveau_code">Choisissez un code de %1$d à %2$d chiffres.</string>
+    <string name="verrouillage_consigne_confirmation">Saisissez ce code une seconde fois.</string>
+
+    <!-- B18 — Champ de saisie. Le code est masqué par défaut ; l'œil permet de le relire,
+         parce qu'un code tapé à l'aveugle et refusé sans explication est la première cause
+         d'abandon sur ce genre d'écran. -->
+    <string name="verrouillage_champ_label">Code</string>
+    <string name="verrouillage_champ_afficher">Afficher le code</string>
+    <string name="verrouillage_champ_masquer">Masquer le code</string>
+
+    <!-- B18 — Actions -->
+    <string name="verrouillage_action_ouvrir">Ouvrir le carnet</string>
+    <string name="verrouillage_action_continuer">Continuer</string>
+    <string name="verrouillage_action_enregistrer">Enregistrer le code</string>
+    <string name="verrouillage_verification_en_cours">Vérification…</string>
+
+    <!-- B18 — Messages d'erreur. Neutres (US-B10, scénario « code faux ») : ils décrivent ce
+         qui vient de se passer, jamais la personne qui l'a fait. -->
+    <string name="verrouillage_erreur_incorrect">Ce code ne correspond pas. Vous pouvez réessayer.</string>
+    <string name="verrouillage_erreur_vide">Saisissez votre code.</string>
+    <string name="verrouillage_erreur_trop_court">Le code doit comporter au moins %1$d chiffres.</string>
+    <string name="verrouillage_erreur_trop_long">Le code ne peut pas dépasser %1$d chiffres.</string>
+    <string name="verrouillage_erreur_chiffres">Le code ne peut contenir que des chiffres.</string>
+    <string name="verrouillage_erreur_confirmation">Les deux saisies sont différentes. Choisissez à nouveau votre code.</string>
+    <string name="verrouillage_erreur_enregistrement">Le code n\'a pas pu être enregistré. Vous pouvez réessayer.</string>
+
+    <!-- B18 — Avertissement sur l'écran de choix du code, au-dessus du champ : il est lu
+         avant la frappe, pas après l'enregistrement. -->
+    <string name="verrouillage_oubli_titre">Un code oublié ne peut pas être récupéré</string>
+    <string name="verrouillage_oubli_detail">L\'application ne conserve pas votre code et ne peut pas le retrouver. Si vous l\'oubliez, le seul moyen de rouvrir l\'application est de la désinstaller, ce qui efface les enfants et les vaccins déjà saisis. Notez-le en lieu sûr.</string>
+
+    <!-- B18 — Bloc « Sécurité » des réglages. Le titre de section et le libellé de
+         l'interrupteur viennent de strings.xml (B15) : reglages_section_securite et
+         reglages_code_verrouillage. -->
+    <string name="verrouillage_reglages_etat_actif">Activé — le code est demandé à l\'ouverture</string>
+    <string name="verrouillage_reglages_etat_inactif">Désactivé — le carnet s\'ouvre sans code</string>
+    <string name="verrouillage_reglages_fonctionnement">Le code est demandé à l\'ouverture de l\'application, et de nouveau après deux minutes passées hors de l\'application. Revenir plus tôt — le temps de lire un message, par exemple — ne le redemande pas.</string>
+
+    <!-- B18 — La phrase qui dit ce que le verrou ne fait pas. Elle est aussi importante que
+         la fonction elle-même : sans elle, l'écran promet un chiffrement qui n'existe pas. -->
+    <string name="verrouillage_reglages_portee">Ce code empêche une personne qui prend votre téléphone en main d\'ouvrir le carnet. Il ne chiffre pas les données : quelqu\'un qui accède aux fichiers de l\'appareil, par exemple depuis un ordinateur, peut toujours les lire. Le code de déverrouillage d\'Android reste votre protection principale.</string>
+
+    <string name="verrouillage_reglages_modifier">Modifier le code</string>
+
+    <!-- B18 — Désactivation : confirmation, parce que le code est effacé sans retour possible. -->
+    <string name="verrouillage_desactiver_titre">Désactiver le code ?</string>
+    <string name="verrouillage_desactiver_detail">Le carnet s\'ouvrira sans code, et le code actuel sera effacé de ce téléphone. Vous pourrez en choisir un nouveau à tout moment.</string>
+    <string name="verrouillage_desactiver_confirmer">Désactiver</string>
+    <string name="verrouillage_annuler">Annuler</string>
+
+</resources>

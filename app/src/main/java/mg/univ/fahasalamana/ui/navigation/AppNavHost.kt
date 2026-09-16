@@ -18,6 +18,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,8 +31,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import mg.univ.fahasalamana.platform.EtatVerrouillage
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantScreen
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinScreen
+import mg.univ.fahasalamana.ui.verrouillage.EcranAvantVerrouillage
+import mg.univ.fahasalamana.ui.verrouillage.VerrouillageScreen
+import mg.univ.fahasalamana.ui.verrouillage.etatVerrouillageCourant
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import mg.univ.fahasalamana.R
@@ -93,17 +98,33 @@ private val onglets = listOf(
 /**
  * Navigation de l'application : Scaffold avec la barre du bas à trois onglets, et NavHost
  * portant les huit destinations.
- *
- * TODO(B18) : démarrer sur [Verrouillage] quand un code est configuré, en lisant la
- * préférence avant la première composition (sinon l'écran verrouillé clignote).
  */
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
+    // (B18) Verrou lu avant que le NavHost n'existe, donc avant que sa destination de départ
+    // ne soit figée. Tant que la préférence n'est pas lue, on n'affiche ni le carnet ni
+    // l'écran de code : sinon l'écran verrouillé clignoterait par-dessus le carnet.
+    val etatVerrou = etatVerrouillageCourant()
+    if (etatVerrou == EtatVerrouillage.Indetermine) {
+        EcranAvantVerrouillage(modifier)
+        return
+    }
+
     val entreeCourante by navController.currentBackStackEntryAsState()
     val destinationCourante = entreeCourante?.destination
+
+    // (B18) Reprise après plus de deux minutes hors de l'application : le gardien repasse à
+    // Verrouille et l'écran de code se pose par-dessus la pile, sans la vider — on retombe
+    // donc sur l'écran qu'on avait quitté, une fois le code saisi.
+    LaunchedEffect(etatVerrou) {
+        val destination = navController.currentDestination ?: return@LaunchedEffect
+        if (etatVerrou == EtatVerrouillage.Verrouille && !destination.hasRoute(Verrouillage::class)) {
+            navController.navigate(Verrouillage) { launchSingleTop = true }
+        }
+    }
 
     // La barre du bas n'apparaît que sur les trois racines : les écrans de détail et de
     // saisie occupent tout l'écran et se referment par la flèche de retour (wireframes §B7.2).
@@ -124,7 +145,7 @@ fun AppNavHost(
     ) { interieur ->
         NavHost(
             navController = navController,
-            startDestination = MesEnfants,
+            startDestination = if (etatVerrou == EtatVerrouillage.Verrouille) Verrouillage else MesEnfants,
             modifier = Modifier
                 .padding(interieur)
                 .consumeWindowInsets(interieur),
@@ -203,20 +224,30 @@ fun AppNavHost(
 
             // --- Onglet Réglages ---
 
-            // TODO(B18) : passer à ReglagesScreen une lambda qui navigue vers Verrouillage,
-            // pour créer ou modifier le code. L'entrée « Code de verrouillage » de l'écran est
-            // encore inactive (B15), et Verrouillage n'a donc plus d'accès depuis l'interface.
             composable<Reglages> {
-                ReglagesScreen()
+                ReglagesScreen(
+                    onOuvrirCodeVerrouillage = { navController.navigate(Verrouillage) },
+                )
             }
 
             // --- Hors onglets ---
 
             composable<Verrouillage> {
-                EcranProvisoire(
-                    nomEcran = "Verrouillage",
-                    tache = "B18",
+                VerrouillageScreen(
                     onRetour = { navController.navigateUp() },
+                    onTermine = {
+                        // Deux sorties : l'écran a été empilé (verrou en cours de session, ou
+                        // arrivée depuis les Réglages) et il suffit de le dépiler ; ou il est
+                        // la destination de départ d'un démarrage verrouillé, et il n'y a rien
+                        // derrière — on le remplace alors, pour qu'un retour n'y ramène pas.
+                        if (navController.previousBackStackEntry != null) {
+                            navController.popBackStack()
+                        } else {
+                            navController.navigate(MesEnfants) {
+                                popUpTo(Verrouillage) { inclusive = true }
+                            }
+                        }
+                    },
                 )
             }
         }
