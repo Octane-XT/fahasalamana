@@ -312,5 +312,8 @@ class NotificationHelper(context: Context) {
  *    instant-là, pas à la programmation.
  *
  * Aucun `WorkRequest` n'est enfilé par un écran : un écran appelle
- * `PlanificateurRappels.replanifier(enfantId)`, et ce branchement-là reste TODO(B12).
+ * `PlanificateurRappels.replanifier(enfantId)`. B12 a branché cet appel sur ses quatre
+ * déclencheurs — enregistrement et suppression d'un enfant, saisie et suppression d'une dose.
+ * Restent à venir l'import (B17) et la mise à jour du calendrier (B19), qui appelleront
+ * `replanifierTout()`.
  */

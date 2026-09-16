@@ -142,6 +142,8 @@ val appModule = module {
             savedStateHandle = get(),
             enfants = get(),
             horlogeJour = get(),
+            // (B12) Créer, modifier ou supprimer un enfant reprogramme ses rappels.
+            planificateur = get(),
         )
     }
 
@@ -153,6 +155,8 @@ val appModule = module {
             reference = get(),
             calc = get(),
             horlogeJour = get(),
+            // (B12) Saisir ou supprimer une dose reprogramme les rappels de l'enfant.
+            planificateur = get(),
         )
     }
 

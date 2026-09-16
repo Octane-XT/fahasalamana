@@ -22,6 +22,7 @@ import mg.univ.fahasalamana.domain.Sexe
 import mg.univ.fahasalamana.domain.dateNaissanceMinimum
 import mg.univ.fahasalamana.domain.enfantValide
 import mg.univ.fahasalamana.domain.valider
+import mg.univ.fahasalamana.platform.PlanificateurRappels
 import mg.univ.fahasalamana.ui.navigation.EditionEnfant
 import java.time.LocalDate
 
@@ -51,6 +52,7 @@ class EditionEnfantViewModel(
     savedStateHandle: SavedStateHandle,
     private val enfants: EnfantRepository,
     private val horlogeJour: Flow<LocalDate>,
+    private val planificateur: PlanificateurRappels,
 ) : ViewModel() {
 
     /** Argument de navigation lu par la route typée, jamais parsé dans l'écran (CLAUDE.md, règle 4). */
@@ -139,13 +141,19 @@ class EditionEnfantViewModel(
                 return@launch
             }
 
-            // TODO(B12) : `planificateur.replanifier(enfant.id)` exactement ici, après
-            // l'écriture réussie et avant la sortie de l'écran. C'est ce qui manque au
-            // dernier « Et » du scénario « création valide » de US-B1 (« les rappels de ses
-            // échéances futures sont programmés ») et il faut aussi le rejouer après une
-            // modification : changer la date de naissance décale tout l'échéancier, donc
-            // tous les rappels. `PlanificateurRappels` est livré par B11 ; l'écran ne
-            // programmera jamais de `WorkRequest` lui-même (règle 9 de CLAUDE.md).
+            // (B12) Rappels des échéances futures, dernier « Et » du scénario « création
+            // valide » de US-B1. Un seul appel, en création **comme en modification** :
+            // changer une date de naissance décale tout l'échéancier, donc tous les rappels.
+            // `replanifier` annule les travaux existants avant de réenfiler (R4, politique
+            // `REPLACE`), il n'y a donc rien à annuler ici — et l'écran ne programme jamais
+            // de `WorkRequest` lui-même (règle 9 de CLAUDE.md).
+            //
+            // Enveloppé dans `tenter`, et son résultat volontairement ignoré : l'enfant est
+            // déjà enregistré, une replanification qui échoue ne doit ni faire tomber le
+            // `viewModelScope` ni transformer un enregistrement réussi en échec à l'écran.
+            // L'opération étant idempotente, la prochaine écriture la rejouera.
+            tenter { planificateur.replanifier(enfant.id) }
+
             etat.update { it.copy(enCours = false, sortie = SortieEdition.ENREGISTRE) }
         }
     }
@@ -174,14 +182,21 @@ class EditionEnfantViewModel(
                 return@launch
             }
 
-            // TODO(B12) : annuler ici les rappels de cet enfant, une fois `PlanificateurRappels`
-            // livré par B11 — c'est le troisième « Alors » du scénario « suppression » de
-            // US-B1 (« ses vaccins administrés et ses rappels sont supprimés avec lui »).
-            // Les doses partent déjà avec l'enfant par la cascade SQL ; les `WorkRequest`
-            // uniques "rappel-<enfantId>-<vaccinId>" (R4), eux, survivent à la base et
-            // doivent être annulés explicitement. Sans cela, un rappel se déclencherait pour
-            // un enfant effacé — le worker relit la base avant de notifier (règle 9), donc
-            // rien ne s'affiche, mais le travail reste programmé.
+            // (B12) Troisième « Alors » du scénario « suppression » de US-B1 : « ses vaccins
+            // administrés et ses rappels sont supprimés avec lui ». Les doses partent avec
+            // l'enfant par la cascade SQL ; les `WorkRequest` uniques
+            // "rappel-<enfantId>-<vaccinId>" (R4), eux, survivent à la base et doivent être
+            // annulés explicitement — sans cela le travail resterait programmé pour un enfant
+            // effacé (le worker relit la base avant de notifier, donc rien ne s'afficherait,
+            // mais le réveil aurait quand même lieu).
+            //
+            // `annulerTous` et non `replanifier` : c'est le chemin de la suppression documenté
+            // par `PlanificateurRappels`, l'enfant n'étant plus lisible. Les deux font la même
+            // chose ici — `replanifier` sur un enfant absent dégénère en annulation — mais
+            // celui-ci évite une lecture de la base qui ne peut plus rien rendre, et n'est pas
+            // `suspend` : rien ne peut s'intercaler avant la sortie de l'écran.
+            planificateur.annulerTous(id)
+
             etat.update { it.copy(enCours = false, sortie = SortieEdition.SUPPRIME) }
         }
     }
