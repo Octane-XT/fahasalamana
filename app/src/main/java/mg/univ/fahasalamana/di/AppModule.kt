@@ -15,12 +15,16 @@ import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.platform.horlogeJour
 import mg.univ.fahasalamana.ui.edition.EditionEnfantViewModel
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
+import androidx.work.WorkManager
 import mg.univ.fahasalamana.platform.NotificationHelper
+import mg.univ.fahasalamana.platform.PlanificateurRappels
+import mg.univ.fahasalamana.platform.RappelWorker
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.workmanager.dsl.workerOf
 import org.koin.dsl.module
 import java.time.LocalDate
 
@@ -80,7 +84,7 @@ val appModule = module {
     // supprime toute question de fuite ou de concurrence.
     factory { CalculateurEcheancier() }
 
-    // --- Plateforme (rappels, notifications) --- TODO(B11)
+    // --- Plateforme (rappels, notifications) ---
     // (B06) Jour courant, qui change à minuit et au retour au premier plan : c'est lui qui
     // fait basculer un vaccin de « à venir » à « à faire » sans rouvrir l'application.
     //
@@ -97,6 +101,19 @@ val appModule = module {
     // `single` pour ne pas reconstruire une façade à chaque injection. Consommée par
     // RappelWorker (B11) ; le canal, lui, est créé directement depuis App.onCreate.
     single { NotificationHelper(androidContext()) }
+
+    // (B11) WorkManager. `workManagerFactory()` de `App.onCreate` l'a déjà initialisé avec la
+    // fabrique de workers de Koin ; `getInstance` rend cette instance-là. Résolution
+    // paresseuse, donc toujours après `startKoin`.
+    single { WorkManager.getInstance(androidContext()) }
+
+    // (B11) Planificateur des rappels (R3, R4) : le seul endroit qui enfile un WorkRequest.
+    // Un écran ne sait pas comment un rappel est programmé, il déclenche replanifier().
+    single { PlanificateurRappels(get(), get(), get(), get(), get()) }
+
+    // (B11) Worker injecté par Koin (§B6) : `workerOf` fournit lui-même Context et
+    // WorkerParameters, et résout les dépendances suivantes du constructeur.
+    workerOf(::RappelWorker)
 
     // --- ViewModels ---
     // (B15) Réglages : lit la provenance du calendrier et les préférences locales.

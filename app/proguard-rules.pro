@@ -20,3 +20,8 @@
 # Room
 -keep class * extends androidx.room.RoomDatabase
 -dontwarn androidx.room.paging.**
+
+# WorkManager retrouve un worker par le nom de sa classe, qu'il persiste en base : un rappel
+# enfile par une version et execute apres une mise a jour au mapping different ne serait plus
+# retrouve. Les noms des workers doivent donc survivre a R8 (B11).
+-keepnames class * extends androidx.work.ListenableWorker

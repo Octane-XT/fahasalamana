@@ -21,7 +21,9 @@ android {
 
     buildTypes {
         debug {
-            // Le build debug sert aux démonstrations : délai de rappel raccourci (TODO(B11)).
+            // Le build debug sert aux démonstrations : le délai des rappels y est plafonné à
+            // une minute par src/debug/java/.../platform/DelaiDemonstration.kt, dont le jumeau
+            // src/release/ ne plafonne rien. Le raccourci n'existe donc pas dans l'APK publié.
             isMinifyEnabled = false
         }
         release {

@@ -21,6 +21,11 @@
     <!-- B10 — Notification de rappel, téléphone déverrouillé (scénario de US-B5 :
          « Faly : Penta 1 prévu dans 3 jours (12/02). Trouver un CSB »). -->
     <string name="notif_rappel_titre">%1$s : %2$s</string>
+    <!-- B11 — Libellé de la dose dans le titre ci-dessus : nom puis dose, « Pentavalent
+         1re dose ». Séparé de notif_rappel_titre parce que ce n'est pas la même décision :
+         l'un assemble prénom et vaccin, l'autre assemble les deux moitiés d'un libellé de
+         dose du calendrier de référence. -->
+    <string name="notif_rappel_vaccin">%1$s %2$s</string>
     <plurals name="notif_rappel_dans_jours">
         <item quantity="one">Prévu dans %1$d jour (%2$s)</item>
         <item quantity="other">Prévu dans %1$d jours (%2$s)</item>

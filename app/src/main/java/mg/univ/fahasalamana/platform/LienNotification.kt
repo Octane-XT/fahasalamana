@@ -43,7 +43,7 @@ fun lienFicheEnfant(enfantId: String): String = "$BASE_LIEN_ENFANT/$enfantId"
  * Nom unique d'un rappel, règle R4 : `rappel-<enfantId>-<vaccinId>`.
  *
  * La même chaîne sert deux fois, et ce n'est pas un hasard :
- * - `uniqueWorkName` du `OneTimeWorkRequest` côté `PlanificateurRappels` (TODO(B11)) ;
+ * - `uniqueWorkName` du `OneTimeWorkRequest` côté `PlanificateurRappels` (B11) ;
  * - étiquette (`tag`) de la notification affichée par [NotificationHelper].
  *
  * Conséquence utile : annuler un rappel, c'est annuler le travail **et** retirer la

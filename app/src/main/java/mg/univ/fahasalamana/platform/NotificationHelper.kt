@@ -27,7 +27,7 @@ import java.util.Locale
  *
  * Ce fichier ne décide de rien : il ne sait ni quand notifier, ni s'il faut encore le
  * faire. Le « quand » est calculé par `CalculateurEcheancier.rappelsAProgrammer()` (R3)
- * puis enfilé par `PlanificateurRappels` (TODO(B11)) ; le « faut-il encore » est une
+ * puis enfilé par `PlanificateurRappels` (B11) ; le « faut-il encore » est une
  * relecture de la base par `RappelWorker` juste avant l'appel à `afficherRappel`
  * (règle 9 de CLAUDE.md). Ici, on construit et on affiche — rien d'autre.
  */
@@ -119,7 +119,7 @@ data class ContenuRappel(
  *
  * Sans état : une simple façade au-dessus de `NotificationManagerCompat`. Peut être
  * construite à la demande comme injectée par Koin — c'est ce dernier chemin qu'utilisera
- * `RappelWorker` (TODO(B11)).
+ * `RappelWorker` (B11).
  */
 class NotificationHelper(context: Context) {
 
@@ -303,21 +303,14 @@ class NotificationHelper(context: Context) {
 }
 
 /*
- * TODO(B11) — `platform/PlanificateurRappels.kt` et `platform/RappelWorker.kt`.
+ * B11 est livrée : la suite annoncée ici vit dans le même paquet.
  *
- * C'est ici, dans le même paquet, que vient la suite. Ce que B10 laisse prêt :
+ *  - `TraductionRappels.kt` — nom unique (R4) et délai initial (§B8), logique pure.
+ *  - `PlanificateurRappels.kt` — lit la base, annule, enfile les `OneTimeWorkRequest`.
+ *  - `RappelWorker.kt` — relit la base avant d'appeler [NotificationHelper.afficherRappel]
+ *    (règle 9 de CLAUDE.md), compose le libellé de la dose et calcule `joursRestants` à cet
+ *    instant-là, pas à la programmation.
  *
- *  - `CalculateurEcheancier.rappelsAProgrammer()` (R3) produit déjà la liste des `Rappel`
- *    à enfiler, avec leur `dateHeure` d'émission ; `initialDelay = dateHeure - maintenant`.
- *  - [etiquetteRappel] donne le `uniqueWorkName` de R4 — `"rappel-<enfantId>-<vaccinId>"` —
- *    avec `ExistingWorkPolicy.REPLACE` ; le rappel « fenêtre bientôt fermée » y ajoute le
- *    suffixe `-fenetre` (voir la KDoc de `domain/Rappel.kt`).
- *  - `RappelWorker` relit la base avant d'appeler [NotificationHelper.afficherRappel]
- *    (règle 9 de CLAUDE.md), compose le libellé de la dose et calcule `joursRestants` à
- *    cet instant-là, pas à la programmation.
- *  - `NotificationHelper` s'injecte par Koin : `single { NotificationHelper(androidContext()) }`
- *    reste à ajouter dans `di/AppModule.kt`, sous la section « Plateforme ».
- *
- * Aucun `WorkRequest` n'est enfilé par B10 : un écran ne programme jamais de travail
- * lui-même, il appellera `PlanificateurRappels.replanifier(enfantId)` (TODO(B12)).
+ * Aucun `WorkRequest` n'est enfilé par un écran : un écran appelle
+ * `PlanificateurRappels.replanifier(enfantId)`, et ce branchement-là reste TODO(B12).
  */
