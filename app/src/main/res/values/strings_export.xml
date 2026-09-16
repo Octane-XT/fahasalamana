@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textes de l'export du carnet (tâche B16, US-B9 scénario 1). Fichier distinct de
+  strings.xml : Android fusionne tous les fichiers de res/values/, ce qui permet aux deux
+  développeurs d'ajouter leurs textes en parallèle sans se marcher dessus. B17 ajoutera les
+  siens à la fin de ce fichier, préfixés `import_`.
+
+  Le libellé de l'action elle-même n'est pas ici : c'est `reglages_export` (« Exporter le
+  carnet »), déjà écrit par B15 pour la place réservée, et repris tel quel — c'est le mot à
+  mot du scénario. En créer un second laisserait une clé orpheline dans strings.xml.
+
+  Ton factuel et non culpabilisant (règle R7), et une contrainte de plus propre à cet
+  écran : ces phrases parlent d'un fichier de santé qui sort du téléphone. Elles disent ce
+  que l'application fait et ce qu'elle ne fait pas, sans promesse au-delà du code — pas de
+  « sécurisé », pas de « chiffré » (le §B8 renvoie le chiffrement à une V2), pas de
+  « sauvegarde » qui laisserait croire à une copie tenue à jour ailleurs.
+-->
+<resources>
+
+    <!-- B16 — Entrée « Exporter le carnet » du bloc Carnet des Réglages -->
+    <string name="export_description">Enregistre vos enfants et leurs vaccins dans un fichier, à l\'emplacement que vous choisissez.</string>
+    <string name="export_en_cours">Écriture du fichier en cours…</string>
+    <string name="export_fermer">Fermer</string>
+
+    <!-- B16 — Export réussi. Le détail compte ce qu'il y a réellement dans le fichier. -->
+    <string name="export_reussi_titre">Carnet exporté</string>
+    <string name="export_reussi_detail">Le fichier contient %1$s et %2$s.</string>
+    <plurals name="export_nb_enfants">
+        <item quantity="one">%1$d enfant</item>
+        <item quantity="other">%1$d enfants</item>
+    </plurals>
+    <plurals name="export_nb_doses">
+        <item quantity="one">%1$d vaccin enregistré</item>
+        <item quantity="other">%1$d vaccins enregistrés</item>
+    </plurals>
+
+    <!-- B16 — La phrase exigée par US-B9 : « un message confirme que le fichier ne contient
+         aucune donnée envoyée ailleurs ». Elle dit les trois choses qui comptent : où est le
+         fichier, que rien n'est parti, et qu'il est lisible tel quel (§B8, point 3). -->
+    <string name="export_reussi_confidentialite">Le fichier reste là où vous venez de l\'enregistrer. L\'application ne l\'envoie nulle part et n\'en garde aucune copie. Il contient des données de santé lisibles telles quelles : gardez-le en lieu sûr.</string>
+
+    <!-- B16 — Rien à exporter : le sélecteur de fichiers n'est pas ouvert. -->
+    <string name="export_vide_titre">Aucun enfant à exporter</string>
+    <string name="export_vide_detail">Ajoutez d\'abord un enfant dans l\'onglet Enfants.</string>
+
+    <!-- B16 — Échec d'écriture. Aucun détail technique, aucune donnée personnelle. -->
+    <string name="export_echec_titre">Le fichier n\'a pas été écrit</string>
+    <string name="export_echec_detail">L\'emplacement choisi n\'a pas pu être utilisé. Vous pouvez réessayer et choisir un autre dossier.</string>
+
+</resources>

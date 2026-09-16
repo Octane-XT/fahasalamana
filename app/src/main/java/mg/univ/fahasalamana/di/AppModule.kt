@@ -15,6 +15,8 @@ import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.platform.horlogeJour
 import mg.univ.fahasalamana.ui.edition.EditionEnfantViewModel
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
+import mg.univ.fahasalamana.platform.EcrivainDocument
+import mg.univ.fahasalamana.ui.export.ExportCarnetViewModel
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinViewModel
@@ -92,6 +94,10 @@ val appModule = module {
     // un second `Flow<…>` doit être déclaré, il faudra un qualificatif nommé sur les deux.
     single<Flow<LocalDate>> { horlogeJour() }
 
+    // (B16) Écriture du carnet dans le document choisi par l'utilisateur (SAF, §B8 point 2).
+    // Sans état : il ne porte qu'un Context, d'où `single`.
+    single { EcrivainDocument(androidContext()) }
+
     // --- ViewModels ---
     // (B15) Réglages : lit la provenance du calendrier et les préférences locales.
     viewModel { ReglagesViewModel(get(), get()) }
@@ -132,6 +138,10 @@ val appModule = module {
             horlogeJour = get(),
         )
     }
+
+    // (B16) Export du carnet : bloc « Carnet » de l'écran Réglages. ViewModel à part et non
+    // ReglagesViewModel, pour garder l'export testable et l'écran des réglages inchangé.
+    viewModel { ExportCarnetViewModel(enfants = get(), ecrivain = get(), horlogeJour = get()) }
 
     // TODO(B10) à TODO(B18) : un viewModel par écran restant.
 }

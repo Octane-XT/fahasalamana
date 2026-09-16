@@ -15,7 +15,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FileDownload
-import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,6 +68,7 @@ import java.util.Locale
 /** Dates affichées en jour/mois/année, comme dans les wireframes (§B7.2). */
 private val FORMAT_JOUR: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
 
+import mg.univ.fahasalamana.ui.export.LigneExportCarnet
 @Composable
 fun ReglagesScreen(
     modifier: Modifier = Modifier,
@@ -278,11 +278,7 @@ private fun BlocCarnet() {
         TitreSection(stringResource(R.string.reglages_section_carnet))
         OutlinedCard(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(vertical = 4.dp)) {
-                // TODO(B16) : export du carnet par ACTION_CREATE_DOCUMENT (SAF).
-                LigneReservee(
-                    icone = Icons.Outlined.FileUpload,
-                    titre = stringResource(R.string.reglages_export),
-                )
+                LigneExportCarnet()
                 // TODO(B17) : import par ACTION_OPEN_DOCUMENT, fusion par identifiant.
                 LigneReservee(
                     icone = Icons.Outlined.FileDownload,
