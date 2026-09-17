@@ -21,11 +21,6 @@
     <string name="erreur_titre">Une erreur est survenue</string>
     <string name="action_reessayer">Réessayer</string>
 
-    <!-- B01 — Écrans provisoires, à supprimer quand les huit écrans sont livrés -->
-    <string name="ecran_provisoire_tache">Écran provisoire — livré par la tâche %1$s</string>
-    <string name="ecran_provisoire_arguments">Arguments de navigation</string>
-    <string name="ecran_provisoire_sans_argument">Aucun argument</string>
-    <string name="ecran_provisoire_ouvrir">Ouvrir %1$s</string>
 
     <!-- B15 — Écran Réglages : données de référence (US-B7) -->
     <string name="reglages_titre">Réglages</string>
