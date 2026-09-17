@@ -1,33 +1,53 @@
 package mg.univ.fahasalamana.ui.reglages
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import mg.univ.fahasalamana.data.local.PreferencesLocales
 import mg.univ.fahasalamana.data.repository.InfosSource
 import mg.univ.fahasalamana.data.repository.ReferenceRepository
+import mg.univ.fahasalamana.data.repository.ResultatSync
+import mg.univ.fahasalamana.platform.ETIQUETTE_LOG_RAPPEL
+import mg.univ.fahasalamana.platform.PlanificateurRappels
 
 /**
  * Écran Réglages (CDC §B6 : VM7 → `PreferencesRepository` + `ReferenceRepository`).
  *
- * Aucun calcul ici : on assemble trois flux de lecture en un état d'affichage. La route
+ * Aucun calcul ici : on assemble quatre flux de lecture en un état d'affichage. La route
  * `Reglages` n'a pas d'argument, donc pas de `SavedStateHandle`.
  *
- * TODO(B19) : ajouter `fun onVerifierMisesAJour()` qui appellera
- * `reference.mettreAJour()` dans `viewModelScope`, puis `replanifierTout()`. Le
- * repository est déjà injecté pour ça ; le bouton correspondant est affiché désactivé.
+ * (B19) La recherche de mise à jour ne contient elle non plus **aucune règle** : la
+ * comparaison de version, la validation du format et le remplacement transactionnel sont
+ * dans `SynchroniseurReference` (couche `data`), la programmation des rappels dans
+ * `PlanificateurRappels` (couche `platform`). Ce ViewModel enchaîne les deux et tient l'état
+ * du bouton.
  */
 class ReglagesViewModel(
-    reference: ReferenceRepository,
+    private val reference: ReferenceRepository,
     preferences: PreferencesLocales,
+    private val planificateur: PlanificateurRappels,
 ) : ViewModel() {
+
+    /**
+     * (B19) État du bouton « Vérifier les mises à jour ».
+     *
+     * Un `MutableStateFlow` combiné aux flux de lecture plutôt qu'un second `StateFlow`
+     * exposé : l'écran n'a ainsi qu'un seul état à collecter, et la carte des données de
+     * référence ne peut pas afficher un compte rendu de mise à jour à côté de versions qui
+     * ne seraient pas encore celles qu'il annonce.
+     */
+    private val miseAJour = MutableStateFlow(EtatMiseAJour())
 
     /**
      * Typé `Flow<ReglagesUiState>` et non `Flow<Pret>` : c'est ce qui permet à [catch]
@@ -40,9 +60,10 @@ class ReglagesViewModel(
         reference.observerInfosSource().onStart<InfosSource?> { emit(null) },
         preferences.annuaireVersion,
         preferences.derniereVerification,
-    ) { infos, versionAnnuaire, derniereVerification ->
+        miseAJour,
+    ) { infos, versionAnnuaire, derniereVerification, etatMiseAJour ->
         ReglagesUiState.Pret(
-            DonneesReference(
+            reference = DonneesReference(
                 sourceCalendrier = infos?.source,
                 calendrierPublieLe = infos?.publieLe,
                 versionCalendrier = infos?.version,
@@ -50,6 +71,7 @@ class ReglagesViewModel(
                 versionAnnuaire = versionAnnuaire.takeIf { it != PreferencesLocales.VERSION_ABSENTE },
                 derniereVerification = derniereVerification,
             ),
+            miseAJour = etatMiseAJour,
         )
     }
 
@@ -64,4 +86,71 @@ class ReglagesViewModel(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = ReglagesUiState.Chargement,
         )
+
+    // --- Mise à jour des contenus de référence (B19, US-B11) ------------------
+
+    /**
+     * Le parent a touché « Vérifier les mises à jour ».
+     *
+     * Trois choses, dans cet ordre : appeler le repository, replanifier les rappels si le
+     * calendrier a changé, publier le compte rendu.
+     *
+     * **Aucun `try` autour de `mettreAJour()` n'est nécessaire** — elle s'engage à ne pas
+     * lever (§B0, couche 2) — mais il y en a un quand même : l'interface ne doit pas
+     * dépendre du respect d'une promesse pour ne pas planter. Le repli est un
+     * [ResultatSync.echecTotal], c'est-à-dire exactement ce que le parent verrait si son
+     * téléphone était hors réseau, ce qui est vrai dans les faits : rien n'a été mis à jour.
+     *
+     * Le garde sur `enCours` évite qu'un double appui lance deux téléchargements de 115 Ko.
+     */
+    fun onVerifierMisesAJour() {
+        if (miseAJour.value.enCours) return
+        viewModelScope.launch {
+            miseAJour.update { it.copy(enCours = true, resultat = null) }
+
+            val resultat = try {
+                reference.mettreAJour()
+            } catch (annulation: CancellationException) {
+                throw annulation
+            } catch (erreur: Exception) {
+                ResultatSync.echecTotal()
+            }
+
+            // Uniquement si le **calendrier** a changé : un nouveau calendrier déplace les
+            // dates prévues de tous les enfants, donc leurs rappels (§B8). Une nouvelle
+            // version du seul annuaire ne change aucune date — replanifier serait du travail
+            // pour rien, et ferait clignoter des notifications sans raison.
+            if (resultat.calendrierRemplace) replanifierApresMiseAJour()
+
+            miseAJour.update { it.copy(enCours = false, resultat = resultat) }
+        }
+    }
+
+    /** Le compte rendu de mise à jour a été fermé par le parent. */
+    fun onResultatMiseAJourFerme() {
+        miseAJour.update { it.copy(resultat = null) }
+    }
+
+    /**
+     * Recalcule les rappels de tout le carnet après un changement de calendrier (§B8 : la
+     * mise à jour du calendrier est l'un des déclencheurs de `replanifier`).
+     *
+     * `replanifierTout()` et non `replanifier(enfantId)` : ce n'est pas un enfant qui a
+     * changé, ce sont les données qui servent à calculer l'échéancier de tous. L'opération
+     * est idempotente (R4), elle ne crée aucun doublon.
+     *
+     * **Son échec ne remet pas en cause la mise à jour**, qui est déjà en base : annoncer un
+     * échec ferait croire au parent que le nouveau calendrier n'a pas été installé, alors
+     * qu'il l'est. Seuls les rappels manqueraient, et la prochaine saisie ou la prochaine
+     * modification les reprogrammera. Même arbitrage qu'en B17 après un import.
+     */
+    private suspend fun replanifierApresMiseAJour() {
+        try {
+            planificateur.replanifierTout()
+        } catch (annulation: CancellationException) {
+            throw annulation
+        } catch (erreur: Exception) {
+            Log.w(ETIQUETTE_LOG_RAPPEL, "Replanification après mise à jour du calendrier impossible", erreur)
+        }
+    }
 }

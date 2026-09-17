@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textes des notifications de rappel (tâche B10, US-B5, CDC §B8). Fichier distinct de
+  strings.xml : Android fusionne tous les fichiers de res/values/, ce qui permet aux deux
+  développeurs d'ajouter leurs textes en parallèle sans se marcher dessus.
+
+  Ces textes-là ont une particularité : ils s'affichent **hors de l'application**, dans le
+  volet système et sur l'écran verrouillé, donc devant des gens qui n'ont rien demandé.
+  Deux règles s'y ajoutent :
+  - le ton reste factuel et non culpabilisant (R7) : « Prévu le… », jamais « Vous avez oublié » ;
+  - tout ce qui nomme un enfant ou un vaccin est réservé à la notification complète ; la
+    version affichée sur l'écran verrouillé (notif_rappel_masque_*) n'en dit rien.
+-->
+<resources>
+
+    <!-- B10 — Canal de notification (CDC §B8 : canal `rappels_vaccins`, importance DEFAULT).
+         Visibles dans les réglages Android de l'application, pas dans l'application. -->
+    <string name="notif_canal_rappels_nom">Rappels de vaccination</string>
+    <string name="notif_canal_rappels_description">Un rappel trois jours avant chaque date prévue. Sur l\'écran verrouillé, le prénom de l\'enfant et le nom du vaccin restent masqués.</string>
+
+    <!-- B10 — Notification de rappel, téléphone déverrouillé (scénario de US-B5 :
+         « Faly : Penta 1 prévu dans 3 jours (12/02). Trouver un CSB »). -->
+    <string name="notif_rappel_titre">%1$s : %2$s</string>
+    <!-- B11 — Libellé de la dose dans le titre ci-dessus : nom puis dose, « Pentavalent
+         1re dose ». Séparé de notif_rappel_titre parce que ce n'est pas la même décision :
+         l'un assemble prénom et vaccin, l'autre assemble les deux moitiés d'un libellé de
+         dose du calendrier de référence. -->
+    <string name="notif_rappel_vaccin">%1$s %2$s</string>
+    <plurals name="notif_rappel_dans_jours">
+        <item quantity="one">Prévu dans %1$d jour (%2$s)</item>
+        <item quantity="other">Prévu dans %1$d jours (%2$s)</item>
+    </plurals>
+    <string name="notif_rappel_aujourdhui">Prévu aujourd\'hui (%1$s)</string>
+    <string name="notif_rappel_depasse">Prévu le %1$s — à faire dès que possible</string>
+    <!-- Volet déplié : la phrase ci-dessus, suivie de l'action possible. -->
+    <string name="notif_rappel_detail">%1$s. Vous pouvez trouver un centre de santé dans l\'onglet Centres.</string>
+
+    <!-- B10 — Ce que voit l'écran verrouillé : ni prénom, ni vaccin (CDC §B8).
+         Un téléphone de foyer est partagé ; un rappel de vaccination reste une donnée de
+         santé rattachée à un enfant nommé. Ne jamais ajouter de détail ici. -->
+    <string name="notif_rappel_masque_titre">Rappel de vaccination</string>
+    <string name="notif_rappel_masque_texte">Déverrouillez le téléphone pour voir de quel enfant il s\'agit.</string>
+
+    <!-- B10 — Explication affichée avant la boîte système POST_NOTIFICATIONS (Android 13+),
+         au premier ajout d'enfant. Elle dit ce que l'application enverra, quand, et ce qui
+         reste masqué : c'est ce que la boîte d'Android, elle, n'explique pas. -->
+    <string name="notif_permission_titre">Recevoir les rappels de vaccination ?</string>
+    <string name="notif_permission_message">L\'application peut vous prévenir trois jours avant chaque date prévue, vers 9 h. Le rappel nomme l\'enfant et le vaccin : sur l\'écran verrouillé, ce détail reste masqué et n\'apparaît qu\'une fois le téléphone déverrouillé.\n\nVous pouvez changer d\'avis à tout moment dans les réglages d\'Android.</string>
+    <string name="notif_permission_activer">Recevoir les rappels</string>
+    <string name="notif_permission_plus_tard">Plus tard</string>
+
+</resources>

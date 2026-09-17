@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Icône de lanceur (B24), sous forme d'icône adaptative : le lanceur compose lui-même le
+  fond et l'avant, puis applique le masque du téléphone (rond, carré, goutte…).
+
+  **Pourquoi il n'y a aucun PNG dans ce dépôt.** Une icône adaptative n'est lue qu'à
+  partir d'Android 8.0, d'où le qualificatif `-v26` du dossier. Le projet a `minSdk = 26`
+  (CDC §0.2) : il n'existe donc aucun appareil capable d'installer cette application et
+  incapable de lire ce fichier. Les habituels `mipmap-mdpi/…hdpi/…xxxhdpi/ic_launcher.png`
+  de repli seraient du poids mort. Le jour où `minSdk` descendrait, il faudrait les
+  ajouter — et c'est la seule raison de le faire.
+
+  Le calque `monochrome` est l'icône thématisée d'Android 13+, teintée par le système avec
+  les couleurs du fond d'écran. Les versions antérieures ignorent simplement cette balise.
+  On y remet le même dessin : seule sa silhouette est utilisée, les couleurs sont
+  remplacées.
+
+  Les deux dessins sont dans `drawable/ic_launcher_foreground.xml` et
+  `values/ic_launcher_background.xml`.
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+    <monochrome android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>

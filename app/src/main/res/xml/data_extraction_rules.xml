@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Règles d'extraction des données (B24, CDC §B8 point 5).
+
+  Ce fichier est la moitié Android 12+ de la promesse du manifeste : le carnet ne part
+  « ni en sauvegarde cloud ni en transfert d'appareil ». L'autre moitié,
+  `android:allowBackup="false"` et `android:fullBackupContent="false"`, ne suffit plus
+  depuis Android 12 :
+
+  - `allowBackup="false"` désactive bien la sauvegarde vers Google Drive, mais la
+    documentation Android est explicite : « On devices from some device manufacturers,
+    specifying android:allowBackup="false" does disable backups to Google Drive, but
+    doesn't disable D2D transfers for the app. » Autrement dit, sur une partie du parc,
+    le transfert d'appareil à appareil (l'assistant « copier vos données » du premier
+    démarrage d'un téléphone neuf) recopierait quand même `fahasalamana.db`.
+  - « If <device-transfer> is not set, all application data will be transferred during
+    D2D migration. » C'est le défaut, et c'est exactement ce qu'on ne veut pas pour une
+    base qui contient des prénoms d'enfants, des dates de naissance et des vaccins reçus.
+
+  D'où les deux sections ci-dessous, toutes deux vides de tout contenu exportable.
+
+  Lecture des règles, pour la relecture :
+
+  - Aucun `<include>` : sans règle d'inclusion, tout est éligible par défaut, et ce sont
+    les `<exclude>` qui retranchent. Deux exclusions suffisent donc à tout retrancher.
+  - `domain="root"` désigne le répertoire privé de l'application
+    (`/data/data/mg.univ.fahasalamana/`). Il **contient** `databases/` (la base Room
+    `fahasalamana.db`, B02), `files/` et `shared_prefs/` (le DataStore `preferences`) :
+    l'exclure exclut les trois, il n'y a pas à les répéter.
+  - `domain="external"` désigne `getExternalFilesDir()`. L'application n'y écrit rien
+    aujourd'hui (l'export passe par le SAF, dans un document choisi par l'utilisateur, et
+    ne transite pas par ce répertoire) ; la règle est là pour que cela reste vrai si un
+    jour quelque chose y est écrit.
+  - `path="."` désigne la racine du domaine, donc le répertoire entier et ses
+    sous-répertoires. L'attribut `path` est obligatoire sur chaque règle : une règle sans
+    `path` est ignorée en silence, ce qui donnerait un fichier d'apparence correcte et
+    sans effet.
+  - Pas de `disableIfNoEncryptionCapabilities` sur `<cloud-backup>` : cet attribut sert à
+    n'autoriser la sauvegarde que si elle peut être chiffrée. Ici rien n'est sauvegardé,
+    la question ne se pose pas. (Et il n'existe pas sur `<device-transfer>`.)
+
+  Ce que ce fichier ne fait pas : il n'empêche pas l'utilisateur d'exporter son carnet
+  lui-même (US-B9). C'est justement la seule sortie prévue, explicite et choisie.
+-->
+<data-extraction-rules>
+
+    <!-- Sauvegarde vers le cloud (Google Drive). Déjà coupée par allowBackup="false" ;
+         répétée ici pour que le fichier dise la règle en entier plutôt que de dépendre
+         d'un attribut situé ailleurs. -->
+    <cloud-backup>
+        <exclude domain="root" path="." />
+        <exclude domain="external" path="." />
+    </cloud-backup>
+
+    <!-- Transfert d'appareil à appareil (Android 12+). C'est la section qui compte :
+         sans elle, toute la base serait recopiée sur le téléphone suivant. -->
+    <device-transfer>
+        <exclude domain="root" path="." />
+        <exclude domain="external" path="." />
+    </device-transfer>
+
+</data-extraction-rules>

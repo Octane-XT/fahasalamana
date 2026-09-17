@@ -12,8 +12,17 @@ import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
  *
  * Elle ne fait que poser le thème et la navigation ; tout le reste vit dans les écrans.
  *
- * TODO(B10) : traiter l'intent de deep link fahasalamana://enfant/{id} venant d'une
- * notification de rappel, en reconstruisant la pile MesEnfants -> FicheEnfant.
+ * **Lien profond (B10)** : rien à écrire ici, et c'est le but. L'intent-filter du manifeste
+ * envoie `fahasalamana://enfant/{enfantId}` vers cette activité, et c'est le `NavHost` qui
+ * le consomme au moment où il installe son graphe, en empilant `MesEnfants` sous
+ * `FicheEnfant` (CDC §B7.1). Deux conditions à cela, tenues ailleurs :
+ *  - la destination `FicheEnfant` déclare le lien (`navDeepLink`) dans `AppNavHost` ;
+ *  - la notification ouvre une tâche neuve (`FLAG_ACTIVITY_CLEAR_TASK`, voir
+ *    `NotificationHelper`), donc l'intent arrive toujours par `onCreate`.
+ *
+ * Sans cette seconde condition il faudrait intercepter `onNewIntent` et appeler
+ * `navController.handleDeepLink(intent)` — or le `NavController` est créé dans `AppNavHost`,
+ * hors de portée d'ici.
  */
 class MainActivity : ComponentActivity() {
 

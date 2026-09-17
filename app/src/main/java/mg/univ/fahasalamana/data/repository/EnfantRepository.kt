@@ -2,8 +2,11 @@ package mg.univ.fahasalamana.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import mg.univ.fahasalamana.data.local.EnfantAvecVaccins
+import mg.univ.fahasalamana.domain.CarnetExport
 import mg.univ.fahasalamana.domain.Enfant
+import mg.univ.fahasalamana.domain.ResultatImport
 import mg.univ.fahasalamana.domain.VaccinAdministre
+import java.time.LocalDate
 
 /**
  * Les enfants du carnet et leurs doses reçues (§B6).
@@ -62,22 +65,45 @@ interface EnfantRepository {
     /** Supprime une dose saisie par erreur (US-B4). */
     suspend fun supprimerAdministration(id: String)
 
-    /*
-     * TODO(B16) / TODO(B17) — export et import du carnet, tâches de Dev A.
+    /**
+     * Tout le carnet de ce téléphone, sous la forme écrite dans le fichier d'export
+     * (US-B9, scénario 1).
      *
-     * Signatures prévues par le §B6, à ajouter ici telles quelles :
+     * **Une lecture, rien d'autre** : ni écriture de fichier, ni choix d'emplacement, ni
+     * message. L'écriture dans le document désigné par l'utilisateur est faite par
+     * `platform/ExportCarnetSaf.kt`, à partir du texte produit par `ecrireCarnet()`.
+     * C'est ce découpage qui permet de tester le format en JVM sans Android.
      *
-     *     suspend fun importer(carnet: CarnetExport): ResultatImport
-     *     suspend fun exporter(): CarnetExport
+     * @param jour jour de l'export, repris tel quel dans [CarnetExport.exporteLe] **et**
+     *   dans le nom du fichier proposé (`nomFichierCarnet`), pour que les deux ne puissent
+     *   pas désigner deux jours différents.
      *
-     * Elles ne sont pas déclarées tant que `CarnetExport` et `ResultatImport` n'existent
-     * pas : ces deux types sont le format de fichier de l'export (B16) et le rapport de
-     * fusion de l'import (B17), et leur forme relève de ces tâches. Les inventer ici pour
-     * que la signature compile obligerait à les refaire — c'est le même choix que celui
-     * fait en B04 pour `ReferenceRepository.mettreAJour()` et son `ResultatSync`.
-     *
-     * Le reste est déjà en place : `EnfantDao.lireToutAvecVaccins` lit tout le carnet en
-     * une fois pour l'export, et `enregistrerTous` / `upsertTous` fusionnent par
-     * identifiant à l'import.
+     *   Ce paramètre est un **écart assumé au §B6**, qui écrit `exporter(): CarnetExport`.
+     *   Le jour courant vient de l'horloge injectée (`platform/HorlogeJour.kt`) partout
+     *   dans le projet, jamais d'un `LocalDate.now()` enfoui dans une couche basse :
+     *   sans lui, ce repository lirait l'heure système, et l'export deviendrait le seul
+     *   endroit du code où la date du jour n'est ni injectée ni testable.
      */
+    suspend fun exporter(jour: LocalDate): CarnetExport
+
+    /**
+     * Fusionne un carnet importé avec celui de ce téléphone (US-B9, scénario 2 ; §B6).
+     *
+     * **Le carnet reçu est déjà validé** : c'est `analyserCarnet()` qui décide qu'un texte
+     * est un carnet lisible d'un format connu, et elle le fait avant tout appel ici. Un
+     * fichier illisible ou d'une version inconnue n'atteint donc jamais la base.
+     *
+     * **La fusion n'écrase rien** : elle n'ajoute que les enfants et les doses absents de
+     * ce téléphone, reconnus par leur identifiant (et, pour une dose, par le couple
+     * (enfant, vaccin) de la règle R5). La décision et ses raisons sont écrites en tête de
+     * `domain/ImportCarnet.kt` ; la règle elle-même y vit, sous forme de fonction pure, ce
+     * repository ne faisant que lire l'état courant, appliquer le plan et rendre le rapport.
+     *
+     * **Ne programme aucun rappel** : l'appel à `PlanificateurRappels.replanifierTout()`
+     * (§B8) appartient à l'appelant, comme pour tous les autres déclencheurs de B12 — un
+     * repository ne connaît pas WorkManager.
+     *
+     * @return le rapport à afficher au parent : ajoutés, fusionnés, ignorés.
+     */
+    suspend fun importer(carnet: CarnetExport): ResultatImport
 }

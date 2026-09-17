@@ -5,6 +5,7 @@ import mg.univ.fahasalamana.data.local.AppDatabase
 import mg.univ.fahasalamana.data.local.PreferencesLocales
 import mg.univ.fahasalamana.data.local.SourcesEmbarquees
 import mg.univ.fahasalamana.data.local.construireBase
+import mg.univ.fahasalamana.data.remote.construireReferenceApi
 import mg.univ.fahasalamana.data.repository.CentreRepository
 import mg.univ.fahasalamana.data.repository.CentreRepositoryImpl
 import mg.univ.fahasalamana.data.repository.EnfantRepository
@@ -15,11 +16,20 @@ import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.platform.horlogeJour
 import mg.univ.fahasalamana.ui.edition.EditionEnfantViewModel
 import mg.univ.fahasalamana.ui.enfants.MesEnfantsViewModel
+import androidx.work.WorkManager
+import mg.univ.fahasalamana.platform.EcrivainDocument
+import mg.univ.fahasalamana.platform.LecteurDocument
+import mg.univ.fahasalamana.platform.NotificationHelper
+import mg.univ.fahasalamana.platform.PlanificateurRappels
+import mg.univ.fahasalamana.platform.RappelWorker
+import mg.univ.fahasalamana.ui.export.ExportCarnetViewModel
+import mg.univ.fahasalamana.ui.importation.ImportCarnetViewModel
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.workmanager.dsl.workerOf
 import org.koin.dsl.module
 import java.time.LocalDate
 
@@ -52,6 +62,11 @@ val appModule = module {
     // (B04) Contenu de référence. Liés à l'interface et non à l'implémentation : les
     // ViewModels dépendent du contrat du §B6, et B19 remplacera l'implémentation du
     // calendrier sans toucher à un seul écran.
+    // (B19) Client HTTP des fichiers de référence publiés (§B5.1). `single` : Retrofit et
+    // OkHttp partagent un pool de connexions et de threads ; en construire un par appel
+    // rouvrirait une socket à chaque vérification.
+    single { construireReferenceApi() }
+
     single<ReferenceRepository> {
         ReferenceRepositoryImpl(
             vaccinReferenceDao = get(),
@@ -59,6 +74,8 @@ val appModule = module {
             referenceDao = get(),
             sources = get(),
             preferences = get(),
+            // (B19) Mise à jour des contenus de référence depuis le réseau.
+            api = get(),
         )
     }
     single<CentreRepository> { CentreRepositoryImpl(centreDao = get()) }
@@ -67,6 +84,9 @@ val appModule = module {
     // `vaccins_administres`. Lié à l'interface, comme les deux précédents.
     single<EnfantRepository> {
         EnfantRepositoryImpl(
+            // (B17) La fusion d'un carnet importé lit et écrit les deux tables personnelles
+            // dans une seule transaction : le repository a besoin de la base, pas des seuls DAO.
+            base = get(),
             enfantDao = get(),
             vaccinAdministreDao = get(),
         )
@@ -79,7 +99,7 @@ val appModule = module {
     // supprime toute question de fuite ou de concurrence.
     factory { CalculateurEcheancier() }
 
-    // --- Plateforme (rappels, notifications) --- TODO(B10), TODO(B11)
+    // --- Plateforme (rappels, notifications) ---
     // (B06) Jour courant, qui change à minuit et au retour au premier plan : c'est lui qui
     // fait basculer un vaccin de « à venir » à « à faire » sans rouvrir l'application.
     //
@@ -92,9 +112,35 @@ val appModule = module {
     // un second `Flow<…>` doit être déclaré, il faudra un qualificatif nommé sur les deux.
     single<Flow<LocalDate>> { horlogeJour() }
 
+    // (B10) Notifications de rappel : canal, lien profond, permission. Sans état, mais
+    // `single` pour ne pas reconstruire une façade à chaque injection. Consommée par
+    // RappelWorker (B11) ; le canal, lui, est créé directement depuis App.onCreate.
+    single { NotificationHelper(androidContext()) }
+
+    // (B11) WorkManager. `workManagerFactory()` de `App.onCreate` l'a déjà initialisé avec la
+    // fabrique de workers de Koin ; `getInstance` rend cette instance-là. Résolution
+    // paresseuse, donc toujours après `startKoin`.
+    single { WorkManager.getInstance(androidContext()) }
+
+    // (B11) Planificateur des rappels (R3, R4) : le seul endroit qui enfile un WorkRequest.
+    // Un écran ne sait pas comment un rappel est programmé, il déclenche replanifier().
+    single { PlanificateurRappels(get(), get(), get(), get(), get()) }
+
+    // (B11) Worker injecté par Koin (§B6) : `workerOf` fournit lui-même Context et
+    // WorkerParameters, et résout les dépendances suivantes du constructeur.
+    workerOf(::RappelWorker)
+
+    // (B16) Écriture du carnet dans le document choisi par l'utilisateur (SAF, §B8 point 2).
+    // Sans état : il ne porte qu'un Context, d'où `single`.
+    single { EcrivainDocument(androidContext()) }
+
+    // (B17) Lecture du document choisi par l'utilisateur (SAF, §B8 point 2).
+    single { LecteurDocument(androidContext()) }
+
     // --- ViewModels ---
     // (B15) Réglages : lit la provenance du calendrier et les préférences locales.
-    viewModel { ReglagesViewModel(get(), get()) }
+    // (B19) + PlanificateurRappels : un nouveau calendrier déplace toutes les dates prévues.
+    viewModel { ReglagesViewModel(get(), get(), get()) }
 
     // (B06) Mes enfants : carnet + calendrier + jour courant, résumés par le calculateur (R6).
     viewModel { MesEnfantsViewModel(get(), get(), get(), get()) }
@@ -119,6 +165,8 @@ val appModule = module {
             savedStateHandle = get(),
             enfants = get(),
             horlogeJour = get(),
+            // (B12) Créer, modifier ou supprimer un enfant reprogramme ses rappels.
+            planificateur = get(),
         )
     }
 
@@ -130,8 +178,17 @@ val appModule = module {
             reference = get(),
             calc = get(),
             horlogeJour = get(),
+            // (B12) Saisir ou supprimer une dose reprogramme les rappels de l'enfant.
+            planificateur = get(),
         )
     }
+
+    // (B16) Export du carnet : bloc « Carnet » de l'écran Réglages. ViewModel à part et non
+    // ReglagesViewModel, pour garder l'export testable et l'écran des réglages inchangé.
+    viewModel { ExportCarnetViewModel(enfants = get(), ecrivain = get(), horlogeJour = get()) }
+
+    // (B17) Import du carnet : fusion par identifiant, puis replanifierTout().
+    viewModel { ImportCarnetViewModel(enfants = get(), lecteur = get(), planificateur = get()) }
 
     // TODO(B10) à TODO(B18) : un viewModel par écran restant.
 }

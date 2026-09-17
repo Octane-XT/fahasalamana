@@ -33,23 +33,35 @@ interface ReferenceRepository {
      */
     suspend fun chargerEmbarqueSiVide()
 
-    /*
-     * TODO(B19) — mise à jour depuis le réseau, tâche de Dev B.
+    /**
+     * Vérifie s'il existe une version plus récente des contenus de référence publiés, et
+     * l'installe le cas échéant (US-B11, §B5.1).
      *
-     * Signature prévue par le §B6, à ajouter ici telle quelle :
+     * Déclenchée par le seul bouton « Vérifier les mises à jour » de l'écran Réglages :
+     * l'application ne vérifie **jamais** d'elle-même, ni au démarrage, ni en tâche de fond.
+     * C'est une application hors ligne qui emprunte le réseau sur demande explicite, et un
+     * contrôle automatique consommerait les données de quelqu'un qui ne l'a pas demandé.
      *
-     *     suspend fun mettreAJour(): ResultatSync
+     * Le calendrier et l'annuaire sont traités **indépendamment** : l'un peut avoir une
+     * nouvelle version et pas l'autre, et l'échec de l'un n'annule pas l'autre. [ResultatSync]
+     * porte donc une issue par fichier.
      *
-     * Elle n'est pas déclarée tant que `ResultatSync` n'existe pas : ce type décrit le
-     * résultat d'une synchronisation (contenu à jour, contenu remplacé avec les nouvelles
-     * versions, échec réseau sans effet sur la base — US-B11) et sa forme relève de B19.
-     * L'inventer ici pour que la signature compile obligerait Dev B à le refaire.
+     * **Ne lève pas** (§B0, couche 2) : réseau absent, temps dépassé, JSON illisible,
+     * `schemaVersion` inattendu sont des cas de [IssueMiseAJour], pas des exceptions. Et dans
+     * chacun de ces cas la base reste exactement dans l'état où elle était — un contenu n'est
+     * remplacé qu'une fois son fichier entièrement téléchargé et validé, et ce remplacement
+     * est transactionnel.
      *
-     * Le reste est déjà en place pour B19 : les DTO de `data/remote` sont ceux du fichier
-     * distant, `MappageReference` les aplatit, `ReferenceDao.remplacerCalendrier` /
-     * `remplacerAnnuaire` remplacent en transaction et `PreferencesLocales` garde les
-     * versions à comparer.
+     * Comme partout dans ce repository, **aucune donnée personnelle n'est touchée** : ni
+     * `enfants`, ni `vaccins_administres` ne sont lues, écrites ou supprimées ici, et rien
+     * n'est envoyé sur le réseau — les deux requêtes sont des `GET` sans corps (§B8, point 1).
+     *
+     * L'appelant qui obtient `ResultatSync.calendrierRemplace` doit replanifier les rappels
+     * (`PlanificateurRappels.replanifierTout()`, §B8) : un nouveau calendrier change les dates
+     * prévues de tous les enfants. Ce n'est pas fait ici — un repository ne programme pas de
+     * `WorkRequest` (règle 9 de CLAUDE.md).
      */
+    suspend fun mettreAJour(): ResultatSync
 }
 
 /**

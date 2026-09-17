@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import mg.univ.fahasalamana.data.local.CentreDao
 import mg.univ.fahasalamana.data.local.PreferencesLocales
@@ -12,20 +13,32 @@ import mg.univ.fahasalamana.data.local.SourcesEmbarquees
 import mg.univ.fahasalamana.data.local.VaccinReferenceDao
 import mg.univ.fahasalamana.data.local.toDomain
 import mg.univ.fahasalamana.data.local.versEntites
+import mg.univ.fahasalamana.data.remote.AnnuaireDto
+import mg.univ.fahasalamana.data.remote.CalendrierDto
+import mg.univ.fahasalamana.data.remote.ReferenceApi
 import mg.univ.fahasalamana.domain.VaccinReference
+import java.time.LocalDate
 
 /**
  * Implémentation de [ReferenceRepository] : la base locale d'abord, les fichiers
  * embarqués seulement pour l'amorcer.
  *
- * Trois responsabilités, et pas une de plus :
+ * Quatre responsabilités, et pas une de plus :
  * 1. exposer le calendrier de la base en `Flow` de modèles du domaine ;
  * 2. exposer la provenance du contenu chargé ;
- * 3. amorcer la base au premier lancement avec les fichiers d'`assets/`.
+ * 3. amorcer la base au premier lancement avec les fichiers d'`assets/` ;
+ * 4. (B19) installer une version plus récente publiée sur le réseau, sur demande.
  *
  * Il écrit **uniquement** par `ReferenceDao`, dont les deux fonctions sont
  * transactionnelles et ne portent que sur les quatre tables de référence : aucune
  * ligne d'`enfants` ni de `vaccins_administres` n'est lue, écrite ou supprimée ici.
+ *
+ * (B19) La décision de mise à jour — comparer les versions, refuser un format inconnu,
+ * ne remplacer qu'après un téléchargement complet — n'est pas dans cette classe mais dans
+ * [SynchroniseurReference], qui est sans Android et donc testable en JVM (§B9). Ce que cette
+ * classe fournit à ce synchroniseur, c'est [StockageLocal] : la traduction des cinq
+ * opérations dont il a besoin vers les DAO de B02 et les préférences de B04. Les deux
+ * chemins de chargement, embarqué et distant, passent ainsi par le même code d'écriture.
  */
 class ReferenceRepositoryImpl(
     private val vaccinReferenceDao: VaccinReferenceDao,
@@ -33,7 +46,14 @@ class ReferenceRepositoryImpl(
     private val referenceDao: ReferenceDao,
     private val sources: SourcesEmbarquees,
     private val preferences: PreferencesLocales,
+    // (B19) Client des fichiers publiés. Injecté et non construit ici : c'est Koin qui tient
+    // le cycle de vie du client HTTP. Sans `val` : il ne sert qu'à monter le synchroniseur
+    // ci-dessous, et le repository n'a aucune raison de garder une référence au réseau.
+    api: ReferenceApi,
 ) : ReferenceRepository {
+
+    /** (B19) Le synchroniseur et son accès au stockage local, montés une fois pour toutes. */
+    private val synchroniseur = SynchroniseurReference(api = api, stockage = StockageLocal())
 
     override fun observerCalendrier(): Flow<List<VaccinReference>> =
         vaccinReferenceDao.observerCalendrier().map { it.toDomain() }
@@ -115,17 +135,82 @@ class ReferenceRepositoryImpl(
      * Refuse un fichier dont le format n'est pas celui que cette version sait lire (§B5.1).
      *
      * Sur un fichier embarqué, un écart signale une erreur de build (`assets/` désynchronisé
-     * du code) et doit se voir tout de suite. La même vérification protégera B19 d'un
-     * `v2/` servi par erreur sur l'URL `v1/`.
+     * du code) et doit se voir tout de suite — d'où le `check`, qui lève.
+     *
+     * (B19) Le fichier **distant**, lui, ne peut pas faire planter l'application : le même
+     * contrôle y est refait par [SynchroniseurReference], mais il y rend
+     * `IssueMiseAJour.SchemaInconnu`. Deux traitements pour un seul critère, parce qu'une
+     * erreur de build et un fichier mal publié n'appellent pas la même réaction. Le critère,
+     * lui, est unique : [SCHEMA_REFERENCE_SUPPORTE].
      */
     private fun verifierSchema(schemaVersion: Int, fichier: String) {
-        check(schemaVersion == SCHEMA_SUPPORTE) {
-            "$fichier annonce schemaVersion=$schemaVersion, cette version lit le format $SCHEMA_SUPPORTE"
+        check(schemaVersion == SCHEMA_REFERENCE_SUPPORTE) {
+            "$fichier annonce schemaVersion=$schemaVersion, " +
+                "cette version lit le format $SCHEMA_REFERENCE_SUPPORTE"
         }
     }
 
-    private companion object {
-        /** Format des fichiers publiés sous `v1/` (§B5.1). Une évolution incompatible publiera `v2/`. */
-        const val SCHEMA_SUPPORTE = 1
+    // --- Mise à jour depuis le réseau (B19, US-B11) ---------------------------
+
+    /**
+     * Délègue à [SynchroniseurReference], qui porte toute la décision.
+     *
+     * Une ligne, et c'est voulu : ce qui se joue dans une mise à jour — l'ordre
+     * télécharger / valider / comparer / remplacer — est ce que B19 doit pouvoir montrer,
+     * et il se lit en un seul endroit plutôt que dispersé entre un repository Android et un
+     * client Retrofit.
+     */
+    override suspend fun mettreAJour(): ResultatSync = synchroniseur.synchroniser()
+
+    /**
+     * L'accès au stockage local vu par la synchronisation (B19).
+     *
+     * `inner` : cette classe n'a aucun état propre, elle n'est que la traduction des cinq
+     * opérations de [StockageReference] vers les DAO et les préférences de l'instance
+     * englobante. La déclarer ici plutôt que de faire implémenter [StockageReference] par
+     * `ReferenceRepositoryImpl` lui-même évite d'ajouter cinq fonctions publiques au
+     * repository : personne d'autre que le synchroniseur n'a à pouvoir remplacer un contenu
+     * de référence sans passer par `mettreAJour()`.
+     *
+     * Les deux remplacements reprennent **exactement** le chemin de l'amorçage embarqué
+     * (`versEntites()` puis `ReferenceDao`), à une différence près : ils ne testent pas si la
+     * base est vide, puisqu'ici le but est justement de remplacer un contenu existant.
+     */
+    private inner class StockageLocal : StockageReference {
+
+        override suspend fun versionCalendrier(): Int = preferences.calendrierVersion.first()
+
+        override suspend fun versionAnnuaire(): Int = preferences.annuaireVersion.first()
+
+        override suspend fun remplacerCalendrier(publie: CalendrierDto) {
+            // Transaction : soit tout le nouveau calendrier est en base, soit l'ancien est
+            // intact. Aucune ligne d'`enfants` ni de `vaccins_administres` n'est touchée —
+            // les identifiants de dose étant stables (§B5.1), les vaccins déjà saisis
+            // retrouvent leur ligne de référence après le remplacement.
+            referenceDao.remplacerCalendrier(publie.versEntites())
+
+            // Après la transaction, pour ne jamais annoncer une version que la base n'aurait
+            // pas. Les trois valeurs partent dans un seul `edit` (B04) : l'écran « À propos
+            // des données » ne peut pas afficher la nouvelle version avec l'ancienne source.
+            preferences.enregistrerInfosCalendrier(
+                version = publie.version,
+                source = publie.source,
+                publieLe = publie.publieLe,
+            )
+        }
+
+        override suspend fun remplacerAnnuaire(publie: AnnuaireDto) {
+            val entites = publie.versEntites()
+            referenceDao.remplacerAnnuaire(
+                regions = entites.regions,
+                districts = entites.districts,
+                centres = entites.centres,
+            )
+            preferences.enregistrerVersionAnnuaire(publie.version)
+        }
+
+        override suspend fun enregistrerVerification(jour: LocalDate) {
+            preferences.enregistrerDerniereVerification(jour)
+        }
     }
 }

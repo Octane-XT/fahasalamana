@@ -30,6 +30,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navDeepLink
+import mg.univ.fahasalamana.platform.BASE_LIEN_ENFANT
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantScreen
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinScreen
 import androidx.navigation.compose.rememberNavController
@@ -156,10 +158,13 @@ fun AppNavHost(
                 )
             }
 
-            // TODO(B10) : deep link fahasalamana://enfant/{enfantId} sur cette destination,
-            // avec l'intent-filter correspondant dans AndroidManifest.xml et la reconstruction
-            // de la pile MesEnfants -> FicheEnfant depuis la notification (CDC §B7.1).
-            composable<FicheEnfant> {
+            // (B10) Lien profond des notifications : fahasalamana://enfant/{enfantId}.
+            // navDeepLink<FicheEnfant> ajoute lui-même le segment de l'argument obligatoire
+            // de la route ; la pile MesEnfants -> FicheEnfant est reconstruite par le NavHost,
+            // qui empile la destination de départ du graphe sous la cible (CDC §B7.1).
+            composable<FicheEnfant>(
+                deepLinks = listOf(navDeepLink<FicheEnfant>(basePath = BASE_LIEN_ENFANT)),
+            ) {
                 FicheEnfantScreen(
                     onRetour = { navController.navigateUp() },
                     onModifierEnfant = { enfantId -> navController.navigate(EditionEnfant(enfantId)) },

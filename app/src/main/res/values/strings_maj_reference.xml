@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textes de la recherche de mise à jour des contenus de référence (tâche B19, US-B11).
+
+  Fichier distinct de strings.xml, comme strings_export.xml : Android fusionne tous les
+  fichiers de res/values/, ce qui permet aux deux développeurs d'ajouter leurs textes en
+  parallèle sans se marcher dessus.
+
+  Ce qui n'est PAS ici, et qui est repris tel quel d'ailleurs :
+   - `reglages_action_verifier` (« Vérifier les mises à jour »), écrit par B15 : c'est le
+     libellé du wireframe §B7.2, il n'y a pas lieu d'en créer un second ;
+   - `reglages_calendrier_titre` et `reglages_annuaire_titre`, qui nomment les deux contenus
+     dans la carte juste au-dessus : le compte rendu doit employer exactement les mêmes mots,
+     sans quoi le parent ne saura pas de quelle ligne on lui parle ;
+   - `import_rappels_recalcules` (B17) : la phrase est mot pour mot la même après un import
+     et après un nouveau calendrier, et en dupliquer une variante laisserait les deux
+     diverger à la première relecture ;
+   - `export_fermer` (B16), pour le bouton de fermeture : même mot, même geste.
+
+  Ton (règle R7) et deux contraintes propres à cet écran :
+
+   1. « Rien n'a changé sur ce téléphone » figure dans chacun des trois messages d'échec.
+      C'est la question que se pose quelqu'un dont la mise à jour vient d'échouer, et c'est
+      exactement ce que garantit le code (voir SynchroniseurReference).
+   2. Les deux contenus sont annoncés séparément, même quand tout s'est bien passé. L'un peut
+      être à jour et l'autre non, l'un peut échouer et l'autre réussir : un message unique
+      obligerait à taire la moitié de ce qui s'est passé.
+
+  Aucune de ces phrases ne promet ce que le code ne fait pas : pas de « synchronisation
+  automatique » (l'application ne vérifie que sur demande), pas de « sauvegarde ».
+-->
+<resources>
+
+    <!-- B19 — Le bouton et son état. Le libellé du bouton est `reglages_action_verifier`. -->
+    <string name="maj_description">Télécharge la dernière version publiée du calendrier vaccinal et de l\'annuaire des centres. Vos enfants et les vaccins que vous avez saisis ne sont jamais envoyés.</string>
+    <string name="maj_en_cours">Recherche d\'une mise à jour…</string>
+
+    <!-- B19 — Titre du compte rendu. Trois cas, dans l'ordre où on les regarde : quelque
+         chose a changé, rien n'avait changé, rien n'a pu être vérifié. -->
+    <string name="maj_titre_installee">Contenu mis à jour</string>
+    <string name="maj_titre_a_jour">Vous êtes à jour</string>
+    <string name="maj_titre_echec">La vérification n\'a pas abouti</string>
+
+    <!-- B19 — Une ligne par contenu (%1$s = « Calendrier vaccinal » ou « Annuaire des
+         centres de santé »). La version est toujours citée : c'est ce qui permet de vérifier
+         d'un coup d'œil que la carte au-dessus affiche bien le nouveau contenu. -->
+    <string name="maj_ligne_a_jour">%1$s : vous avez déjà la version la plus récente (version %2$d).</string>
+    <string name="maj_ligne_installee">%1$s : version %2$d installée, à la place de la version %3$d.</string>
+    <string name="maj_ligne_premiere_installation">%1$s : version %2$d installée.</string>
+
+    <!-- B19 — Échecs. Aucun détail technique, aucun code d'erreur, aucune URL : le parent
+         n'en ferait rien, et l'écran d'une application de santé n'est pas un journal. -->
+    <string name="maj_ligne_echec">%1$s : le fichier n\'a pas pu être téléchargé. Rien n\'a changé sur ce téléphone.</string>
+    <string name="maj_ligne_format_invalide">%1$s : le fichier publié n\'a pas pu être lu. Rien n\'a changé sur ce téléphone ; vous pourrez réessayer plus tard.</string>
+    <string name="maj_ligne_schema_inconnu">%1$s : le fichier publié est écrit dans un format que cette version de l\'application ne sait pas lire (format %2$d). Rien n\'a changé sur ce téléphone : installez la dernière version de l\'application, puis réessayez.</string>
+
+    <!-- B19 — Ce que la mise à jour a touché, et ce qu'elle n'a pas touché (§B8, règle 8 de
+         CLAUDE.md). Affiché seulement quand un contenu a réellement été remplacé : c'est le
+         seul moment où la question se pose. -->
+    <string name="maj_donnees_personnelles">Seuls le calendrier et l\'annuaire ont été remplacés. Les enfants et les vaccins enregistrés sur ce téléphone n\'ont pas été modifiés.</string>
+
+</resources>

@@ -22,6 +22,7 @@ import mg.univ.fahasalamana.data.repository.ReferenceRepository
 import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.domain.VaccinAdministre
 import mg.univ.fahasalamana.domain.validerSaisie
+import mg.univ.fahasalamana.platform.PlanificateurRappels
 import mg.univ.fahasalamana.ui.navigation.SaisieVaccin
 import java.time.LocalDate
 
@@ -52,6 +53,7 @@ class SaisieVaccinViewModel(
     reference: ReferenceRepository,
     private val calc: CalculateurEcheancier,
     private val horlogeJour: Flow<LocalDate>,
+    private val planificateur: PlanificateurRappels,
 ) : ViewModel() {
 
     /** Les deux arguments de navigation, lus par la route typée (CLAUDE.md, règle 4). */
@@ -205,16 +207,18 @@ class SaisieVaccinViewModel(
                     ),
                 )
 
-                // TODO(B12) — annulation et reprogrammation des rappels de cet enfant.
-                // C'est ici, après l'écriture réussie et avant la fermeture de l'écran, que
-                // l'appel doit venir :
-                //     planificateur.replanifier(route.enfantId)
-                // (scénario « vaccin saisi avant le rappel » de US-B5 : le rappel de cette
-                // dose est annulé, et ceux des doses qui en dépendent sont recalculés depuis
-                // sa date réelle, règle R1). `PlanificateurRappels` est livré par B11 ; il
-                // sera injecté dans le constructeur et déclaré dans `AppModule` en B12.
-                // Rien n'est inventé ici : aucun `WorkRequest` n'est programmé depuis un
-                // écran (CLAUDE.md, règle 9).
+                // (B12) Scénario « vaccin saisi avant le rappel » de US-B5 : le rappel de
+                // cette dose disparaît, et ceux des doses qui en dépendent sont recalculés
+                // depuis sa date **réelle** (R1). Un seul appel : `replanifier` annule les
+                // travaux de l'enfant avant de réenfiler ce que R3 produit, et retire du
+                // volet les notifications des doses devenues faites. Aucun `WorkRequest`
+                // n'est programmé depuis un écran (CLAUDE.md, règle 9).
+                //
+                // Dans le `try` : une replanification impossible laisse l'écran ouvert sur
+                // son message d'échec plutôt que de refermer sur un carnet dont les rappels
+                // ne correspondent plus. La dose est déjà écrite et l'enregistrement est un
+                // `upsert` idempotent (R5), donc réessayer rejoue les deux sans doublon.
+                planificateur.replanifier(route.enfantId)
 
                 edition.update { it?.copy(enCours = false, termine = true) }
             } catch (annulation: CancellationException) {
@@ -244,9 +248,10 @@ class SaisieVaccinViewModel(
                     enfants.supprimerAdministration(existante.id)
                 }
 
-                // TODO(B12) — même appel qu'à l'enregistrement, pour la raison inverse :
-                //     planificateur.replanifier(route.enfantId)
-                // la dose supprimée redevient à faire, son rappel doit être reprogrammé.
+                // (B12) Même appel qu'à l'enregistrement, pour la raison inverse : la dose
+                // supprimée redevient à faire, son rappel doit être reprogrammé — et les
+                // doses qui en dépendent repartent de leur date théorique (R1).
+                planificateur.replanifier(route.enfantId)
 
                 edition.update { it?.copy(enCours = false, termine = true) }
             } catch (annulation: CancellationException) {

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textes de l'outillage de démonstration (tâche B10). Source set `debug` : ces clés
+  n'existent pas dans la version publiée, et le code qui les lit non plus
+  (src/debug/java/.../BlocRappelsDebug.kt, dont le jumeau `release` est vide).
+
+  tools:ignore="MissingDefaultResource" : lint signale par défaut une ressource définie dans
+  un seul variant. C'est ici exactement l'intention.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingDefaultResource">
+
+    <string name="debug_rappels_section">Rappels (version de test)</string>
+    <string name="debug_rappels_explication">Bouton de démonstration, absent de la version publiée : il affiche tout de suite une notification de rappel, sans attendre l\'échéance réelle.</string>
+    <string name="debug_rappels_action">Envoyer une notification de test</string>
+    <string name="debug_rappels_etat_autorise">Notifications autorisées sur ce téléphone.</string>
+    <string name="debug_rappels_etat_refuse">Notifications non autorisées : la permission sera demandée au premier envoi.</string>
+    <string name="debug_rappels_envoyee">Notification envoyée. Touchez-la pour ouvrir la fiche de l\'enfant ; le retour doit ramener à « Mes enfants ».</string>
+    <string name="debug_rappels_bloquee">Rien n\'a été envoyé : les notifications sont désactivées pour cette application dans les réglages d\'Android.</string>
+    <string name="debug_rappels_sans_enfant">Le carnet est vide : la notification pointera vers une fiche introuvable. Ajoutez un enfant pour une démonstration complète.</string>
+
+    <!-- Contenu de démonstration : le scénario de US-B5, mot pour mot. -->
+    <string name="debug_rappels_prenom_demo">Faly</string>
+    <string name="debug_rappels_vaccin_demo">Pentavalent 1re dose</string>
+
+</resources>
