@@ -67,7 +67,7 @@
     <string name="reglages_confidentialite_donnees_locales">Les enfants que vous ajoutez et les vaccins que vous saisissez restent sur ce téléphone, dans la mémoire de l\'application.</string>
     <string name="reglages_confidentialite_aucun_envoi">L\'application ne crée aucun compte et n\'envoie aucune donnée de santé sur Internet : ni les enfants, ni les vaccins saisis.</string>
     <string name="reglages_confidentialite_sauvegarde">La sauvegarde automatique vers le cloud est désactivée : le carnet n\'est pas copié sur les serveurs de Google.</string>
-    <string name="reglages_confidentialite_export">Le carnet ne peut sortir de ce téléphone que par un export de fichier que vous demandez vous-même. Le fichier est écrit à l'emplacement que vous choisissez, et l'application ne l'envoie nulle part.</string>
+    <string name="reglages_confidentialite_export">Le carnet ne peut sortir de ce téléphone que par un export de fichier que vous demandez vous-même. Le fichier est écrit à l\'emplacement que vous choisissez, et l\'application ne l\'envoie nulle part.</string>
 
     <!-- B15 — Écran Réglages : entrées réservées aux tâches B16, B17 et B18 -->
     <string name="reglages_section_carnet">Carnet</string>

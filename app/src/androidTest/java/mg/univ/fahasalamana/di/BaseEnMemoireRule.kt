@@ -131,11 +131,17 @@ private fun moduleDeTest(): Module = module {
             referenceDao = get(),
             sources = get(),
             preferences = get(),
+            // (B19) Le repository de référence sait aussi aller chercher une mise à jour :
+            // le vrai client est injecté, les tests n'appellent simplement pas mettreAJour().
+            api = get(),
         )
     }
     single<CentreRepository> { CentreRepositoryImpl(centreDao = get()) }
     single<EnfantRepository> {
         EnfantRepositoryImpl(
+            // (B17) La fusion d'un carnet importé écrit les deux tables personnelles dans
+            // une seule transaction : le repository a besoin de la base en mémoire du test.
+            base = get(),
             enfantDao = get(),
             vaccinAdministreDao = get(),
         )
