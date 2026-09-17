@@ -63,11 +63,16 @@ class ReglagesViewModel(
      *
      * L'erreur est **cantonnée à ce bloc** : elle ne doit emporter ni l'état du verrouillage,
      * qui vient d'une autre source et dont l'utilisateur a besoin même quand le calendrier
-     * est illisible, ni le compte rendu de mise à jour. Typé `Flow<EtatReference>` et non
-     * `Flow<Pret>` : c'est ce qui permet à [catch] d'émettre [EtatReference.Erreur] sur la
-     * même chaîne.
+     * est illisible, ni le compte rendu de mise à jour.
+     *
+     * **En deux propriétés, et c'est nécessaire.** La lambda de [combine] ne construit que des
+     * [EtatReference.Pret] : enchaînée directement, `combine { ... }.catch { ... }` ferait
+     * inférer `Flow<Pret>` au récepteur, et [catch] ne pourrait plus émettre
+     * [EtatReference.Erreur]. Le type déclaré ici sert d'attendu à l'inférence : la lecture
+     * est déjà un `Flow<EtatReference>` avant que [catch] ne s'y attache. C'est le même
+     * découpage que dans les six autres ViewModels.
      */
-    private val etatReference: Flow<EtatReference> = combine(
+    private val referenceLue: Flow<EtatReference> = combine(
         // `observerInfosSource()` n'émet rien tant que rien n'est chargé : sans cette
         // première valeur nulle, la combinaison ne produirait jamais d'état et l'écran
         // resterait en chargement pour toujours. Même parade que FicheEnfantViewModel.
@@ -85,7 +90,10 @@ class ReglagesViewModel(
                 derniereVerification = derniereVerification,
             ),
         )
-    }.catch { erreur ->
+    }
+
+    /** La lecture ci-dessus, dont l'échec devient un état d'affichage au lieu de tomber. */
+    private val etatReference: Flow<EtatReference> = referenceLue.catch { erreur ->
         // L'annulation du scope n'est pas une erreur d'affichage : elle doit remonter.
         if (erreur is CancellationException) throw erreur
         emit(EtatReference.Erreur)
