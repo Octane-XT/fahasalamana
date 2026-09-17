@@ -1,6 +1,7 @@
 package mg.univ.fahasalamana.ui.navigation
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -105,9 +106,9 @@ fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
-    // (B18) Verrou lu avant que le NavHost n'existe, donc avant que sa destination de départ
-    // ne soit figée. Tant que la préférence n'est pas lue, on n'affiche ni le carnet ni
-    // l'écran de code : sinon l'écran verrouillé clignoterait par-dessus le carnet.
+    // (B18) Verrou lu avant que le NavHost n'existe. Tant que la préférence n'est pas lue, on
+    // n'affiche ni le carnet ni l'écran de code : sinon l'écran verrouillé clignoterait
+    // par-dessus le carnet.
     val etatVerrou = etatVerrouillageCourant()
     if (etatVerrou == EtatVerrouillage.Indetermine) {
         EcranAvantVerrouillage(modifier)
@@ -116,133 +117,158 @@ fun AppNavHost(
 
     val entreeCourante by navController.currentBackStackEntryAsState()
     val destinationCourante = entreeCourante?.destination
+    val surEcranDeCode = destinationCourante?.hasRoute(Verrouillage::class) == true
 
-    // (B18) Reprise après plus de deux minutes hors de l'application : le gardien repasse à
-    // Verrouille et l'écran de code se pose par-dessus la pile, sans la vider — on retombe
-    // donc sur l'écran qu'on avait quitté, une fois le code saisi.
-    LaunchedEffect(etatVerrou) {
+    // (B18) Tout le verrouillage tient dans un invariant : **carnet verrouillé => écran de
+    // code au sommet de la pile**. L'écran de code est *empilé* par-dessus ce qui est là, jamais
+    // substitué à la pile : au démarrage à froid il couvre la racine `MesEnfants` (§B7.1), et
+    // après plus de deux minutes hors de l'application il couvre l'écran qu'on avait quitté,
+    // qu'on retrouve intact — saisie en cours comprise — une fois le code saisi.
+    //
+    // L'effet est relancé à chaque changement de destination, et pas seulement à chaque
+    // changement de verrou : sans cela, quitter l'écran de code sans déverrouiller laisserait
+    // le carnet à découvert jusqu'à la prochaine bascule du gardien. Le cas existe — on
+    // arrive aussi sur cet écran depuis les Réglages, où il porte une flèche de retour.
+    LaunchedEffect(etatVerrou, entreeCourante) {
         val destination = navController.currentDestination ?: return@LaunchedEffect
         if (etatVerrou == EtatVerrouillage.Verrouille && !destination.hasRoute(Verrouillage::class)) {
             navController.navigate(Verrouillage) { launchSingleTop = true }
         }
     }
 
+    // L'effet ci-dessus s'exécute après la composition, donc après une image dessinée : sans
+    // ce masque, le carnet apparaîtrait le temps d'une image avant l'écran de code, au
+    // démarrage à froid comme au reverrouillage. C'est exactement ce que la surface neutre
+    // d'`EcranAvantVerrouillage` évite déjà pendant `Indetermine`, pour la même raison.
+    val carnetMasque = etatVerrou == EtatVerrouillage.Verrouille && !surEcranDeCode
+
     // La barre du bas n'apparaît que sur les trois racines : les écrans de détail et de
     // saisie occupent tout l'écran et se referment par la flèche de retour (wireframes §B7.2).
     val barreVisible = onglets.any { destinationCourante.estDans(it) }
 
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        bottomBar = {
-            if (barreVisible) {
-                BarreOnglets(
-                    destinationCourante = destinationCourante,
-                    onOngletChoisi = { onglet -> navController.allerAOnglet(onglet) },
-                )
-            }
-        },
-        // Les encarts système sont laissés aux écrans, qui ont leur propre Scaffold.
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-    ) { interieur ->
-        NavHost(
-            navController = navController,
-            startDestination = if (etatVerrou == EtatVerrouillage.Verrouille) Verrouillage else MesEnfants,
-            modifier = Modifier
-                .padding(interieur)
-                .consumeWindowInsets(interieur),
-        ) {
-            // --- Onglet Enfants ---
-
-            // (B06) Premier écran réel de l'onglet Enfants. Il ne navigue pas lui-même :
-            // il reçoit deux lambdas, la navigation restant l'affaire de ce fichier.
-            composable<MesEnfants> {
-                MesEnfantsScreen(
-                    onAjouterEnfant = { navController.navigate(EditionEnfant()) },
-                    onOuvrirEnfant = { enfantId ->
-                        navController.navigate(FicheEnfant(enfantId = enfantId))
-                    },
-                )
-            }
-
-            // (B07) Création quand `enfantId` est nul, modification sinon. L'argument n'est pas
-            // lu ici : le ViewModel le récupère par SavedStateHandle.toRoute<EditionEnfant>().
-            //
-            // La sortie après suppression ne peut pas être un simple `navigateUp()` : on
-            // arrive sur cet écran depuis la fiche de l'enfant, qui est encore dans la pile et
-            // afficherait « Introuvable ». On remonte donc jusqu'à la liste.
-            composable<EditionEnfant> {
-                EditionEnfantScreen(
-                    onRetour = { navController.navigateUp() },
-                    onEnregistre = { navController.navigateUp() },
-                    onSupprime = { navController.popBackStack(route = MesEnfants, inclusive = false) },
-                )
-            }
-
-            // (B10) Lien profond des notifications : fahasalamana://enfant/{enfantId}.
-            // navDeepLink<FicheEnfant> ajoute lui-même le segment de l'argument obligatoire
-            // de la route ; la pile MesEnfants -> FicheEnfant est reconstruite par le NavHost,
-            // qui empile la destination de départ du graphe sous la cible (CDC §B7.1).
-            composable<FicheEnfant>(
-                deepLinks = listOf(navDeepLink<FicheEnfant>(basePath = BASE_LIEN_ENFANT)),
+    Box(modifier = modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = {
+                if (barreVisible) {
+                    BarreOnglets(
+                        destinationCourante = destinationCourante,
+                        onOngletChoisi = { onglet -> navController.allerAOnglet(onglet) },
+                    )
+                }
+            },
+            // Les encarts système sont laissés aux écrans, qui ont leur propre Scaffold.
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        ) { interieur ->
+            NavHost(
+                navController = navController,
+                // (B18) La destination de départ ne dépend **pas** du verrou, et c'est ce qui fait
+                // tenir ensemble les deux exigences du §B7.1. Calculée depuis `etatVerrou`, elle
+                // changeait de valeur au reverrouillage ; le NavHost reconstruisait alors son
+                // graphe, et un graphe neuf vide la pile de retour. Deux conséquences, contraires
+                // au commentaire qui promettait le contraire : la saisie de vaccin en cours était
+                // perdue au retour, et un lien profond reçu carnet verrouillé empilait
+                // `Verrouillage -> FicheEnfant` au lieu de `MesEnfants -> FicheEnfant`.
+                // `MesEnfants` reste donc la racine dans tous les cas : c'est elle que le lien
+                // profond empile sous `FicheEnfant`, et c'est elle que vise le
+                // `popUpTo(graph.findStartDestination())` du changement d'onglet.
+                startDestination = MesEnfants,
+                modifier = Modifier
+                    .padding(interieur)
+                    .consumeWindowInsets(interieur),
             ) {
-                FicheEnfantScreen(
-                    onRetour = { navController.navigateUp() },
-                    onModifierEnfant = { enfantId -> navController.navigate(EditionEnfant(enfantId)) },
-                    onSaisirVaccin = { enfantId, vaccinId ->
-                        navController.navigate(SaisieVaccin(enfantId = enfantId, vaccinId = vaccinId))
-                    },
-                )
+                // --- Onglet Enfants ---
+
+                // (B06) Premier écran réel de l'onglet Enfants. Il ne navigue pas lui-même :
+                // il reçoit deux lambdas, la navigation restant l'affaire de ce fichier.
+                composable<MesEnfants> {
+                    MesEnfantsScreen(
+                        onAjouterEnfant = { navController.navigate(EditionEnfant()) },
+                        onOuvrirEnfant = { enfantId ->
+                            navController.navigate(FicheEnfant(enfantId = enfantId))
+                        },
+                    )
+                }
+
+                // (B07) Création quand `enfantId` est nul, modification sinon. L'argument n'est pas
+                // lu ici : le ViewModel le récupère par SavedStateHandle.toRoute<EditionEnfant>().
+                //
+                // La sortie après suppression ne peut pas être un simple `navigateUp()` : on
+                // arrive sur cet écran depuis la fiche de l'enfant, qui est encore dans la pile et
+                // afficherait « Introuvable ». On remonte donc jusqu'à la liste.
+                composable<EditionEnfant> {
+                    EditionEnfantScreen(
+                        onRetour = { navController.navigateUp() },
+                        onEnregistre = { navController.navigateUp() },
+                        onSupprime = { navController.popBackStack(route = MesEnfants, inclusive = false) },
+                    )
+                }
+
+                // (B10) Lien profond des notifications : fahasalamana://enfant/{enfantId}.
+                // navDeepLink<FicheEnfant> ajoute lui-même le segment de l'argument obligatoire
+                // de la route ; la pile MesEnfants -> FicheEnfant est reconstruite par le NavHost,
+                // qui empile la destination de départ du graphe sous la cible (CDC §B7.1).
+                composable<FicheEnfant>(
+                    deepLinks = listOf(navDeepLink<FicheEnfant>(basePath = BASE_LIEN_ENFANT)),
+                ) {
+                    FicheEnfantScreen(
+                        onRetour = { navController.navigateUp() },
+                        onModifierEnfant = { enfantId -> navController.navigate(EditionEnfant(enfantId)) },
+                        onSaisirVaccin = { enfantId, vaccinId ->
+                            navController.navigate(SaisieVaccin(enfantId = enfantId, vaccinId = vaccinId))
+                        },
+                    )
+                }
+
+                composable<SaisieVaccin> {
+                    SaisieVaccinScreen(
+                        onRetour = { navController.navigateUp() },
+                        onTermine = { navController.navigateUp() },
+                    )
+                }
+
+                // --- Onglet Centres ---
+
+                composable<Centres> {
+                    CentresScreen(
+                        onOuvrirCentre = { centreId ->
+                            navController.navigate(DetailCentre(centreId = centreId))
+                        },
+                    )
+                }
+
+                composable<DetailCentre> {
+                    DetailCentreScreen(onRetour = { navController.navigateUp() })
+                }
+
+                // --- Onglet Réglages ---
+
+                composable<Reglages> {
+                    ReglagesScreen(
+                        onOuvrirCodeVerrouillage = { navController.navigate(Verrouillage) },
+                    )
+                }
+
+                // --- Hors onglets ---
+
+                composable<Verrouillage> {
+                    VerrouillageScreen(
+                        onRetour = { navController.navigateUp() },
+                        // Une seule sortie, parce qu'il n'y a plus qu'une façon d'entrer : l'écran
+                        // de code est toujours empilé par-dessus quelque chose — la racine
+                        // `MesEnfants` au pire —, donc le dépiler rend la pile telle qu'elle
+                        // était, y compris après un démarrage à froid verrouillé.
+                        onTermine = { navController.popBackStack() },
+                    )
+                }
             }
+        }
 
-            composable<SaisieVaccin> {
-                SaisieVaccinScreen(
-                    onRetour = { navController.navigateUp() },
-                    onTermine = { navController.navigateUp() },
-                )
-            }
-
-            // --- Onglet Centres ---
-
-            composable<Centres> {
-                CentresScreen(
-                    onOuvrirCentre = { centreId ->
-                        navController.navigate(DetailCentre(centreId = centreId))
-                    },
-                )
-            }
-
-            composable<DetailCentre> {
-                DetailCentreScreen(onRetour = { navController.navigateUp() })
-            }
-
-            // --- Onglet Réglages ---
-
-            composable<Reglages> {
-                ReglagesScreen(
-                    onOuvrirCodeVerrouillage = { navController.navigate(Verrouillage) },
-                )
-            }
-
-            // --- Hors onglets ---
-
-            composable<Verrouillage> {
-                VerrouillageScreen(
-                    onRetour = { navController.navigateUp() },
-                    onTermine = {
-                        // Deux sorties : l'écran a été empilé (verrou en cours de session, ou
-                        // arrivée depuis les Réglages) et il suffit de le dépiler ; ou il est
-                        // la destination de départ d'un démarrage verrouillé, et il n'y a rien
-                        // derrière — on le remplace alors, pour qu'un retour n'y ramène pas.
-                        if (navController.previousBackStackEntry != null) {
-                            navController.popBackStack()
-                        } else {
-                            navController.navigate(MesEnfants) {
-                                popUpTo(Verrouillage) { inclusive = true }
-                            }
-                        }
-                    },
-                )
-            }
+        // Posé par-dessus le carnet et non à sa place : le NavHost reste composé, donc la
+        // pile de retour et les états d'écran survivent au verrouillage. Le masque disparaît
+        // de lui-même dès que l'écran de code est au sommet, à la recomposition suivante.
+        if (carnetMasque) {
+            EcranAvantVerrouillage()
         }
     }
 }

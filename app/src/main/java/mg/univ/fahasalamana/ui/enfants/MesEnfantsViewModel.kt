@@ -54,6 +54,11 @@ class MesEnfantsViewModel(
         if (carnets.isEmpty()) {
             MesEnfantsUiState.Vide
         } else {
+            // Le calendrier de référence peut être vide — amorçage des assets pas encore
+            // terminé, ou en échec. L'état reste [MesEnfantsUiState.Pret] : les enfants
+            // existent, et la liste doit s'afficher pour qu'on puisse en ajouter ou en ouvrir
+            // un. C'est `ligneEnfant` qui décide alors ce que chaque carte a le droit
+            // d'annoncer, et « À jour » n'en fait pas partie.
             MesEnfantsUiState.Pret(
                 carnets
                     .map { carnet ->

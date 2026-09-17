@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ChildCare
 import androidx.compose.material.icons.outlined.EventAvailable
+import androidx.compose.material.icons.outlined.EventNote
 import androidx.compose.material.icons.outlined.PriorityHigh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -261,10 +262,16 @@ private fun CarteEnfant(
 }
 
 /**
- * Les deux compteurs de la règle R6, ou « À jour » quand il n'y a rien à faire.
+ * Les deux compteurs de la règle R6, « À jour » quand il n'y a rien à faire, ou l'attente du
+ * calendrier quand il n'y a rien à calculer.
  *
  * Un compteur à zéro n'est pas affiché : une carte ne montre que ce qui demande une action,
  * et « 0 en retard » attire l'œil sur un chiffre qui ne veut rien dire.
+ *
+ * Le troisième cas n'est pas une nuance de couleur : les deux compteurs de R6 sont à zéro
+ * aussi bien pour un carnet complet que pour un enfant dont rien n'a pu être calculé, et la
+ * puce verte « À jour » affirmait alors, sur une application de santé, qu'un enfant jamais
+ * vacciné était en règle. Gris : on ne sait pas encore, et la ligne en dessous le dit.
  */
 @Composable
 private fun PucesResume(enfant: LigneEnfant, modifier: Modifier = Modifier) {
@@ -275,7 +282,13 @@ private fun PucesResume(enfant: LigneEnfant, modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (enfant.aJour) {
+        if (enfant.sansEcheancier) {
+            PuceStatut(
+                texte = stringResource(R.string.mes_enfants_calendrier_absent_puce),
+                icone = Icons.Outlined.EventNote,
+                couleur = couleurs.aVenir,
+            )
+        } else if (enfant.aJour) {
             PuceStatut(
                 texte = stringResource(R.string.mes_enfants_a_jour),
                 icone = Icons.Outlined.CheckCircle,
@@ -371,14 +384,17 @@ private fun Pastille(initiale: Char?, modifier: Modifier = Modifier) {
 }
 
 /**
- * « Prochain : Rougeole-Rubéole 1re dose, le 28/09/2026 ».
+ * « Prochaine dose : Rougeole-Rubéole 1re dose, le 28/09/2026 ».
  *
- * Trois cas : l'échéance et son vaccin sont connus ; la date est connue mais plus aucun
- * vaccin du calendrier ne la porte (le calendrier a été remplacé, B19) ; il n'y a plus
- * d'échéance à venir du tout — tout est fait, à faire ou en retard.
+ * Quatre cas : rien n'est calculable, et on le dit avec les mots de la fiche enfant ;
+ * l'échéance et son vaccin sont connus ; la date est connue mais plus aucun vaccin du
+ * calendrier ne la porte (le calendrier a été remplacé, B19) ; il ne reste plus rien à
+ * faire, et là seulement le carnet est complet.
  */
 @Composable
 private fun texteProchaineEcheance(enfant: LigneEnfant): String {
+    if (enfant.sansEcheancier) return stringResource(R.string.mes_enfants_calendrier_absent)
+
     val echeance = enfant.resume.prochaineEcheance ?: return stringResource(R.string.mes_enfants_prochain_aucun)
     val nom = enfant.prochainVaccinNom
     val dose = enfant.prochainVaccinDose
@@ -400,6 +416,7 @@ private val FalyEnRetard = LigneEnfant(
     resume = ResumeEnfant(nbEnRetard = 1, nbAFaire = 1, prochaineEcheance = LocalDate.of(2026, 9, 28)),
     prochainVaccinNom = "Rougeole-Rubéole",
     prochainVaccinDose = "1re dose",
+    sansEcheancier = false,
 )
 
 private val SoaAJour = LigneEnfant(
@@ -409,6 +426,7 @@ private val SoaAJour = LigneEnfant(
     resume = ResumeEnfant(nbEnRetard = 0, nbAFaire = 0, prochaineEcheance = null),
     prochainVaccinNom = null,
     prochainVaccinDose = null,
+    sansEcheancier = false,
 )
 
 private val NouveauNe = LigneEnfant(
@@ -418,6 +436,22 @@ private val NouveauNe = LigneEnfant(
     resume = ResumeEnfant(nbEnRetard = 0, nbAFaire = 2, prochaineEcheance = LocalDate.of(2026, 10, 27)),
     prochainVaccinNom = "Pentavalent",
     prochainVaccinDose = "1re dose",
+    sansEcheancier = false,
+)
+
+/**
+ * Calendrier de référence pas encore en base : les trois chiffres de R6 sont à zéro, comme
+ * pour un carnet complet, et c'est tout l'intérêt de cet aperçu — les deux situations ne
+ * doivent pas se ressembler à l'écran.
+ */
+private val KotoSansCalendrier = LigneEnfant(
+    id = "koto",
+    prenom = "Koto",
+    age = AgeEnfant.Mois(3),
+    resume = ResumeEnfant(nbEnRetard = 0, nbAFaire = 0, prochaineEcheance = null),
+    prochainVaccinNom = null,
+    prochainVaccinDose = null,
+    sansEcheancier = true,
 )
 
 @Preview(showBackground = true)
@@ -427,6 +461,19 @@ private fun ApercuMesEnfantsPret() {
     FahasalamanaTheme {
         MesEnfantsContenu(
             state = MesEnfantsUiState.Pret(listOf(FalyEnRetard, NouveauNe, SoaAJour)),
+            onAjouterEnfant = {},
+            onOuvrirEnfant = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ApercuMesEnfantsSansCalendrier() {
+    FahasalamanaTheme {
+        MesEnfantsContenu(
+            state = MesEnfantsUiState.Pret(listOf(KotoSansCalendrier, SoaAJour)),
             onAjouterEnfant = {},
             onOuvrirEnfant = {},
         )

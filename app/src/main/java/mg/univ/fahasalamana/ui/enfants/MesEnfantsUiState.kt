@@ -47,6 +47,9 @@ sealed interface MesEnfantsUiState {
  *   ne reste plus rien à faire ou si plus aucun vaccin du calendrier ne porte cette date.
  *   La date peut être passée : c'est alors la dose en retard la plus ancienne.
  * @param prochainVaccinDose dose correspondante (« 1re dose »), même condition.
+ * @param sansEcheancier rien n'a pu être calculé pour cet enfant : aucune date prévue, et pas
+ *   une seule dose faite. C'est la distinction entre « rien à faire » et « rien à calculer »,
+ *   que [ResumeEnfant] seul ne permet pas de faire (voir [aJour]).
  */
 @Immutable
 data class LigneEnfant(
@@ -56,9 +59,18 @@ data class LigneEnfant(
     val resume: ResumeEnfant,
     val prochainVaccinNom: String?,
     val prochainVaccinDose: String?,
+    val sansEcheancier: Boolean,
 ) {
-    /** Rien en retard et rien à faire aujourd'hui : la carte affiche « À jour » (wireframe §B7.2). */
-    val aJour: Boolean get() = resume.nbEnRetard == 0 && resume.nbAFaire == 0
+    /**
+     * Rien en retard et rien à faire aujourd'hui, **sur un échéancier qui existe** : la carte
+     * affiche « À jour » (wireframe §B7.2).
+     *
+     * `!sansEcheancier` n'est pas une précaution de plus : [ResumeEnfant] vaut (0, 0, null)
+     * aussi bien pour un carnet complet que pour un enfant dont aucune ligne n'a pu être
+     * calculée. Sans ce garde-fou, la carte annonçait « À jour » et « Toutes les doses du
+     * calendrier sont faites » à un enfant qui n'a jamais reçu une seule dose.
+     */
+    val aJour: Boolean get() = !sansEcheancier && resume.nbEnRetard == 0 && resume.nbAFaire == 0
 }
 
 /**
@@ -68,7 +80,7 @@ data class LigneEnfant(
  * [resume] arrive tel quel du `CalculateurEcheancier` (R6), [echeancier] aussi (R1, R2) et
  * l'âge de `domain.ageDepuis`, partagé avec la fiche enfant. Ce qu'elle fait tient en un
  * geste d'affichage : retrouver de quel vaccin il s'agit à la date de la prochaine
- * échéance, que R6 ne renvoie pas.
+ * échéance, que R6 ne renvoie pas, et dire si cet échéancier existe seulement.
  *
  * @param aujourdHui jour de référence, venu de `horlogeJour()` : l'âge affiché change à
  *   minuit comme les statuts, sans qu'il faille rouvrir l'application.
@@ -87,6 +99,14 @@ internal fun ligneEnfant(
         }
     }
 
+    // « Rien à faire » et « rien à calculer » se ressemblent dans [resume], qui vaut (0, 0,
+    // null) dans les deux cas. Ils se distinguent ici : le carnet n'est complet que si
+    // l'échéancier existe et que toutes ses lignes sont faites. Sinon, l'absence de prochaine
+    // échéance veut dire qu'aucune date n'a pu être calculée — calendrier de référence encore
+    // vide (amorçage des assets pas terminé, ou en échec : `App.kt` le journalise et
+    // continue), ou chaîne `dependDe` cassée de bout en bout (cf. `ResumeEnfant`).
+    val carnetComplet = echeancier.isNotEmpty() && echeancier.all { it.statut is StatutVaccin.Fait }
+
     return LigneEnfant(
         id = enfant.id,
         prenom = enfant.prenom,
@@ -94,5 +114,6 @@ internal fun ligneEnfant(
         resume = resume,
         prochainVaccinNom = prochain?.vaccin?.nom,
         prochainVaccinDose = prochain?.vaccin?.dose,
+        sansEcheancier = resume.prochaineEcheance == null && !carnetComplet,
     )
 }

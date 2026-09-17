@@ -46,4 +46,15 @@
          deux écrans se contredisaient. Un seul jeu de clés désormais, `age_*` dans
          strings.xml, écrit par `ui/components/TexteAge.kt`. -->
 
+    <!-- B06 (correction) — Calendrier de référence pas encore chargé, ou inexploitable :
+         aucune date n'est calculable pour cet enfant. La carte ne doit surtout pas annoncer
+         « À jour », qui est faux et rassurant à tort.
+         Même situation que la fiche enfant, donc mêmes mots : la seconde chaîne est celle de
+         `fiche_calendrier_absent_titre`, recopiée ici plutôt que partagée, comme
+         `fiche_introuvable_*` et `edition_introuvable_*` le font déjà — chaque écran garde
+         ses clés, et les deux fichiers portent la même phrase.
+         Ton R7 : on décrit l'état du téléphone, on ne demande rien à la mère. -->
+    <string name="mes_enfants_calendrier_absent_puce">En attente du calendrier</string>
+    <string name="mes_enfants_calendrier_absent">Le calendrier vaccinal n\'est pas encore chargé</string>
+
 </resources>
