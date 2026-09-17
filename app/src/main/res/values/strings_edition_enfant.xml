@@ -68,7 +68,6 @@
     <!-- B07 — L'enfant à modifier n'est plus dans le carnet : ce n'est pas une panne -->
     <string name="edition_introuvable_titre">Cet enfant n\'est plus dans le carnet</string>
     <string name="edition_introuvable_description">Sa fiche a peut-être été supprimée depuis un autre écran.</string>
-    <string name="edition_introuvable_action">Revenir</string>
 
     <!-- B07 — Pannes. Aucune donnée personnelle dans ces messages (règle 7 de CLAUDE.md). -->
     <string name="edition_erreur_lecture">La fiche de l\'enfant n\'a pas pu être lue.</string>

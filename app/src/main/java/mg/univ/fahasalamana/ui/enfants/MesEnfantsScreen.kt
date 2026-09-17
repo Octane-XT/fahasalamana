@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mg.univ.fahasalamana.R
 import mg.univ.fahasalamana.domain.AgeEnfant
+import mg.univ.fahasalamana.domain.ProchaineEcheance
 import mg.univ.fahasalamana.domain.ResumeEnfant
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
@@ -97,16 +98,24 @@ fun MesEnfantsScreen(
         state = state,
         onAjouterEnfant = onAjouterEnfant,
         onOuvrirEnfant = onOuvrirEnfant,
+        onReessayer = vm::onReessayer,
         modifier = modifier,
     )
 }
 
+/**
+ * @param onReessayer relit le carnet après un échec. C'est le seul écran de l'application
+ *   où l'état d'erreur n'offrirait sinon **aucune** action : il occupe tout le corps de
+ *   l'écran, le bouton flottant disparaît avec l'état `Pret`, et cet onglet est le premier
+ *   qui s'ouvre au lancement. Voir `MesEnfantsViewModel.onReessayer`.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MesEnfantsContenu(
     state: MesEnfantsUiState,
     onAjouterEnfant: () -> Unit,
     onOuvrirEnfant: (String) -> Unit,
+    onReessayer: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -156,6 +165,7 @@ private fun MesEnfantsContenu(
                 EtatErreur(
                     message = stringResource(R.string.mes_enfants_erreur),
                     modifier = Modifier.padding(interieur),
+                    onReessayer = onReessayer,
                 )
 
             is MesEnfantsUiState.Pret ->
@@ -282,13 +292,13 @@ private fun PucesResume(enfant: LigneEnfant, modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (enfant.sansEcheancier) {
+        if (enfant.resume.prochaineEcheance is ProchaineEcheance.Indeterminable) {
             PuceStatut(
                 texte = stringResource(R.string.mes_enfants_calendrier_absent_puce),
                 icone = Icons.Outlined.EventNote,
                 couleur = couleurs.aVenir,
             )
-        } else if (enfant.aJour) {
+        } else if (enfant.resume.aJour) {
             PuceStatut(
                 texte = stringResource(R.string.mes_enfants_a_jour),
                 icone = Icons.Outlined.CheckCircle,
@@ -386,26 +396,33 @@ private fun Pastille(initiale: Char?, modifier: Modifier = Modifier) {
 /**
  * « Prochaine dose : Rougeole-Rubéole 1re dose, le 28/09/2026 ».
  *
- * Quatre cas : rien n'est calculable, et on le dit avec les mots de la fiche enfant ;
- * l'échéance et son vaccin sont connus ; la date est connue mais plus aucun vaccin du
- * calendrier ne la porte (le calendrier a été remplacé, B19) ; il ne reste plus rien à
- * faire, et là seulement le carnet est complet.
+ * Quatre cas, et les trois premiers viennent du domaine (`when` sans `else` sur
+ * [ProchaineEcheance]) : rien n'est calculable, et on le dit avec les mots de la fiche
+ * enfant ; il ne reste plus rien à faire, et là seulement le carnet est complet ; une dose
+ * reste à faire. Ce dernier cas se dédouble ici, et ici seulement : la date est connue mais
+ * plus aucun vaccin du calendrier ne la porte (le calendrier a été remplacé, B19).
  */
 @Composable
-private fun texteProchaineEcheance(enfant: LigneEnfant): String {
-    if (enfant.sansEcheancier) return stringResource(R.string.mes_enfants_calendrier_absent)
+private fun texteProchaineEcheance(enfant: LigneEnfant): String =
+    when (val prochaine = enfant.resume.prochaineEcheance) {
+        ProchaineEcheance.Indeterminable ->
+            stringResource(R.string.mes_enfants_calendrier_absent)
 
-    val echeance = enfant.resume.prochaineEcheance ?: return stringResource(R.string.mes_enfants_prochain_aucun)
-    val nom = enfant.prochainVaccinNom
-    val dose = enfant.prochainVaccinDose
-    val jour = echeance.format(FORMAT_JOUR)
+        ProchaineEcheance.CarnetComplet ->
+            stringResource(R.string.mes_enfants_prochain_aucun)
 
-    return if (nom != null && dose != null) {
-        stringResource(R.string.mes_enfants_prochain, nom, dose, jour)
-    } else {
-        stringResource(R.string.mes_enfants_prochain_date_seule, jour)
+        is ProchaineEcheance.Prevue -> {
+            val nom = enfant.prochainVaccinNom
+            val dose = enfant.prochainVaccinDose
+            val jour = prochaine.date.format(FORMAT_JOUR)
+
+            if (nom != null && dose != null) {
+                stringResource(R.string.mes_enfants_prochain, nom, dose, jour)
+            } else {
+                stringResource(R.string.mes_enfants_prochain_date_seule, jour)
+            }
+        }
     }
-}
 
 // --- Aperçus -----------------------------------------------------------------
 
@@ -413,45 +430,58 @@ private val FalyEnRetard = LigneEnfant(
     id = "faly",
     prenom = "Faly",
     age = AgeEnfant.Mois(8),
-    resume = ResumeEnfant(nbEnRetard = 1, nbAFaire = 1, prochaineEcheance = LocalDate.of(2026, 9, 28)),
+    resume = ResumeEnfant(
+        nbEnRetard = 1,
+        nbAFaire = 1,
+        prochaineEcheance = ProchaineEcheance.Prevue(LocalDate.of(2026, 9, 28)),
+    ),
     prochainVaccinNom = "Rougeole-Rubéole",
     prochainVaccinDose = "1re dose",
-    sansEcheancier = false,
 )
 
 private val SoaAJour = LigneEnfant(
     id = "soa",
     prenom = "Soa",
     age = AgeEnfant.Annees(2),
-    resume = ResumeEnfant(nbEnRetard = 0, nbAFaire = 0, prochaineEcheance = null),
+    resume = ResumeEnfant(
+        nbEnRetard = 0,
+        nbAFaire = 0,
+        prochaineEcheance = ProchaineEcheance.CarnetComplet,
+    ),
     prochainVaccinNom = null,
     prochainVaccinDose = null,
-    sansEcheancier = false,
 )
 
 private val NouveauNe = LigneEnfant(
     id = "hasina",
     prenom = "Hasina",
     age = AgeEnfant.Jours(12),
-    resume = ResumeEnfant(nbEnRetard = 0, nbAFaire = 2, prochaineEcheance = LocalDate.of(2026, 10, 27)),
+    resume = ResumeEnfant(
+        nbEnRetard = 0,
+        nbAFaire = 2,
+        prochaineEcheance = ProchaineEcheance.Prevue(LocalDate.of(2026, 10, 27)),
+    ),
     prochainVaccinNom = "Pentavalent",
     prochainVaccinDose = "1re dose",
-    sansEcheancier = false,
 )
 
 /**
- * Calendrier de référence pas encore en base : les trois chiffres de R6 sont à zéro, comme
- * pour un carnet complet, et c'est tout l'intérêt de cet aperçu — les deux situations ne
- * doivent pas se ressembler à l'écran.
+ * Calendrier de référence pas encore en base : les deux compteurs de R6 sont à zéro, comme
+ * pour un carnet complet, et c'est tout l'intérêt de cet aperçu — à côté de `SoaAJour`, les
+ * deux situations ne doivent pas se ressembler à l'écran. Seule la [ProchaineEcheance] les
+ * sépare.
  */
 private val KotoSansCalendrier = LigneEnfant(
     id = "koto",
     prenom = "Koto",
     age = AgeEnfant.Mois(3),
-    resume = ResumeEnfant(nbEnRetard = 0, nbAFaire = 0, prochaineEcheance = null),
+    resume = ResumeEnfant(
+        nbEnRetard = 0,
+        nbAFaire = 0,
+        prochaineEcheance = ProchaineEcheance.Indeterminable,
+    ),
     prochainVaccinNom = null,
     prochainVaccinDose = null,
-    sansEcheancier = true,
 )
 
 @Preview(showBackground = true)
@@ -463,6 +493,7 @@ private fun ApercuMesEnfantsPret() {
             state = MesEnfantsUiState.Pret(listOf(FalyEnRetard, NouveauNe, SoaAJour)),
             onAjouterEnfant = {},
             onOuvrirEnfant = {},
+            onReessayer = {},
         )
     }
 }
@@ -476,6 +507,7 @@ private fun ApercuMesEnfantsSansCalendrier() {
             state = MesEnfantsUiState.Pret(listOf(KotoSansCalendrier, SoaAJour)),
             onAjouterEnfant = {},
             onOuvrirEnfant = {},
+            onReessayer = {},
         )
     }
 }
@@ -488,6 +520,7 @@ private fun ApercuMesEnfantsVide() {
             state = MesEnfantsUiState.Vide,
             onAjouterEnfant = {},
             onOuvrirEnfant = {},
+            onReessayer = {},
         )
     }
 }
@@ -500,6 +533,7 @@ private fun ApercuMesEnfantsChargement() {
             state = MesEnfantsUiState.Chargement,
             onAjouterEnfant = {},
             onOuvrirEnfant = {},
+            onReessayer = {},
         )
     }
 }
@@ -512,6 +546,7 @@ private fun ApercuMesEnfantsErreur() {
             state = MesEnfantsUiState.Erreur,
             onAjouterEnfant = {},
             onOuvrirEnfant = {},
+            onReessayer = {},
         )
     }
 }

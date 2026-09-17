@@ -181,7 +181,7 @@ private fun DetailCentreContenu(
                     titre = stringResource(R.string.detail_centre_introuvable_titre),
                     description = stringResource(R.string.detail_centre_introuvable_description),
                     icone = Icons.Outlined.LocalHospital,
-                    libelleAction = stringResource(R.string.detail_centre_introuvable_action),
+                    libelleAction = stringResource(R.string.action_revenir),
                     onAction = onRetour,
                 )
 

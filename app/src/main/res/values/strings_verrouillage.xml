@@ -58,7 +58,11 @@
     <string name="verrouillage_erreur_enregistrement">Le code n\'a pas pu être enregistré. Vous pouvez réessayer.</string>
 
     <!-- B18 — Avertissement sur l'écran de choix du code, au-dessus du champ : il est lu
-         avant la frappe, pas après l'enregistrement. -->
+         avant la frappe, pas après l'enregistrement.
+         B23 (correction) — Ces deux clés n'ont plus qu'un seul lecteur,
+         `ui/components/EncartOubliCode.kt`, appelé par l'écran Verrouillage et par le bloc
+         « Sécurité » des Réglages. Les deux écrans affichaient auparavant leur propre copie
+         de l'encart, aux mêmes clés mais avec deux mises en forme différentes. -->
     <string name="verrouillage_oubli_titre">Un code oublié ne peut pas être récupéré</string>
     <string name="verrouillage_oubli_detail">L\'application ne conserve pas votre code et ne peut pas le retrouver. Si vous l\'oubliez, le seul moyen de rouvrir l\'application est de la désinstaller, ce qui efface les enfants et les vaccins déjà saisis. Notez-le en lieu sûr.</string>
 

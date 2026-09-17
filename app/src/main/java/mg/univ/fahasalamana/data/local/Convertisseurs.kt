@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter
  *    fonctionnent tels quels sur ce format, l'ordre lexicographique étant l'ordre
  *    chronologique.
  *
- * Les instants techniques (`creeLe`, `dernierAcces`) restent des `Long` : ce ne sont
+ * Les instants techniques (`creeLe`) restent des `Long` : ce ne sont
  * pas des dates métier, ils ne s'affichent jamais tels quels.
  */
 class Convertisseurs {

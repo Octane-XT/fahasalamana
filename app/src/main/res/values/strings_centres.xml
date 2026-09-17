@@ -104,7 +104,10 @@
          n'est pas une panne, d'où un texte distinct de `detail_centre_erreur`. -->
     <string name="detail_centre_introuvable_titre">Centre introuvable</string>
     <string name="detail_centre_introuvable_description">Ce centre ne figure pas dans l\'annuaire enregistré sur ce téléphone. Il a pu en être retiré par une mise à jour.</string>
-    <string name="detail_centre_introuvable_action">Revenir à la liste</string>
+    <!-- B23 (correction) — `detail_centre_introuvable_action` (« Revenir à la liste ») a été
+         retirée : le bouton passe par `action_revenir` de strings.xml, partagé avec la fiche
+         enfant et la saisie d'un vaccin. -->
+
 
     <!-- B14 — Échec de lecture de la base. Aucune donnée personnelle dans ce message. -->
     <string name="detail_centre_erreur">La fiche de ce centre n\'a pas pu être lue.</string>

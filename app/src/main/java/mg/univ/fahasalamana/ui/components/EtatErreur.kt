@@ -34,6 +34,20 @@ import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
  * @param message description de la panne, par exemple « Le fichier n'a pas pu être lu ».
  * @param titre phrase d'accroche ; « Une erreur est survenue » par défaut.
  * @param onReessayer si fourni, affiche un bouton de nouvelle tentative.
+ *
+ *   **Ne le fournir que si l'écran sait vraiment relancer quelque chose.** Les états
+ *   d'erreur du projet naissent tous d'un `catch` posé sur un `Flow` Room, et ce `catch`
+ *   termine la chaîne : l'amont est annulé, il ne réémettra pas de lui-même. Un bouton
+ *   branché sur une lambda vide serait donc pire que pas de bouton — il promettrait une
+ *   relance qui n'a pas lieu. Relancer demande de rouvrir une collecte, ce que fait
+ *   `MesEnfantsViewModel.onReessayer` (`flatMapLatest` sur un compteur de relances).
+ *
+ *   Les autres écrans l'omettent volontairement, et pour une raison qui leur est propre :
+ *   leur état d'erreur laisse une sortie — la flèche de retour de leur barre du haut, ou
+ *   l'onglet voisin. « Mes enfants » est le seul où l'erreur retire aussi le bouton
+ *   d'ajout, donc la seule impasse, et c'est le seul qui passe cette lambda. Un écran qui
+ *   gagnerait une vraie relance peut la fournir à son tour ; le paramètre est là pour ça,
+ *   pas pour être rempli par habitude.
  */
 @Composable
 fun EtatErreur(

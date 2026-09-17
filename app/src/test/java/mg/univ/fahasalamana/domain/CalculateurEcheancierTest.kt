@@ -215,7 +215,11 @@ class CalculateurEcheancierTest {
         // R6 : la prochaine dose à faire, c'est BCG, prévue aujourd'hui même — et non la
         // première dose encore à venir (Pentavalent 1, le 01/07).
         assertEquals(
-            ResumeEnfant(nbEnRetard = 0, nbAFaire = 2, prochaineEcheance = aujourdHui),
+            ResumeEnfant(
+                nbEnRetard = 0,
+                nbAFaire = 2,
+                prochaineEcheance = ProchaineEcheance.Prevue(aujourdHui),
+            ),
             calc.resume(lignes),
         )
     }
@@ -358,13 +362,17 @@ class CalculateurEcheancierTest {
         assertEquals(LocalDate.of(2026, 3, 20), lignes.ligne("penta2").prevuLe)
     }
 
-    /** Aucune dose dans le calendrier : échéancier vide, résumé neutre. */
+    /**
+     * Aucune dose dans le calendrier : échéancier vide, et un résumé qui dit qu'il n'y a
+     * rien à calculer — [ProchaineEcheance.Indeterminable] — et non que tout est fait.
+     * Les trois cas de [ProchaineEcheance] ont leurs propres tests dans `ResumeEnfantTest`.
+     */
     @Test
     fun calendrierVide_donneUnEcheancierVide() {
         val lignes = echeancierAu(LocalDate.of(2026, 3, 20), calendrier = emptyList())
 
         assertTrue(lignes.isEmpty())
-        assertEquals(ResumeEnfant(0, 0, null), calc.resume(lignes))
+        assertEquals(ResumeEnfant(0, 0, ProchaineEcheance.Indeterminable), calc.resume(lignes))
     }
 
     // ----------------------------------------------------------------------
@@ -390,7 +398,10 @@ class CalculateurEcheancierTest {
     fun resume_prochaineEcheance_estLaPlusProcheDoseNonFaite() {
         val lignes = echeancierAu(LocalDate.of(2026, 2, 20))
 
-        assertEquals(LocalDate.of(2026, 1, 1), calc.resume(lignes).prochaineEcheance)
+        assertEquals(
+            ProchaineEcheance.Prevue(LocalDate.of(2026, 1, 1)),
+            calc.resume(lignes).prochaineEcheance,
+        )
     }
 
     /** Les doses reçues sortent du calcul : l'échéance avance au fur et à mesure des saisies. */
@@ -404,7 +415,10 @@ class CalculateurEcheancierTest {
         val lignes = echeancierAu(LocalDate.of(2026, 2, 20), saisie)
 
         // Les quatre doses de 6 semaines, prévues le 12/02 et encore dans leur fenêtre.
-        assertEquals(LocalDate.of(2026, 2, 12), calc.resume(lignes).prochaineEcheance)
+        assertEquals(
+            ProchaineEcheance.Prevue(LocalDate.of(2026, 2, 12)),
+            calc.resume(lignes).prochaineEcheance,
+        )
     }
 
     /**
@@ -424,7 +438,7 @@ class CalculateurEcheancierTest {
 
         assertEquals(16, resume.nbEnRetard)
         assertEquals(0, resume.nbAFaire)
-        assertEquals(LocalDate.of(2026, 1, 1), resume.prochaineEcheance)
+        assertEquals(ProchaineEcheance.Prevue(LocalDate.of(2026, 1, 1)), resume.prochaineEcheance)
     }
 
     /**
@@ -441,7 +455,7 @@ class CalculateurEcheancierTest {
         val resume = calc.resume(lignes)
 
         assertEquals(14, resume.nbEnRetard)
-        assertEquals(LocalDate.of(2026, 1, 1), resume.prochaineEcheance)
+        assertEquals(ProchaineEcheance.Prevue(LocalDate.of(2026, 1, 1)), resume.prochaineEcheance)
     }
 
     @Test
@@ -450,6 +464,13 @@ class CalculateurEcheancierTest {
 
         val lignes = echeancierAu(LocalDate.of(2027, 6, 1), saisie)
 
-        assertEquals(ResumeEnfant(nbEnRetard = 0, nbAFaire = 0, prochaineEcheance = null), calc.resume(lignes))
+        assertEquals(
+            ResumeEnfant(
+                nbEnRetard = 0,
+                nbAFaire = 0,
+                prochaineEcheance = ProchaineEcheance.CarnetComplet,
+            ),
+            calc.resume(lignes),
+        )
     }
 }

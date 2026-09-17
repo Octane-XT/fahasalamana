@@ -213,7 +213,7 @@ private fun EditionEnfantContenu(
                     modifier = Modifier.padding(interieur),
                     description = stringResource(R.string.edition_introuvable_description),
                     icone = Icons.Outlined.SearchOff,
-                    libelleAction = stringResource(R.string.edition_introuvable_action),
+                    libelleAction = stringResource(R.string.action_revenir),
                     onAction = onRetour,
                 )
 

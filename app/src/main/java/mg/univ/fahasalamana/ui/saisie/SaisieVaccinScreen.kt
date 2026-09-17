@@ -190,7 +190,7 @@ private fun SaisieVaccinContenu(
                 titre = stringResource(R.string.saisie_introuvable_titre),
                 description = stringResource(R.string.saisie_introuvable_detail),
                 icone = Icons.Outlined.EventNote,
-                libelleAction = stringResource(R.string.saisie_introuvable_action),
+                libelleAction = stringResource(R.string.action_revenir),
                 onAction = onRetour,
                 modifier = Modifier.padding(interieur),
             )

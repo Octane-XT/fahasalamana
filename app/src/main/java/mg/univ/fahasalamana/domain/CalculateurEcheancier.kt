@@ -54,15 +54,21 @@ class CalculateurEcheancier {
     /**
      * Synthèse d'un échéancier déjà calculé (R6) : badges de la fiche et tri de la liste.
      *
-     * [ResumeEnfant.prochaineEcheance] est la date de la **prochaine dose à faire**, tous
-     * statuts non faits confondus. Ne retenir que les dates encore à venir produisait deux
-     * lignes contradictoires côte à côte sur la même carte — « 3 en retard » et « Prochain :
+     * [ResumeEnfant.prochaineEcheance] est la **prochaine dose à faire**, tous statuts non
+     * faits confondus. Ne retenir que les dates encore à venir produisait deux lignes
+     * contradictoires côte à côte sur la même carte — « 3 en retard » et « Prochain :
      * aucune échéance à venir » — dès qu'un enfant n'avait plus que du retard. Le wireframe
      * §B7.2 montre l'inverse : « 1 en retard · 1 à faire / prochain : RR1 le 28/09 ».
+     *
+     * Quand il n'y a pas de date, cette fonction **dit pourquoi** (voir [ProchaineEcheance]) :
+     * un carnet complet et un calendrier illisible donnent les mêmes compteurs à zéro, et
+     * c'est ici, avec l'échéancier sous la main, que les deux se distinguent — pas dans un
+     * écran qui recalculerait la réponse à partir des lignes brutes.
      */
     fun resume(echeancier: List<LigneEcheancier>): ResumeEnfant {
         var nbEnRetard = 0
         var nbAFaire = 0
+        var nbNonFaites = 0
         val datesNonFaites = mutableListOf<LocalDate>()
 
         echeancier.forEach { ligne ->
@@ -75,14 +81,31 @@ class CalculateurEcheancier {
             }
             // Les quatre autres statuts sont autant de doses encore à faire : leur date
             // entre dans le calcul, qu'elle soit devant nous ou déjà dépassée. Une ligne
-            // sans date calculable (chaîne de dépendances cassée) n'en donne aucune.
+            // sans date calculable (chaîne de dépendances cassée) n'en donne aucune, mais
+            // elle reste une dose qui manque : elle compte dans `nbNonFaites`.
+            nbNonFaites++
             ligne.prevuLe?.let(datesNonFaites::add)
+        }
+
+        val plusProche = datesNonFaites.minOrNull()
+        val prochaineEcheance = when {
+            // Au moins une date : c'est la plus proche, dépassée ou non.
+            plusProche != null -> ProchaineEcheance.Prevue(plusProche)
+
+            // Aucune date parce qu'il ne reste aucune dose à faire, sur un calendrier qui
+            // en contient : le carnet est complet.
+            echeancier.isNotEmpty() && nbNonFaites == 0 -> ProchaineEcheance.CarnetComplet
+
+            // Reste l'échéancier vide — calendrier de référence pas encore chargé — et les
+            // doses restantes dont pas une seule date n'est calculable (chaîne `dependDe`
+            // cassée). Dans les deux cas, on ne sait rien : surtout pas que c'est à jour.
+            else -> ProchaineEcheance.Indeterminable
         }
 
         return ResumeEnfant(
             nbEnRetard = nbEnRetard,
             nbAFaire = nbAFaire,
-            prochaineEcheance = datesNonFaites.minOrNull(),
+            prochaineEcheance = prochaineEcheance,
         )
     }
 

@@ -22,7 +22,10 @@
          enfants », ce qui était en plus inexact — la suppression se fait depuis l'édition. -->
     <string name="fiche_introuvable_titre">Cet enfant n\'est plus dans le carnet</string>
     <string name="fiche_introuvable_detail">Sa fiche a peut-être été supprimée depuis un autre écran.</string>
-    <string name="fiche_introuvable_action">Revenir à mes enfants</string>
+    <!-- B23 (correction) — `fiche_introuvable_action` (« Revenir à mes enfants ») a été
+         retirée : le bouton passe par `action_revenir` de strings.xml, partagé avec la
+         saisie d'un vaccin et la fiche d'un centre. -->
+
     <string name="fiche_calendrier_absent_titre">Le calendrier vaccinal n\'est pas encore chargé</string>
     <string name="fiche_calendrier_absent_detail">Les échéances s\'afficheront dès que le calendrier de référence sera disponible sur ce téléphone.</string>
 

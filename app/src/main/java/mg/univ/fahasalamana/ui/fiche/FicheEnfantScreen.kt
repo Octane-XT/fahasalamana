@@ -65,6 +65,7 @@ import mg.univ.fahasalamana.domain.CalculateurEcheancier
 import mg.univ.fahasalamana.domain.Enfant
 import mg.univ.fahasalamana.domain.GroupeEcheancier
 import mg.univ.fahasalamana.domain.LigneEcheancier
+import mg.univ.fahasalamana.domain.ProchaineEcheance
 import mg.univ.fahasalamana.domain.Sexe
 import mg.univ.fahasalamana.domain.StatutVaccin
 import mg.univ.fahasalamana.domain.VaccinAdministre
@@ -205,7 +206,7 @@ private fun FicheEnfantContenu(
                 titre = stringResource(R.string.fiche_introuvable_titre),
                 description = stringResource(R.string.fiche_introuvable_detail),
                 icone = Icons.Outlined.ChildCare,
-                libelleAction = stringResource(R.string.fiche_introuvable_action),
+                libelleAction = stringResource(R.string.action_revenir),
                 onAction = onRetour,
                 modifier = Modifier.padding(interieur),
             )
@@ -364,8 +365,12 @@ private fun EnteteEnfant(state: FicheEnfantUiState.Pret) {
                     libelle = stringResource(R.string.fiche_badge_en_retard, state.resume.nbEnRetard),
                 )
             }
-            // Rien à faire ni en retard : on le dit, plutôt que de laisser un vide à interpréter.
-            if (state.resume.nbAFaire == 0 && state.resume.nbEnRetard == 0) {
+            // Rien à faire ni en retard : on le dit, plutôt que de laisser un vide à
+            // interpréter. `resume.aJour` et non « les deux compteurs à zéro » : ils le sont
+            // aussi quand rien n'a pu être calculé, et la fiche affichait alors le badge vert
+            // à un enfant dont l'échéancier est vide. La liste des enfants, elle, faisait
+            // déjà la distinction — c'est la divergence que R6 corrige en la portant.
+            if (state.resume.aJour) {
                 BadgeResume(
                     couleur = couleurs.fait,
                     icone = Icons.Outlined.CheckCircle,
@@ -374,9 +379,17 @@ private fun EnteteEnfant(state: FicheEnfantUiState.Pret) {
             }
         }
 
-        state.resume.prochaineEcheance?.let { date ->
+        // Une date à annoncer, et seulement dans ce cas : « carnet complet » et « rien de
+        // calculable » se disent ailleurs sur cet écran — par le badge ci-dessus pour le
+        // premier, par l'état vide de l'échéancier (`fiche_calendrier_absent_*`) pour le
+        // second.
+        val prochaine = state.resume.prochaineEcheance
+        if (prochaine is ProchaineEcheance.Prevue) {
             Text(
-                text = stringResource(R.string.fiche_prochaine_echeance, date.format(FORMAT_JOUR)),
+                text = stringResource(
+                    R.string.fiche_prochaine_echeance,
+                    prochaine.date.format(FORMAT_JOUR),
+                ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

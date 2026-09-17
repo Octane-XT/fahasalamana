@@ -19,7 +19,10 @@
     <string name="saisie_erreur">Le carnet n\'a pas pu être lu.</string>
     <string name="saisie_introuvable_titre">Cette dose n\'est plus disponible</string>
     <string name="saisie_introuvable_detail">L\'enfant ou le vaccin ne figure plus sur ce téléphone.</string>
-    <string name="saisie_introuvable_action">Revenir</string>
+    <!-- B23 (correction) — `saisie_introuvable_action` a été retirée : le bouton passe par
+         `action_revenir` de strings.xml, partagé avec la fiche enfant et la fiche d'un
+         centre, qui disaient la même action avec trois formulations différentes. -->
+
 
     <!-- B09 — En-tête : de quelle dose et de quel enfant il s'agit, et la date prévue.
          Le parent doit pouvoir vérifier ce qu'il enregistre avant de toucher « Enregistrer ». -->

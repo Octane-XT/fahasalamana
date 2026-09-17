@@ -21,6 +21,18 @@
     <string name="erreur_titre">Une erreur est survenue</string>
     <string name="action_reessayer">Réessayer</string>
 
+    <!-- B23 (correction) — Bouton qui referme un écran arrivé dans une impasse : enfant
+         supprimé, dose retirée du calendrier, centre absent de l'annuaire. Trois écrans
+         l'écrivaient de trois façons — « Revenir », « Revenir à mes enfants », « Revenir à
+         la liste » — pour exactement la même action : un `popBackStack`. B23 devait
+         harmoniser ces libellés et avait manqué celui-ci.
+         « Revenir » et non « Revenir à X » : la destination dépend de la pile de retour, que
+         le libellé ne connaît pas. Depuis la fiche d'un enfant ouverte par notification, la
+         pile est `MesEnfants → FicheEnfant` ; depuis la saisie, on revient à la fiche.
+         Distinct de `action_retour` ci-dessus, qui décrit la flèche de la barre du haut pour
+         TalkBack et n'est jamais affiché. -->
+    <string name="action_revenir">Revenir</string>
+
 
     <!-- B15 — Écran Réglages : données de référence (US-B7) -->
     <string name="reglages_titre">Réglages</string>

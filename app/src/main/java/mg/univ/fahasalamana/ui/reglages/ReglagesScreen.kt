@@ -57,6 +57,7 @@ import mg.univ.fahasalamana.data.local.PreferencesLocales
 import mg.univ.fahasalamana.data.repository.IssueMiseAJour
 import mg.univ.fahasalamana.data.repository.ResultatSync
 import mg.univ.fahasalamana.platform.BlocRappelsDebug
+import mg.univ.fahasalamana.ui.components.EncartOubliCode
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.export.LigneExportCarnet
@@ -694,7 +695,11 @@ private fun BlocSecurite(
                 }
 
                 if (!verrouillageActif) {
-                    AvertissementAvantActivation()
+                    // Même encart, au mot près, que l'étape « choisir un code » de l'écran
+                    // Verrouillage : il est écrit une seule fois, dans `ui/components`.
+                    EncartOubliCode(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                    )
                 }
             }
         }
@@ -711,32 +716,9 @@ private fun BlocSecurite(
     }
 }
 
-/** Le code oublié n'a aucun recours ; c'est dit avant l'activation, pas après. */
-@Composable
-private fun AvertissementAvantActivation() {
-    Surface(
-        color = MaterialTheme.colorScheme.tertiaryContainer,
-        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-        shape = MaterialTheme.shapes.medium,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 4.dp),
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            Text(
-                text = stringResource(R.string.verrouillage_oubli_titre),
-                style = MaterialTheme.typography.titleSmall,
-            )
-            Text(
-                text = stringResource(R.string.verrouillage_oubli_detail),
-                style = MaterialTheme.typography.bodySmall,
-            )
-        }
-    }
-}
+// L'encart « un code oublié ne se récupère pas » vivait ici et, aux mêmes clés de texte,
+// dans `VerrouillageScreen`. Il est remonté dans `ui/components/EncartOubliCode.kt`, où il
+// a aussi gagné l'icône que seule l'autre copie portait.
 
 /** Confirmation avant de retirer le code : texte factuel, qui décrit l'effet de l'action. */
 @Composable

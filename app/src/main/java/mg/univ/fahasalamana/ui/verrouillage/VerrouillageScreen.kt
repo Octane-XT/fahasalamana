@@ -8,7 +8,6 @@ import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
-import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,7 +32,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -66,6 +63,7 @@ import mg.univ.fahasalamana.R
 import mg.univ.fahasalamana.domain.ErreurPin
 import mg.univ.fahasalamana.domain.LONGUEUR_PIN_MAX
 import mg.univ.fahasalamana.domain.LONGUEUR_PIN_MIN
+import mg.univ.fahasalamana.ui.components.EncartOubliCode
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
 import org.koin.androidx.compose.koinViewModel
@@ -214,7 +212,7 @@ private fun FormulaireCode(
         // Avertissement au moment de choisir le code, donc avant de l'avoir choisi : c'est la
         // seule place utile pour dire qu'un code oublié ne se récupère pas.
         if (state.etape == EtapeCode.NouveauCode) {
-            AvertissementOubli()
+            EncartOubliCode()
         }
 
         val messageErreur = state.erreur?.let { messageDe(it) }
@@ -298,35 +296,9 @@ private fun FormulaireCode(
     }
 }
 
-/** Encart d'avertissement : ce que l'utilisateur perd s'il oublie son code. */
-@Composable
-private fun AvertissementOubli() {
-    Surface(
-        color = MaterialTheme.colorScheme.tertiaryContainer,
-        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-        shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Row(modifier = Modifier.padding(12.dp)) {
-            Icon(
-                imageVector = Icons.Outlined.WarningAmber,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp),
-            )
-            Spacer(Modifier.width(12.dp))
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(
-                    text = stringResource(R.string.verrouillage_oubli_titre),
-                    style = MaterialTheme.typography.titleSmall,
-                )
-                Text(
-                    text = stringResource(R.string.verrouillage_oubli_detail),
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-        }
-    }
-}
+// L'encart « un code oublié ne se récupère pas » vivait ici et, mot pour mot, dans
+// `ReglagesScreen`. Il est remonté dans `ui/components/EncartOubliCode.kt`, comme
+// `texteAge` et `EtiquetteType` avant lui.
 
 // --- Correspondances texte ---------------------------------------------------
 

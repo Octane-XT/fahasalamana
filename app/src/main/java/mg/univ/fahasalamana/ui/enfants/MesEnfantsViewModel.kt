@@ -3,12 +3,17 @@ package mg.univ.fahasalamana.ui.enfants
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import mg.univ.fahasalamana.data.local.toDomain
 import mg.univ.fahasalamana.data.repository.EnfantRepository
 import mg.univ.fahasalamana.data.repository.ReferenceRepository
@@ -35,6 +40,7 @@ import java.time.LocalDate
  *   au retour au premier plan. Injecté plutôt que lu par `LocalDate.now()` : c'est ce qui
  *   rend l'état de l'écran reproductible et testable sans toucher à l'horloge du système.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class MesEnfantsViewModel(
     enfants: EnfantRepository,
     reference: ReferenceRepository,
@@ -43,10 +49,20 @@ class MesEnfantsViewModel(
 ) : ViewModel() {
 
     /**
-     * Typé `Flow<MesEnfantsUiState>` et non `Flow<Pret>` : c'est ce qui permet à [catch]
-     * d'émettre [MesEnfantsUiState.Erreur] sur la même chaîne.
+     * Compteur de relances demandées depuis l'état d'erreur (voir [onReessayer]).
+     *
+     * Une `Int` qui s'incrémente et non un `Unit` : c'est le **changement** de valeur qui
+     * relance la lecture, et deux appuis successifs doivent produire deux relances.
      */
-    private val etat: Flow<MesEnfantsUiState> = combine(
+    private val relances = MutableStateFlow(0)
+
+    /**
+     * Typé `Flow<MesEnfantsUiState>` et non `Flow<Pret>` : c'est ce qui permet au [catch]
+     * de [etat] d'émettre [MesEnfantsUiState.Erreur] sur la même chaîne. Enchaînée
+     * directement, `combine { ... }.catch { ... }` ferait inférer `Flow<Pret>` au récepteur
+     * de [catch], qui ne pourrait plus y émettre autre chose.
+     */
+    private val listeLue: Flow<MesEnfantsUiState> = combine(
         enfants.observerTous(),
         reference.observerCalendrier(),
         horlogeJour,
@@ -57,8 +73,9 @@ class MesEnfantsViewModel(
             // Le calendrier de référence peut être vide — amorçage des assets pas encore
             // terminé, ou en échec. L'état reste [MesEnfantsUiState.Pret] : les enfants
             // existent, et la liste doit s'afficher pour qu'on puisse en ajouter ou en ouvrir
-            // un. C'est `ligneEnfant` qui décide alors ce que chaque carte a le droit
-            // d'annoncer, et « À jour » n'en fait pas partie.
+            // un. Ce que chaque carte a alors le droit d'annoncer est décidé par le résumé
+            // lui-même (`ProchaineEcheance.Indeterminable`), et « À jour » n'en fait pas
+            // partie.
             MesEnfantsUiState.Pret(
                 carnets
                     .map { carnet ->
@@ -81,17 +98,46 @@ class MesEnfantsViewModel(
         }
     }
 
-    val uiState: StateFlow<MesEnfantsUiState> = etat
-        .catch { erreur ->
-            // L'annulation du scope n'est pas une erreur d'affichage : elle doit remonter.
-            if (erreur is CancellationException) throw erreur
-            emit(MesEnfantsUiState.Erreur)
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = MesEnfantsUiState.Chargement,
-        )
+    /**
+     * La lecture ci-dessus, relançable, et dont l'échec devient un état d'affichage.
+     *
+     * `flatMapLatest` sur [relances] et non un simple [catch] posé une fois : **le `catch`
+     * termine la chaîne**. Une fois l'exception attrapée, le `Flow` Room amont est annulé et
+     * ne réémettra plus rien ; sans ce `flatMapLatest`, l'écran resterait en erreur jusqu'à
+     * ce que le dernier collecteur disparaisse plus de cinq secondes et que [stateIn]
+     * reprenne l'amont de lui-même. Ici, l'appui sur « Réessayer » rouvre une collecte
+     * neuve, ce qui est exactement ce que l'utilisateur croit demander.
+     *
+     * `onStart` repose [MesEnfantsUiState.Chargement] à chaque relance : sans lui, l'état
+     * d'erreur resterait affiché, immobile, jusqu'à la première émission de Room, et le
+     * bouton semblerait n'avoir rien fait.
+     */
+    private val etat: Flow<MesEnfantsUiState> = relances.flatMapLatest {
+        listeLue
+            .onStart { emit(MesEnfantsUiState.Chargement) }
+            .catch { erreur ->
+                // L'annulation du scope n'est pas une erreur d'affichage : elle doit remonter.
+                if (erreur is CancellationException) throw erreur
+                emit(MesEnfantsUiState.Erreur)
+            }
+    }
+
+    val uiState: StateFlow<MesEnfantsUiState> = etat.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = MesEnfantsUiState.Chargement,
+    )
+
+    /**
+     * Le parent a touché « Réessayer » depuis l'état d'erreur.
+     *
+     * Ne relit rien lui-même : il incrémente [relances], et c'est le `flatMapLatest` de
+     * [etat] qui reprend la lecture à zéro. Appuyer sans qu'il y ait eu d'erreur est sans
+     * conséquence — l'écran repasse par « Chargement… » puis réaffiche la même liste.
+     */
+    fun onReessayer() {
+        relances.update { it + 1 }
+    }
 
     private companion object {
 
