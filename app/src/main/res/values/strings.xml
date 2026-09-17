@@ -60,7 +60,8 @@
            `android:fullBackupContent="false"` dans le manifeste. TODO(B24) ajoute
            `dataExtractionRules`, qui couvre en plus le transfert d'appareil à appareil sur
            Android 12+ — la phrase ne parle que du cloud, elle reste donc exacte d'ici là ;
-         - « cet export n'est pas encore disponible » : exact, B16 et B17 ne sont pas livrés.
+         - export (B16) et import (B17) livres : la phrase decrit le ACTION_CREATE_DOCUMENT
+           de platform/ExportCarnetSaf.kt et rien de plus.
            **C'est la phrase à reprendre le jour où l'export arrive** ; elle avait déjà
            dérivé une fois. Elle ne doit pas être écrite en avance. -->
     <string name="reglages_section_confidentialite">Confidentialité</string>
@@ -75,7 +76,6 @@
     <string name="reglages_import">Importer un carnet</string>
     <string name="reglages_section_securite">Sécurité</string>
     <string name="reglages_code_verrouillage">Code de verrouillage</string>
-    <string name="reglages_a_venir">Pas encore disponible dans cette version</string>
 
     <!-- Âge d'un enfant — écrit par `ui/components/TexteAge.kt`, affiché par la liste des
          enfants (B06) et par l'en-tête de la fiche (B08).

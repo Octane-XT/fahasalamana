@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import mg.univ.fahasalamana.data.remote.SerialiseurLocalDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -50,9 +49,8 @@ import java.time.format.DateTimeFormatter
  * vit dans `platform/ExportCarnetSaf.kt`, la lecture du carnet en base dans
  * `EnfantRepository.exporter()`.
  *
- * Le seul import hors de `domain` est [SerialiseurLocalDate] : sa propre documentation
- * prévoit explicitement cette réutilisation (« Même règle que côté base et que côté export
- * (B16) »), et c'est un objet de transport sans Android. Le redéclarer ici ferait deux
+ * Le sérialiseur de dates est celui de `domain`, partagé avec les DTO du contrat publié :
+ * une date métier est du texte ISO, la règle n'existe qu'à un seul endroit.
  * définitions de « une date est du texte ISO », qui finiraient par diverger.
  */
 

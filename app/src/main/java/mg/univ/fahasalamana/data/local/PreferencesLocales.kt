@@ -27,7 +27,7 @@ private val Context.fichierPreferences: DataStore<Preferences> by preferencesDat
  * la moindre donnée de santé — enfants et doses reçues sont en base, et nulle part ailleurs.
  *
  * Cette classe n'expose **que des clés, des lectures et des écritures**. Aucune logique :
- * - le hachage SHA-256 salé du code et sa vérification sont écrits en B18 (§B8, point 4) ;
+ * - l'empreinte salée du code (PBKDF2-HMAC-SHA256) et sa vérification sont écrits en B18 (§B8, point 4) ;
  * - la comparaison `version distante > version locale` est écrite en B19 (§B5.1).
  *
  * Le code en clair n'est jamais stocké : seuls [pinHash] et [pinSel] le sont.
@@ -124,7 +124,7 @@ class PreferencesLocales(context: Context) {
 
     // --- Verrouillage par code (B18) -----------------------------------------
 
-    /** Empreinte SHA-256 salée du code, jamais le code lui-même. `null` si aucun code n'est défini. */
+    /** Empreinte salée du code (PBKDF2-HMAC-SHA256, voir VerrouillagePin), jamais le code lui-même. `null` si aucun code n'est défini. */
     val pinHash: Flow<String?> = preferences.map { it[Cles.PIN_HASH] }
 
     /** Sel du hachage, tiré au hasard à la création du code et conservé avec l'empreinte. */

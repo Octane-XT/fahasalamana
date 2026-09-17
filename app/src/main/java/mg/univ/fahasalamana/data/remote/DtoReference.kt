@@ -11,6 +11,7 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import mg.univ.fahasalamana.domain.SerialiseurLocalDate
 
 /*
  * ---------------------------------------------------------------------------
@@ -47,26 +48,6 @@ import java.time.format.DateTimeFormatter
 val jsonReference: Json = Json {
     ignoreUnknownKeys = true
     encodeDefaults = true
-}
-
-/**
- * `LocalDate` <-> texte ISO `yyyy-MM-dd`, le format de `publieLe` dans les deux fichiers.
- *
- * Même règle que côté base (`Convertisseurs`, §B5.2) et que côté export (B16) : une date
- * métier est du texte ISO, jamais un epoch. Une date illisible lève ici plutôt que de
- * laisser passer une valeur approximative — l'appelant (B04, B19) traite l'échec.
- */
-object SerialiseurLocalDate : KSerializer<LocalDate> {
-
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("mg.univ.fahasalamana.LocalDate", PrimitiveKind.STRING)
-
-    override fun serialize(encoder: Encoder, value: LocalDate) {
-        encoder.encodeString(value.format(DateTimeFormatter.ISO_LOCAL_DATE))
-    }
-
-    override fun deserialize(decoder: Decoder): LocalDate =
-        LocalDate.parse(decoder.decodeString(), DateTimeFormatter.ISO_LOCAL_DATE)
 }
 
 // --- calendrier.json --------------------------------------------------------

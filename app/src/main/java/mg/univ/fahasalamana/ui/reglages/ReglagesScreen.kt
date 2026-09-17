@@ -41,7 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
@@ -543,8 +543,13 @@ private fun BlocCarnet() {
         TitreSection(stringResource(R.string.reglages_section_carnet))
         OutlinedCard(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(vertical = 4.dp)) {
-                LigneExportCarnet()
-                LigneImportCarnet()
+                // Les apercus n'ont ni Koin ni LocalActivityResultRegistryOwner : ces deux
+                // lignes resolvent un ViewModel et un lanceur d'activite, elles leveraient
+                // dans le volet Design. Meme garde que BlocRappelsDebug.
+                if (!LocalInspectionMode.current) {
+                    LigneExportCarnet()
+                    LigneImportCarnet()
+                }
             }
         }
     }
@@ -766,41 +771,6 @@ private fun LigneInfo(libelle: String, valeur: String) {
     }
 }
 
-/**
- * Entrée de réglage dont la fonction n'est pas encore écrite.
- *
- * Ni cliquable, ni trompeuse : couleur atténuée, sous-titre explicite, et `disabled()` pour
- * que TalkBack l'annonce comme indisponible au lieu de la présenter comme un bouton.
- */
-@Composable
-private fun LigneReservee(icone: ImageVector, titre: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .semantics(mergeDescendants = true) { disabled() }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = icone,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Spacer(Modifier.width(16.dp))
-        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(
-                text = titre,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(
-                text = stringResource(R.string.reglages_a_venir),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-}
 
 // --- Aperçus -----------------------------------------------------------------
 

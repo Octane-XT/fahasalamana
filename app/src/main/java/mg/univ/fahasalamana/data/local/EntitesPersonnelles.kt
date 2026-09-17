@@ -24,9 +24,9 @@ import java.util.UUID
  * Elles ne sont **jamais touchées par une mise à jour du contenu de référence** :
  * aucune fonction de `ReferenceDao` n'écrit dans ces deux tables. Une administration
  * dont le `vaccinId` a disparu d'une nouvelle version du calendrier est conservée en
- * base — mais **elle n'est encore affichée nulle part** : l'échéancier est construit à
- * partir du calendrier seul. Point n° 6 du suivi, à traiter avant la mise à jour
- * distante (B19), sans quoi une dose correctement saisie deviendrait invisible.
+ * base **et la fiche la montre** : `domain.dosesHorsCalendrier` la retrouve à partir des
+ * administrations, et l'écran l'affiche dans une section dédiée où elle compte parmi les
+ * doses reçues. Les deux moitiés de la décision B04 sont en place.
  *
  * Les identifiants sont des **UUID générés côté application** (`nouvelIdentifiant()`)
  * et non des entiers auto-incrémentés : l'import d'un carnet venu d'un autre téléphone
