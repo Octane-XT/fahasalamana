@@ -2,7 +2,6 @@ package mg.univ.fahasalamana.platform
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -56,17 +55,31 @@ sealed interface EtatVerrouillage {
  * - **[dernierAcces]**, l'instant du dernier passage en arrière-plan, qui sert à décider s'il
  *   faut reverrouiller **au sein d'une même session**.
  *
- * La copie de `dernierAcces` écrite dans DataStore est la trace demandée par le §B8 ; elle
- * n'est volontairement **pas relue au démarrage**. La relire reviendrait à dire « le
- * processus a été tué il y a trente secondes, donc on peut rouvrir sans code », ce qui
- * contredirait le démarrage à froid verrouillé du §B7.1.
+ * ## Pourquoi rien de tout cela n'est écrit sur le disque
+ *
+ * Les deux valeurs vivent en mémoire et meurent avec le processus. Ce n'est pas un oubli :
+ *
+ * 1. **Rien ne les relirait.** Un `dernierAcces` persisté ne pourrait servir qu'au démarrage
+ *    à froid, et il dirait alors « le processus a été tué il y a trente secondes, donc on
+ *    peut rouvrir sans code » — l'inverse exact du §B7.1 (`[*] --> Verrouillage : si PIN
+ *    activé`). La seule lecture possible est une lecture dont on ne veut pas.
+ * 2. **Un horodatage d'usage n'est pas une donnée neutre.** Sur une application de santé, il
+ *    dit quand un parent a consulté le carnet de son enfant, et à quelle fréquence. Le
+ *    conserver dans un fichier que personne ne relit, c'est une trace gratuite ; la règle du
+ *    §B8 (« aucune donnée de santé ne sort de l'appareil », `allowBackup=false`) vaut aussi
+ *    pour ce qui reste dessus.
+ *
+ * Le §B8, point 4, se lit comme s'il décrivait une valeur persistée (« l'écran de
+ * verrouillage s'affiche à la reprise si `dernierAcces` date de plus de 2 minutes »). C'est
+ * le comportement qui est spécifié, pas le support : il est tenu à l'identique ici, en
+ * mémoire. **Ne pas réintroduire d'écriture dans DataStore sans un lecteur en face.**
  *
  * ## Deux minutes, pas chaque bascule
  *
  * `ProcessLifecycleOwner` observe le **processus** et non une activité : une rotation, une
  * boîte de dialogue système ou le passage d'un écran à l'autre ne le font pas bouger. Seul un
- * vrai départ en arrière-plan (accueil, autre application, écran éteint) déclenche
- * l'enregistrement de [dernierAcces]. Et même là, revenir en moins de deux minutes ne
+ * vrai départ en arrière-plan (accueil, autre application, écran éteint) met [dernierAcces]
+ * à jour. Et même là, revenir en moins de deux minutes ne
  * redemande rien : aller lire le SMS du centre de santé en pleine saisie ne doit pas coûter
  * une ressaisie du code (US-B10, scénario « reprise immédiate »).
  *
@@ -77,7 +90,8 @@ sealed interface EtatVerrouillage {
  * le fil principal — contrainte fragile pour un objet construit paresseusement par Koin, à
  * un moment que ce fichier ne maîtrise pas.
  *
- * @param preferences accès aux clés `verrouillage_actif` et `dernier_acces` (B02).
+ * @param preferences accès à la clé `verrouillage_actif` (B02) ; c'est la seule qui soit lue
+ *   ici, et rien n'est écrit en retour.
  * @param portee portée de vie du processus. Jamais annulée : le gardien doit continuer
  *   d'observer le cycle de vie tant que l'application existe. `Dispatchers.Default` suffit,
  *   rien ici ne touche à l'interface.
@@ -149,7 +163,7 @@ class GardienVerrouillage(
      *
      * Les toutes premières émissions au démarrage du processus — `INITIALIZED` avant
      * `STARTED` — ne demandent aucun traitement particulier : elles tombent sur un
-     * [deverrouille] déjà à `false` et sur un [dernierAcces] tout juste écrit, donc sur des
+     * [deverrouille] déjà à `false` et sur un [dernierAcces] tout juste noté, donc sur des
      * opérations neutres. C'est plus sûr qu'un cas particulier à écrire et à maintenir.
      */
     private fun observerLePremierPlan() {
@@ -163,21 +177,14 @@ class GardienVerrouillage(
         }
     }
 
-    /** Départ en arrière-plan : on note l'heure, en mémoire et dans DataStore (§B8). */
+    /**
+     * Départ en arrière-plan : on note l'heure, **en mémoire seulement**.
+     *
+     * Une affectation, pas d'entrée-sortie : rien à attendre, rien qui puisse échouer, rien à
+     * relire au prochain démarrage. Le « pourquoi pas dans DataStore » est en tête de fichier.
+     */
     private fun quitter() {
-        val instant = horloge()
-        dernierAcces = instant
-        portee.launch {
-            try {
-                preferences.enregistrerDernierAcces(instant.toEpochMilli())
-            } catch (annulation: CancellationException) {
-                throw annulation
-            } catch (erreur: Throwable) {
-                // Un échec d'écriture de cette préférence ne doit pas faire tomber
-                // l'application : la décision de reverrouillage s'appuie de toute façon sur
-                // la valeur en mémoire, qui vient d'être posée.
-            }
-        }
+        dernierAcces = horloge()
     }
 
     /** Retour au premier plan : la décision est prise par `domain`, pas ici. */

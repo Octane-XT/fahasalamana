@@ -55,6 +55,12 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit-kotlinx-serialization = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofitSerialization" }
 okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+# OkHttp lui-même : `ReferenceApi` construit un `OkHttpClient` et un `MediaType`, et un test
+# JVM construit un `ResponseBody`. Ces classes n'arrivaient jusqu'ici que par transitivité
+# (via l'intercepteur de journalisation et via Retrofit) — une dépendance qu'on utilise
+# directement se déclare, sinon elle disparaît le jour où un de ces deux artefacts change
+# son propre arbre. Même version que l'intercepteur : les deux doivent rester alignés.
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 
 # Asynchrone et tâches différées
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }

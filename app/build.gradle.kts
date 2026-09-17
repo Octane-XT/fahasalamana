@@ -215,6 +215,12 @@ dependencies {
     implementation(libs.retrofit.kotlinx.serialization)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
+    // OkHttp est utilisé directement (`OkHttpClient`, `MediaType` dans ReferenceApi.kt,
+    // `ResponseBody` dans SynchroniseurReferenceTest), donc il est déclaré directement.
+    // Ne pas le retirer sous prétexte qu'il « arrive déjà » par l'intercepteur ou par
+    // Retrofit : ces deux-là sont libres de changer leurs propres dépendances.
+    // `testImplementation` hérite d'`implementation`, le test JVM est couvert par cette ligne.
+    implementation(libs.okhttp)
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.work.runtime.ktx)

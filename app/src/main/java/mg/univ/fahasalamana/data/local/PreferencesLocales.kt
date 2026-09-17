@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -132,8 +131,13 @@ class PreferencesLocales(context: Context) {
 
     val verrouillageActif: Flow<Boolean> = preferences.map { it[Cles.VERROUILLAGE_ACTIF] ?: false }
 
-    /** Instant du dernier passage au premier plan (epoch ms) : au-delà de deux minutes, l'écran de verrouillage revient (§B8). */
-    val dernierAcces: Flow<Long> = preferences.map { it[Cles.DERNIER_ACCES] ?: 0L }
+    // Pas de clé « dernier accès » ici, et c'est délibéré : l'instant du dernier passage en
+    // arrière-plan ne sert qu'à décider d'un reverrouillage **au sein d'une session**, et
+    // `GardienVerrouillage` le tient en mémoire. Le persister reviendrait à écrire sur le
+    // disque l'heure à laquelle un parent consulte le carnet de son enfant — un horodatage
+    // d'usage sur une application de santé — pour une valeur que personne ne relirait : le
+    // démarrage à froid est verrouillé sans la consulter (§B7.1). Voir la KDoc de
+    // `GardienVerrouillage`, et ne pas réintroduire la clé sans un lecteur en face.
 
     /** Écrit empreinte et sel ensemble : les dissocier rendrait l'empreinte invérifiable. */
     suspend fun enregistrerPin(hash: String, sel: String) {
@@ -152,10 +156,6 @@ class PreferencesLocales(context: Context) {
         }
     }
 
-    suspend fun enregistrerDernierAcces(instantMillis: Long) {
-        datastore.edit { it[Cles.DERNIER_ACCES] = instantMillis }
-    }
-
     /** Noms de clés figés : les renommer perdrait les réglages des installations existantes. */
     private object Cles {
         val CALENDRIER_VERSION = intPreferencesKey("calendrier_version")
@@ -167,7 +167,6 @@ class PreferencesLocales(context: Context) {
         val PIN_HASH = stringPreferencesKey("pin_hash")
         val PIN_SEL = stringPreferencesKey("pin_sel")
         val VERROUILLAGE_ACTIF = booleanPreferencesKey("verrouillage_actif")
-        val DERNIER_ACCES = longPreferencesKey("dernier_acces")
     }
 
     companion object {
