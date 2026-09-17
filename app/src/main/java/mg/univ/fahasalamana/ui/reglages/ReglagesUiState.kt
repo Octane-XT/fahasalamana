@@ -5,30 +5,47 @@ import mg.univ.fahasalamana.data.repository.ResultatSync
 import java.time.LocalDate
 
 /**
- * État de l'écran Réglages (CDC §B7.2, US-B7).
+ * État de l'écran Réglages (CDC §B7.2, US-B7, US-B10 et US-B11).
  *
- * Seul le bloc « Données de référence » dépend de données : le texte de confidentialité et
- * les entrées encore inactives (export/import, code de verrouillage) sont statiques et
- * restent affichés quel que soit l'état.
+ * `data class` au niveau de l'écran, et un `sealed interface` à l'intérieur pour le seul bloc
+ * qui peut échouer : les blocs ont des sorts indépendants. Un `calendrier.json` illisible ne
+ * doit pas emporter le bloc « Sécurité » — c'est justement quand quelque chose ne va pas
+ * qu'il faut pouvoir couper ou remettre le code de verrouillage.
+ *
+ * (B15 avait fait de `ReglagesUiState` lui-même un `sealed interface` : à l'époque un seul
+ * bloc dépendait de données. B18 en ajoute un second, d'où ce niveau supplémentaire.)
+ *
+ * (B19) La recherche de mise à jour est le troisième champ de ce même état, et non un second
+ * `StateFlow` : l'écran n'a ainsi qu'un seul état à collecter, et le compte rendu ne peut pas
+ * annoncer des versions que la carte au-dessus n'affiche pas encore, le temps d'une
+ * recomposition. Elle est posée **à côté** de [reference] et non dans [EtatReference.Pret],
+ * pour la même raison que le verrouillage : un calendrier illisible est précisément le moment
+ * où l'on va chercher une mise à jour, et le compte rendu de cette recherche — y compris son
+ * échec — doit rester lisible alors que le bloc de référence, lui, est en erreur.
+ *
+ * @param reference bloc « Données de référence » (US-B7), avec ses trois états.
+ * @param verrouillageActif un code de verrouillage est configuré sur ce téléphone (US-B10).
+ * @param miseAJour où en est la recherche de mise à jour des contenus de référence (US-B11).
  */
-sealed interface ReglagesUiState {
+@Immutable
+data class ReglagesUiState(
+    val reference: EtatReference = EtatReference.Chargement,
+    val verrouillageActif: Boolean = false,
+    val miseAJour: EtatMiseAJour = EtatMiseAJour(),
+)
+
+/** Les trois états du bloc « Données de référence ». */
+sealed interface EtatReference {
 
     /** Première lecture du calendrier en base, avant la première valeur du Flow. */
-    data object Chargement : ReglagesUiState
+    data object Chargement : EtatReference
 
     /**
      * Les informations de source sont connues et affichables.
      *
-     * @param reference ce qui est en base : versions, provenance, date du dernier contrôle.
-     * @param miseAJour (B19) où en est la recherche de mise à jour. Dans le même état et non
-     *   dans un second `StateFlow` : le bouton et son compte rendu vivent **dans** la carte
-     *   des données de référence, et un écran qui collecte deux flux pour une seule carte
-     *   ouvre la porte à un affichage incohérent le temps d'une recomposition.
+     * @param donnees ce qui est en base : versions, provenance, date du dernier contrôle.
      */
-    data class Pret(
-        val reference: DonneesReference,
-        val miseAJour: EtatMiseAJour = EtatMiseAJour(),
-    ) : ReglagesUiState
+    data class Pret(val donnees: DonneesReference) : EtatReference
 
     /**
      * La lecture des informations de référence a échoué.
@@ -36,7 +53,7 @@ sealed interface ReglagesUiState {
      * Aucun message n'est porté par l'état : il vient de `strings.xml` côté écran, et il ne
      * doit contenir aucune donnée personnelle.
      */
-    data object Erreur : ReglagesUiState
+    data object Erreur : EtatReference
 }
 
 /**

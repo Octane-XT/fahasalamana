@@ -1,6 +1,7 @@
 package mg.univ.fahasalamana.ui.reglages
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,11 +13,14 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Password
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -26,16 +30,21 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
@@ -59,23 +68,29 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 /*
- * Écran Réglages, version 0 (tâche B15, CDC §B7.2).
+ * Écran Réglages (tâches B15, B18 et B19, CDC §B7.2).
  *
- * Deux blocs sont réels :
+ * Trois blocs viennent de B15 et B18 :
  *  - « Données de référence » : source, date et version du calendrier (US-B7), avec la
  *    mention de démonstration mise en évidence et non enfouie dans un paragraphe ;
- *  - « Confidentialité » : ce que l'application fait des données de santé (§B8, point 7).
+ *  - « Confidentialité » : ce que l'application fait des données de santé (§B8, point 7) ;
+ *  - « Sécurité » : le code de verrouillage (US-B10, B18).
  *
  * Le bloc « Carnet » est réel depuis B16 (export) et B17 (import) : ses deux lignes sont des
- * blocs autonomes, posés ici en un appel chacun, avec leur propre ViewModel. Seul le bloc
- * « Sécurité » reste une place réservée : son entrée est visiblement inactive et annoncée
- * comme telle à TalkBack, plutôt que branchée sur un écran vide. Le texte de confidentialité
- * décrit ce que le code fait aujourd'hui, et rien de plus : il est lu en soutenance.
+ * blocs autonomes, posés ici en un appel chacun, avec leur propre ViewModel. Le texte de
+ * confidentialité décrit ce que le code fait aujourd'hui, et rien de plus : il est lu en
+ * soutenance.
  *
- * (B19) « Vérifier les mises à jour » est actif depuis B19 et rend un compte rendu ligne à
- * ligne, un contenu de référence par ligne. Ce bouton est le **seul** endroit d'où
- * l'application emprunte le réseau : il n'y a ni vérification au démarrage, ni tâche de fond,
- * et c'est ce que dit `maj_description` juste en dessous.
+ * (B18) **Le bloc « Sécurité » se lit avant d'être utilisé.** Trois phrases entourent
+ * l'interrupteur : ce que le code déclenche, ce qu'il protège et ce qu'il ne protège pas, et
+ * ce qui arrive si on l'oublie. Cette dernière est affichée **tant que le code n'est pas
+ * activé**, c'est-à-dire au moment où la décision se prend, et non après.
+ *
+ * (B19) « Vérifier les mises à jour » est actif et rend un compte rendu ligne à ligne, un
+ * contenu de référence par ligne. Il est posé **sous** la carte des données de référence et
+ * non dedans, pour rester atteignable quand le calendrier est illisible. Ce bouton est le
+ * **seul** endroit d'où l'application emprunte le réseau : il n'y a ni vérification au
+ * démarrage, ni tâche de fond, et c'est ce que dit `maj_description` juste en dessous.
  *
  * (B10) Le bloc « Rappels » est ajouté en bas de page par `BlocRappelsDebug()`, qui n'existe
  * qu'en build debug : il porte la notification de test de la Definition of Done. L'interrupteur
@@ -86,8 +101,13 @@ import java.util.Locale
 /** Dates affichées en jour/mois/année, comme dans les wireframes (§B7.2). */
 private val FORMAT_JOUR: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
 
+/**
+ * @param onOuvrirCodeVerrouillage navigation vers l'écran `Verrouillage`, qui décide seul
+ *   s'il s'agit de créer ou de modifier le code (voir `VerrouillageViewModel`).
+ */
 @Composable
 fun ReglagesScreen(
+    onOuvrirCodeVerrouillage: () -> Unit,
     modifier: Modifier = Modifier,
     vm: ReglagesViewModel = koinViewModel(),
 ) {
@@ -96,6 +116,8 @@ fun ReglagesScreen(
         state = state,
         onVerifierMisesAJour = vm::onVerifierMisesAJour,
         onResultatMiseAJourFerme = vm::onResultatMiseAJourFerme,
+        onOuvrirCodeVerrouillage = onOuvrirCodeVerrouillage,
+        onDesactiverVerrouillage = vm::onDesactiverVerrouillage,
         modifier = modifier,
     )
 }
@@ -106,6 +128,8 @@ private fun ReglagesContenu(
     state: ReglagesUiState,
     onVerifierMisesAJour: () -> Unit,
     onResultatMiseAJourFerme: () -> Unit,
+    onOuvrirCodeVerrouillage: () -> Unit,
+    onDesactiverVerrouillage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -121,13 +145,18 @@ private fun ReglagesContenu(
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             BlocDonneesReference(
-                state = state,
+                etat = state.reference,
+                miseAJour = state.miseAJour,
                 onVerifierMisesAJour = onVerifierMisesAJour,
                 onResultatMiseAJourFerme = onResultatMiseAJourFerme,
             )
             BlocConfidentialite()
             BlocCarnet()
-            BlocSecurite()
+            BlocSecurite(
+                verrouillageActif = state.verrouillageActif,
+                onOuvrirCodeVerrouillage = onOuvrirCodeVerrouillage,
+                onDesactiverVerrouillage = onDesactiverVerrouillage,
+            )
             // (B10) Notification de test, en dernier et en build debug seulement : la
             // version publiée appelle le jumeau vide de `src/release/` et n'affiche rien.
             BlocRappelsDebug()
@@ -139,46 +168,53 @@ private fun ReglagesContenu(
 
 // --- Bloc « Données de référence » (US-B7) -----------------------------------
 
+/**
+ * Section « Données de référence » : ce qui est en base, puis de quoi le mettre à jour.
+ *
+ * (B19) Le bouton et son compte rendu sont posés **sous** le `when` et non dans la carte :
+ * un calendrier illisible est précisément le moment où l'on vient chercher une mise à jour,
+ * et c'est elle qui peut réparer la situation. Les enfermer dans la branche [EtatReference.Pret]
+ * les ferait disparaître au seul moment où ils servent vraiment — et ferait de l'erreur de
+ * lecture du calendrier une panne de tout le bloc, ce que le `catch` du ViewModel refuse.
+ */
 @Composable
 private fun BlocDonneesReference(
-    state: ReglagesUiState,
+    etat: EtatReference,
+    miseAJour: EtatMiseAJour,
     onVerifierMisesAJour: () -> Unit,
     onResultatMiseAJourFerme: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         TitreSection(stringResource(R.string.reglages_section_reference))
 
-        when (state) {
-            ReglagesUiState.Chargement -> EtatChargement(
+        when (etat) {
+            EtatReference.Chargement -> EtatChargement(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 120.dp),
             )
 
-            ReglagesUiState.Erreur -> EtatErreur(
+            EtatReference.Erreur -> EtatErreur(
                 message = stringResource(R.string.reglages_reference_erreur),
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 160.dp),
             )
 
-            is ReglagesUiState.Pret -> CarteDonneesReference(
-                donnees = state.reference,
-                miseAJour = state.miseAJour,
-                onVerifierMisesAJour = onVerifierMisesAJour,
-                onResultatMiseAJourFerme = onResultatMiseAJourFerme,
-            )
+            is EtatReference.Pret -> CarteDonneesReference(etat.donnees)
         }
+
+        ActionMiseAJour(
+            miseAJour = miseAJour,
+            onVerifierMisesAJour = onVerifierMisesAJour,
+            onResultatMiseAJourFerme = onResultatMiseAJourFerme,
+        )
     }
 }
 
+/** Ce qui est chargé sur ce téléphone : calendrier, annuaire, dernière vérification. */
 @Composable
-private fun CarteDonneesReference(
-    donnees: DonneesReference,
-    miseAJour: EtatMiseAJour,
-    onVerifierMisesAJour: () -> Unit,
-    onResultatMiseAJourFerme: () -> Unit,
-) {
+private fun CarteDonneesReference(donnees: DonneesReference) {
     OutlinedCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -233,39 +269,57 @@ private fun CarteDonneesReference(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+        }
+    }
+}
 
-            // (B19) Le bouton est actif. Il reste inactif pendant une vérification en
-            // cours : un second appui relancerait un téléchargement de 115 Ko pour rien.
-            OutlinedButton(
-                onClick = onVerifierMisesAJour,
-                enabled = !miseAJour.enCours,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                if (miseAJour.enCours) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(18.dp),
-                        strokeWidth = 2.dp,
-                    )
-                    Spacer(Modifier.width(12.dp))
-                }
-                Text(stringResource(R.string.reglages_action_verifier))
+// --- Recherche de mise à jour (B19, US-B11) ----------------------------------
+
+/**
+ * Le bouton « Vérifier les mises à jour », son avancement et son compte rendu.
+ *
+ * Sous la carte et non dedans : le compte rendu doit rester lisible quand le bloc de
+ * référence est en erreur — il est même la seule chose qui puisse encore expliquer pourquoi,
+ * et le bouton la seule qui puisse y remédier.
+ */
+@Composable
+private fun ActionMiseAJour(
+    miseAJour: EtatMiseAJour,
+    onVerifierMisesAJour: () -> Unit,
+    onResultatMiseAJourFerme: () -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        // (B19) Le bouton est actif. Il reste inactif pendant une vérification en
+        // cours : un second appui relancerait un téléchargement de 115 Ko pour rien.
+        OutlinedButton(
+            onClick = onVerifierMisesAJour,
+            enabled = !miseAJour.enCours,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            if (miseAJour.enCours) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(18.dp),
+                    strokeWidth = 2.dp,
+                )
+                Spacer(Modifier.width(12.dp))
             }
+            Text(stringResource(R.string.reglages_action_verifier))
+        }
 
-            Text(
-                // L'avancement passe par le texte et pas seulement par l'indicateur qui
-                // tourne : une animation ne s'annonce pas à TalkBack (même règle qu'en B17).
-                text = if (miseAJour.enCours) {
-                    stringResource(R.string.maj_en_cours)
-                } else {
-                    stringResource(R.string.maj_description)
-                },
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+        Text(
+            // L'avancement passe par le texte et pas seulement par l'indicateur qui
+            // tourne : une animation ne s'annonce pas à TalkBack (même règle qu'en B17).
+            text = if (miseAJour.enCours) {
+                stringResource(R.string.maj_en_cours)
+            } else {
+                stringResource(R.string.maj_description)
+            },
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
 
-            miseAJour.resultat?.let { resultat ->
-                PanneauMiseAJour(resultat = resultat, onFermer = onResultatMiseAJourFerme)
-            }
+        miseAJour.resultat?.let { resultat ->
+            PanneauMiseAJour(resultat = resultat, onFermer = onResultatMiseAJourFerme)
         }
     }
 }
@@ -465,7 +519,7 @@ private fun BlocConfidentialite() {
     }
 }
 
-// --- Carnet et sécurité ------------------------------------------------------
+// --- Bloc « Carnet » : export (B16) et import (B17) --------------------------
 
 @Composable
 private fun BlocCarnet() {
@@ -480,20 +534,191 @@ private fun BlocCarnet() {
     }
 }
 
+// --- Bloc « Sécurité » (US-B10, B18) -----------------------------------------
+
+/**
+ * Code de verrouillage : l'interrupteur, ce qu'il fait, et ce qu'il ne fait pas.
+ *
+ * L'ordre des textes n'est pas décoratif. De haut en bas : l'interrupteur et son état, puis
+ * le déclenchement (ouverture et deux minutes d'absence), puis la portée réelle du verrou,
+ * puis — **uniquement quand le code n'est pas encore activé** — l'avertissement sur le code
+ * oublié. Celui-là est lu avant de toucher l'interrupteur, ce qui est le seul moment où il
+ * sert à quelque chose.
+ */
 @Composable
-private fun BlocSecurite() {
+private fun BlocSecurite(
+    verrouillageActif: Boolean,
+    onOuvrirCodeVerrouillage: () -> Unit,
+    onDesactiverVerrouillage: () -> Unit,
+) {
+    // État purement visuel, donc dans l'écran et non dans le ViewModel (même convention que
+    // la confirmation de suppression de l'écran Saisie).
+    var confirmationDesactivation by rememberSaveable { mutableStateOf(false) }
+
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         TitreSection(stringResource(R.string.reglages_section_securite))
         OutlinedCard(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(vertical = 4.dp)) {
-                // TODO(B18) : création/modification du code, puis navigation vers Verrouillage.
-                LigneReservee(
-                    icone = Icons.Outlined.Lock,
-                    titre = stringResource(R.string.reglages_code_verrouillage),
-                )
+
+                // `toggleable` sur toute la ligne plutôt qu'un `Switch` isolé : TalkBack
+                // annonce alors « Code de verrouillage, désactivé, interrupteur » d'un seul
+                // tenant, et la cible tactile fait la largeur de l'écran.
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .toggleable(
+                            value = verrouillageActif,
+                            role = Role.Switch,
+                            onValueChange = { demande ->
+                                if (demande) {
+                                    onOuvrirCodeVerrouillage()
+                                } else {
+                                    confirmationDesactivation = true
+                                }
+                            },
+                        )
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Lock,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.width(16.dp))
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.reglages_code_verrouillage),
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                        Text(
+                            text = stringResource(
+                                if (verrouillageActif) {
+                                    R.string.verrouillage_reglages_etat_actif
+                                } else {
+                                    R.string.verrouillage_reglages_etat_inactif
+                                },
+                            ),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    // `null` : c'est la ligne entière qui bascule, le commutateur ne doit pas
+                    // être un second point d'entrée pour TalkBack.
+                    Switch(checked = verrouillageActif, onCheckedChange = null)
+                }
+
+                if (verrouillageActif) {
+                    HorizontalDivider()
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = onOuvrirCodeVerrouillage)
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Password,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        Text(
+                            text = stringResource(R.string.verrouillage_reglages_modifier),
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    }
+                }
+
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.verrouillage_reglages_fonctionnement),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    // La phrase qui refuse de promettre un chiffrement. Elle reste affichée
+                    // que le code soit actif ou non : c'est une limite du produit, pas un
+                    // message d'installation.
+                    Text(
+                        text = stringResource(R.string.verrouillage_reglages_portee),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+
+                if (!verrouillageActif) {
+                    AvertissementAvantActivation()
+                }
             }
         }
     }
+
+    if (confirmationDesactivation) {
+        ConfirmationDesactivation(
+            onConfirmer = {
+                confirmationDesactivation = false
+                onDesactiverVerrouillage()
+            },
+            onAnnuler = { confirmationDesactivation = false },
+        )
+    }
+}
+
+/** Le code oublié n'a aucun recours ; c'est dit avant l'activation, pas après. */
+@Composable
+private fun AvertissementAvantActivation() {
+    Surface(
+        color = MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+        shape = MaterialTheme.shapes.medium,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 4.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.verrouillage_oubli_titre),
+                style = MaterialTheme.typography.titleSmall,
+            )
+            Text(
+                text = stringResource(R.string.verrouillage_oubli_detail),
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+    }
+}
+
+/** Confirmation avant de retirer le code : texte factuel, qui décrit l'effet de l'action. */
+@Composable
+private fun ConfirmationDesactivation(
+    onConfirmer: () -> Unit,
+    onAnnuler: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onAnnuler,
+        title = { Text(stringResource(R.string.verrouillage_desactiver_titre)) },
+        text = { Text(stringResource(R.string.verrouillage_desactiver_detail)) },
+        confirmButton = {
+            TextButton(onClick = onConfirmer) {
+                Text(stringResource(R.string.verrouillage_desactiver_confirmer))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onAnnuler) {
+                Text(stringResource(R.string.verrouillage_annuler))
+            }
+        },
+    )
 }
 
 // --- Briques communes --------------------------------------------------------
@@ -573,7 +798,7 @@ private val ReferenceDApercu = DonneesReference(
     derniereVerification = null,
 )
 
-/** Les aperçus ne branchent rien : les deux lambdas de B19 y sont vides. */
+/** Les aperçus ne branchent rien : les quatre lambdas de B18 et B19 y sont vides. */
 @Composable
 private fun ApercuReglages(state: ReglagesUiState) {
     FahasalamanaTheme {
@@ -581,25 +806,42 @@ private fun ApercuReglages(state: ReglagesUiState) {
             state = state,
             onVerifierMisesAJour = {},
             onResultatMiseAJourFerme = {},
+            onOuvrirCodeVerrouillage = {},
+            onDesactiverVerrouillage = {},
         )
     }
 }
 
-@Preview(showBackground = true, heightDp = 1400)
-@Preview(showBackground = true, heightDp = 1400, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, heightDp = 2000)
+@Preview(showBackground = true, heightDp = 2000, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ApercuReglagesPret() {
-    ApercuReglages(ReglagesUiState.Pret(ReferenceDApercu))
+    ApercuReglages(ReglagesUiState(reference = EtatReference.Pret(ReferenceDApercu)))
 }
 
-@Preview(showBackground = true, heightDp = 1400)
+/** Le bloc « Sécurité » une fois le code posé : plus d'avertissement, et « Modifier le code ». */
+@Preview(showBackground = true, heightDp = 2000)
+@Composable
+private fun ApercuReglagesVerrouillageActif() {
+    ApercuReglages(
+        ReglagesUiState(
+            reference = EtatReference.Pret(ReferenceDApercu),
+            verrouillageActif = true,
+        ),
+    )
+}
+
+/** Annuaire jamais chargé et une vérification déjà passée : les deux lignes changent. */
+@Preview(showBackground = true, heightDp = 2000)
 @Composable
 private fun ApercuReglagesAnnuaireAbsent() {
     ApercuReglages(
-        ReglagesUiState.Pret(
-            ReferenceDApercu.copy(
-                versionAnnuaire = null,
-                derniereVerification = LocalDate.of(2026, 9, 15),
+        ReglagesUiState(
+            reference = EtatReference.Pret(
+                ReferenceDApercu.copy(
+                    versionAnnuaire = null,
+                    derniereVerification = LocalDate.of(2026, 9, 15),
+                ),
             ),
         ),
     )
@@ -608,24 +850,30 @@ private fun ApercuReglagesAnnuaireAbsent() {
 @Preview(showBackground = true)
 @Composable
 private fun ApercuReglagesChargement() {
-    ApercuReglages(ReglagesUiState.Chargement)
+    ApercuReglages(ReglagesUiState(reference = EtatReference.Chargement))
 }
 
-@Preview(showBackground = true)
+/**
+ * Calendrier illisible : le bloc « Sécurité » reste utilisable, c'est tout l'intérêt — et le
+ * bouton de mise à jour aussi, qui est ce qui peut réparer le calendrier.
+ */
+@Preview(showBackground = true, heightDp = 2000)
 @Composable
 private fun ApercuReglagesErreur() {
-    ApercuReglages(ReglagesUiState.Erreur)
+    ApercuReglages(
+        ReglagesUiState(reference = EtatReference.Erreur, verrouillageActif = true),
+    )
 }
 
 // --- Aperçus de la mise à jour (B19) -----------------------------------------
 
-/** La carte des données de référence seule, pour voir le compte rendu sans dérouler la page. */
+/** La section « Données de référence » seule, pour voir le compte rendu sans dérouler la page. */
 @Composable
-private fun ApercuCarte(miseAJour: EtatMiseAJour) {
+private fun ApercuBlocReference(miseAJour: EtatMiseAJour) {
     FahasalamanaTheme {
         Column(modifier = Modifier.padding(16.dp)) {
-            CarteDonneesReference(
-                donnees = ReferenceDApercu,
+            BlocDonneesReference(
+                etat = EtatReference.Pret(ReferenceDApercu),
                 miseAJour = miseAJour,
                 onVerifierMisesAJour = {},
                 onResultatMiseAJourFerme = {},
@@ -637,7 +885,7 @@ private fun ApercuCarte(miseAJour: EtatMiseAJour) {
 @Preview(showBackground = true, heightDp = 620)
 @Composable
 private fun ApercuMiseAJourEnCours() {
-    ApercuCarte(EtatMiseAJour(enCours = true))
+    ApercuBlocReference(EtatMiseAJour(enCours = true))
 }
 
 /** Le cas de la soutenance : nouveau calendrier, annuaire déjà à jour. */
@@ -645,7 +893,7 @@ private fun ApercuMiseAJourEnCours() {
 @Preview(showBackground = true, heightDp = 760, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ApercuMiseAJourCalendrierRemplace() {
-    ApercuCarte(
+    ApercuBlocReference(
         EtatMiseAJour(
             resultat = ResultatSync(
                 calendrier = IssueMiseAJour.Remplace(
@@ -662,7 +910,7 @@ private fun ApercuMiseAJourCalendrierRemplace() {
 @Preview(showBackground = true, heightDp = 700)
 @Composable
 private fun ApercuMiseAJourRienDeNouveau() {
-    ApercuCarte(
+    ApercuBlocReference(
         EtatMiseAJour(
             resultat = ResultatSync(
                 calendrier = IssueMiseAJour.DejaAJour(version = 3),
@@ -676,14 +924,14 @@ private fun ApercuMiseAJourRienDeNouveau() {
 @Preview(showBackground = true, heightDp = 700)
 @Composable
 private fun ApercuMiseAJourEchec() {
-    ApercuCarte(EtatMiseAJour(resultat = ResultatSync.echecTotal()))
+    ApercuBlocReference(EtatMiseAJour(resultat = ResultatSync.echecTotal()))
 }
 
 /** Le cas mixte, celui qui justifie deux issues plutôt qu'une. */
 @Preview(showBackground = true, heightDp = 780)
 @Composable
 private fun ApercuMiseAJourPartielle() {
-    ApercuCarte(
+    ApercuBlocReference(
         EtatMiseAJour(
             resultat = ResultatSync(
                 calendrier = IssueMiseAJour.FormatInvalide,
@@ -700,7 +948,7 @@ private fun ApercuMiseAJourPartielle() {
 @Preview(showBackground = true, heightDp = 760)
 @Composable
 private fun ApercuMiseAJourSchemaInconnu() {
-    ApercuCarte(
+    ApercuBlocReference(
         EtatMiseAJour(
             resultat = ResultatSync(
                 calendrier = IssueMiseAJour.SchemaInconnu(schemaVersion = 2),

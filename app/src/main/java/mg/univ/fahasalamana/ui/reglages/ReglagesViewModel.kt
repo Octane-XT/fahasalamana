@@ -24,18 +24,23 @@ import mg.univ.fahasalamana.platform.PlanificateurRappels
 /**
  * Écran Réglages (CDC §B6 : VM7 → `PreferencesRepository` + `ReferenceRepository`).
  *
- * Aucun calcul ici : on assemble quatre flux de lecture en un état d'affichage. La route
+ * Aucun calcul ici : on assemble des flux de lecture en un état d'affichage. La route
  * `Reglages` n'a pas d'argument, donc pas de `SavedStateHandle`.
  *
- * (B19) La recherche de mise à jour ne contient elle non plus **aucune règle** : la
- * comparaison de version, la validation du format et le remplacement transactionnel sont
- * dans `SynchroniseurReference` (couche `data`), la programmation des rappels dans
- * `PlanificateurRappels` (couche `platform`). Ce ViewModel enchaîne les deux et tient l'état
- * du bouton.
+ * Deux écritures seulement, et elles n'ont rien à voir l'une avec l'autre :
+ *
+ *  - (B18) [onDesactiverVerrouillage] efface le code de verrouillage. L'activation et la
+ *    modification du code passent, elles, par l'écran `Verrouillage`, parce qu'elles
+ *    demandent une saisie.
+ *  - (B19) [onVerifierMisesAJour] va chercher les contenus de référence publiés. Elle ne
+ *    contient elle non plus **aucune règle** : la comparaison de version, la validation du
+ *    format et le remplacement transactionnel sont dans `SynchroniseurReference` (couche
+ *    `data`), la programmation des rappels dans `PlanificateurRappels` (couche `platform`).
+ *    Ce ViewModel enchaîne les deux et tient l'état du bouton.
  */
 class ReglagesViewModel(
     private val reference: ReferenceRepository,
-    preferences: PreferencesLocales,
+    private val preferences: PreferencesLocales,
     private val planificateur: PlanificateurRappels,
 ) : ViewModel() {
 
@@ -43,27 +48,34 @@ class ReglagesViewModel(
      * (B19) État du bouton « Vérifier les mises à jour ».
      *
      * Un `MutableStateFlow` combiné aux flux de lecture plutôt qu'un second `StateFlow`
-     * exposé : l'écran n'a ainsi qu'un seul état à collecter, et la carte des données de
-     * référence ne peut pas afficher un compte rendu de mise à jour à côté de versions qui
-     * ne seraient pas encore celles qu'il annonce.
+     * exposé : l'écran n'a ainsi qu'un seul état à collecter, et le compte rendu ne peut pas
+     * annoncer des versions que la carte au-dessus n'affiche pas encore.
+     *
+     * Il est combiné **après** [etatReference] et non dedans : le compte rendu doit survivre
+     * à un calendrier illisible, qui est précisément la situation où l'on vient chercher une
+     * mise à jour.
      */
     private val miseAJour = MutableStateFlow(EtatMiseAJour())
 
     /**
-     * Typé `Flow<ReglagesUiState>` et non `Flow<Pret>` : c'est ce qui permet à [catch]
-     * d'émettre [ReglagesUiState.Erreur] sur la même chaîne.
+     * Bloc « Données de référence », avec son propre `catch`.
+     *
+     * L'erreur est **cantonnée à ce bloc** : elle ne doit emporter ni l'état du verrouillage,
+     * qui vient d'une autre source et dont l'utilisateur a besoin même quand le calendrier
+     * est illisible, ni le compte rendu de mise à jour. Typé `Flow<EtatReference>` et non
+     * `Flow<Pret>` : c'est ce qui permet à [catch] d'émettre [EtatReference.Erreur] sur la
+     * même chaîne.
      */
-    private val etat: Flow<ReglagesUiState> = combine(
+    private val etatReference: Flow<EtatReference> = combine(
         // `observerInfosSource()` n'émet rien tant que rien n'est chargé : sans cette
         // première valeur nulle, la combinaison ne produirait jamais d'état et l'écran
         // resterait en chargement pour toujours. Même parade que FicheEnfantViewModel.
         reference.observerInfosSource().onStart<InfosSource?> { emit(null) },
         preferences.annuaireVersion,
         preferences.derniereVerification,
-        miseAJour,
-    ) { infos, versionAnnuaire, derniereVerification, etatMiseAJour ->
-        ReglagesUiState.Pret(
-            reference = DonneesReference(
+    ) { infos, versionAnnuaire, derniereVerification ->
+        EtatReference.Pret(
+            DonneesReference(
                 sourceCalendrier = infos?.source,
                 calendrierPublieLe = infos?.publieLe,
                 versionCalendrier = infos?.version,
@@ -71,21 +83,57 @@ class ReglagesViewModel(
                 versionAnnuaire = versionAnnuaire.takeIf { it != PreferencesLocales.VERSION_ABSENTE },
                 derniereVerification = derniereVerification,
             ),
-            miseAJour = etatMiseAJour,
         )
+    }.catch { erreur ->
+        // L'annulation du scope n'est pas une erreur d'affichage : elle doit remonter.
+        if (erreur is CancellationException) throw erreur
+        emit(EtatReference.Erreur)
     }
 
-    val uiState: StateFlow<ReglagesUiState> = etat
-        .catch { erreur ->
-            // L'annulation du scope n'est pas une erreur d'affichage : elle doit remonter.
-            if (erreur is CancellationException) throw erreur
-            emit(ReglagesUiState.Erreur)
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = ReglagesUiState.Chargement,
+    val uiState: StateFlow<ReglagesUiState> = combine(
+        etatReference,
+        preferences.verrouillageActif,
+        miseAJour,
+    ) { blocReference, verrouillageActif, etatMiseAJour ->
+        ReglagesUiState(
+            reference = blocReference,
+            verrouillageActif = verrouillageActif,
+            miseAJour = etatMiseAJour,
         )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = ReglagesUiState(),
+    )
+
+    // --- Verrouillage par code (B18, US-B10) ---------------------------------
+
+    /**
+     * Efface le code de verrouillage (B18), après confirmation demandée par l'écran.
+     *
+     * **Sans redemander le code**, et c'est un choix assumé : pour arriver sur cet écran il a
+     * déjà fallu ouvrir le carnet, donc franchir le verrou. Redemander le code ici ne
+     * protégerait rien qui ne soit déjà visible à l'écran — la liste des enfants et leurs
+     * vaccins — et ajouterait une saisie de plus à qui veut simplement arrêter d'en faire.
+     *
+     * `effacerPin` retire l'empreinte **et** le sel, et repose `verrouillage_actif` à faux :
+     * le `GardienVerrouillage` voit passer le réglage et rouvre le carnet de lui-même, sans
+     * que cet écran ait à le prévenir.
+     *
+     * Un échec d'écriture est avalé : l'interrupteur restera simplement affiché « activé »,
+     * puisqu'il reflète la préférence et non l'intention.
+     */
+    fun onDesactiverVerrouillage() {
+        viewModelScope.launch {
+            try {
+                preferences.effacerPin()
+            } catch (annulation: CancellationException) {
+                throw annulation
+            } catch (erreur: Throwable) {
+                // Rien à afficher : l'état affiché reste celui de la préférence réelle.
+            }
+        }
+    }
 
     // --- Mise à jour des contenus de référence (B19, US-B11) ------------------
 

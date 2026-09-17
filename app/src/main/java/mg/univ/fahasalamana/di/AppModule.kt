@@ -26,9 +26,11 @@ import mg.univ.fahasalamana.ui.export.ExportCarnetViewModel
 import mg.univ.fahasalamana.ui.importation.ImportCarnetViewModel
 import mg.univ.fahasalamana.ui.centres.CentresViewModel
 import mg.univ.fahasalamana.ui.detailcentre.DetailCentreViewModel
+import mg.univ.fahasalamana.platform.GardienVerrouillage
 import mg.univ.fahasalamana.ui.fiche.FicheEnfantViewModel
 import mg.univ.fahasalamana.ui.reglages.ReglagesViewModel
 import mg.univ.fahasalamana.ui.saisie.SaisieVaccinViewModel
+import mg.univ.fahasalamana.ui.verrouillage.VerrouillageViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.workmanager.dsl.workerOf
@@ -138,6 +140,10 @@ val appModule = module {
 
     // (B17) Lecture du document choisi par l'utilisateur (SAF, §B8 point 2).
     single { LecteurDocument(androidContext()) }
+    // (B18) Verrou du carnet : instance unique pour le processus. Elle observe
+    // ProcessLifecycleOwner dès sa construction et tient l'unique réponse à « le carnet
+    // est-il ouvert ? » — deux instances donneraient deux réponses.
+    single { GardienVerrouillage(preferences = get()) }
 
     // --- ViewModels ---
     // (B15) Réglages : lit la provenance du calendrier et les préférences locales.
@@ -200,4 +206,9 @@ val appModule = module {
     viewModel { DetailCentreViewModel(savedStateHandle = get(), annuaire = get()) }
 
     // TODO(B10) à TODO(B18) : un viewModel par écran restant.
+    // (B18) Verrouillage : le mode (ouverture, création, modification) est déduit de l'état
+    // du verrou, la route `Verrouillage` n'ayant pas d'argument.
+    viewModel { VerrouillageViewModel(preferences = get(), gardien = get()) }
+
+    // TODO(B14) et TODO(B17) : les deux écrans restants.
 }
