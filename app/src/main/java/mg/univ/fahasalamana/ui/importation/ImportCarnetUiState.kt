@@ -48,8 +48,16 @@ sealed interface IssueImport {
     /**
      * Le carnet a été fusionné. [rapport] dit exactement ce qui a changé — c'est ce qui
      * permet au parent de vérifier que son carnet est complet (US-B9).
+     *
+     * @param rappels ce que la replanification qui suit la fusion a réellement donné. Elle
+     *   est toujours tentée, donc jamais `null` ici. Son échec **ne fait pas** de l'import un
+     *   échec — les enfants sont écrits — mais il est porté par l'état plutôt qu'avalé dans
+     *   un journal : sans lui, l'écran annonçait des rappels recalculés qu'il savait ratés.
      */
-    data class Reussi(val rapport: ResultatImport) : IssueImport
+    data class Reussi(
+        val rapport: ResultatImport,
+        val rappels: EtatReplanification,
+    ) : IssueImport
 
     /** Le fichier est un carnet valide, mais il ne contient aucun enfant : rien à importer. */
     data object FichierSansContenu : IssueImport

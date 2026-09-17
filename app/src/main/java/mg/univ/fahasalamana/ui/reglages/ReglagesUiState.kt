@@ -2,6 +2,7 @@ package mg.univ.fahasalamana.ui.reglages
 
 import androidx.compose.runtime.Immutable
 import mg.univ.fahasalamana.data.repository.ResultatSync
+import mg.univ.fahasalamana.ui.importation.EtatReplanification
 import java.time.LocalDate
 
 /**
@@ -97,9 +98,23 @@ data class DonneesReference(
  *   `InfosSource` dans ce même écran, et c'est préférable à un triplé de types d'affichage
  *   qui ne ferait que recopier les mêmes cinq issues : les libellés, eux, restent dans
  *   `strings_maj_reference.xml`, et l'état ne porte aucune chaîne.
+ * @param rappels ce que la replanification qui suit un nouveau calendrier a réellement
+ *   donné, ou `null` quand il n'y en avait pas à faire — c'est-à-dire quand le calendrier
+ *   n'a pas été remplacé (une nouvelle version du seul annuaire ne déplace aucune date).
+ *
+ *   Il **faut** que ce soit dans l'état : l'écran annonçait « les rappels ont été
+ *   recalculés » dès que le calendrier avait changé, sans savoir si la replanification avait
+ *   abouti — alors que le ViewModel, lui, le savait et se contentait de le journaliser. Sur
+ *   un carnet de vaccination, cette phrase est celle qui dit au parent qu'il sera prévenu.
+ *
+ *   Effacé en même temps que [resultat] : les deux forment un seul compte rendu.
+ *
+ *   Le type est celui du bloc d'import (`ui/importation`), qui porte déjà la seule et même
+ *   phrase pour les deux écrans : un état par écran les laisserait diverger à nouveau.
  */
 @Immutable
 data class EtatMiseAJour(
     val enCours: Boolean = false,
     val resultat: ResultatSync? = null,
+    val rappels: EtatReplanification? = null,
 )

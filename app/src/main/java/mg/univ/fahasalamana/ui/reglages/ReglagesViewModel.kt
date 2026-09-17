@@ -20,6 +20,7 @@ import mg.univ.fahasalamana.data.repository.ReferenceRepository
 import mg.univ.fahasalamana.data.repository.ResultatSync
 import mg.univ.fahasalamana.platform.ETIQUETTE_LOG_RAPPEL
 import mg.univ.fahasalamana.platform.PlanificateurRappels
+import mg.univ.fahasalamana.ui.importation.EtatReplanification
 
 /**
  * Écran Réglages (CDC §B6 : VM7 → `PreferencesRepository` + `ReferenceRepository`).
@@ -154,7 +155,7 @@ class ReglagesViewModel(
     fun onVerifierMisesAJour() {
         if (miseAJour.value.enCours) return
         viewModelScope.launch {
-            miseAJour.update { it.copy(enCours = true, resultat = null) }
+            miseAJour.update { it.copy(enCours = true, resultat = null, rappels = null) }
 
             val resultat = try {
                 reference.mettreAJour()
@@ -167,16 +168,39 @@ class ReglagesViewModel(
             // Uniquement si le **calendrier** a changé : un nouveau calendrier déplace les
             // dates prévues de tous les enfants, donc leurs rappels (§B8). Une nouvelle
             // version du seul annuaire ne change aucune date — replanifier serait du travail
-            // pour rien, et ferait clignoter des notifications sans raison.
-            if (resultat.calendrierRemplace) replanifierApresMiseAJour()
+            // pour rien, et ferait clignoter des notifications sans raison. `null` dit qu'il
+            // n'y avait rien à replanifier, ce qui n'est pas la même chose qu'un échec.
+            val rappels = if (resultat.calendrierRemplace) replanifierApresMiseAJour() else null
 
-            miseAJour.update { it.copy(enCours = false, resultat = resultat) }
+            miseAJour.update { it.copy(enCours = false, resultat = resultat, rappels = rappels) }
+        }
+    }
+
+    /**
+     * Le parent a touché « Reprogrammer les rappels » après un échec de replanification.
+     *
+     * **Ne retélécharge rien** : le calendrier est déjà en base, seule sa prise en compte
+     * dans les rappels a manqué. Le compte rendu reste affiché pendant l'essai.
+     */
+    fun onReessayerRappels() {
+        // Seul l'échec se retente : le bouton n'est affiché que là (même garde qu'en B17).
+        if (miseAJour.value.rappels != EtatReplanification.Echouee) return
+        viewModelScope.launch {
+            miseAJour.update { it.copy(rappels = EtatReplanification.EnCours) }
+            val resultat = replanifierApresMiseAJour()
+            // Si le compte rendu a été fermé ou remplacé entre-temps, c'est le nouveau qui
+            // fait foi : on ne recouvre que le « en cours » posé juste au-dessus.
+            miseAJour.update {
+                if (it.rappels == EtatReplanification.EnCours) it.copy(rappels = resultat) else it
+            }
         }
     }
 
     /** Le compte rendu de mise à jour a été fermé par le parent. */
     fun onResultatMiseAJourFerme() {
-        miseAJour.update { it.copy(resultat = null) }
+        // Les rappels partent avec lui : ils sont une ligne de ce compte rendu, pas un état
+        // durable de l'écran.
+        miseAJour.update { it.copy(resultat = null, rappels = null) }
     }
 
     /**
@@ -189,16 +213,20 @@ class ReglagesViewModel(
      *
      * **Son échec ne remet pas en cause la mise à jour**, qui est déjà en base : annoncer un
      * échec ferait croire au parent que le nouveau calendrier n'a pas été installé, alors
-     * qu'il l'est. Seuls les rappels manqueraient, et la prochaine saisie ou la prochaine
+     * qu'il l'est. Seuls les rappels manquent, et la prochaine saisie ou la prochaine
      * modification les reprogrammera. Même arbitrage qu'en B17 après un import.
+     *
+     * Elle ne relève donc toujours pas, mais elle **rend** ce qui s'est passé au lieu de le
+     * laisser au seul journal : l'écran ne peut plus annoncer des rappels recalculés qui ne
+     * l'ont pas été.
      */
-    private suspend fun replanifierApresMiseAJour() {
-        try {
-            planificateur.replanifierTout()
-        } catch (annulation: CancellationException) {
-            throw annulation
-        } catch (erreur: Exception) {
-            Log.w(ETIQUETTE_LOG_RAPPEL, "Replanification après mise à jour du calendrier impossible", erreur)
-        }
+    private suspend fun replanifierApresMiseAJour(): EtatReplanification = try {
+        planificateur.replanifierTout()
+        EtatReplanification.Reussie
+    } catch (annulation: CancellationException) {
+        throw annulation
+    } catch (erreur: Exception) {
+        Log.w(ETIQUETTE_LOG_RAPPEL, "Replanification après mise à jour du calendrier impossible", erreur)
+        EtatReplanification.Echouee
     }
 }

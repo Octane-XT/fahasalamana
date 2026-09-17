@@ -60,7 +60,9 @@ import mg.univ.fahasalamana.platform.BlocRappelsDebug
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.export.LigneExportCarnet
+import mg.univ.fahasalamana.ui.importation.EtatReplanification
 import mg.univ.fahasalamana.ui.importation.LigneImportCarnet
+import mg.univ.fahasalamana.ui.importation.RappelsReplanifies
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
@@ -116,6 +118,7 @@ fun ReglagesScreen(
         state = state,
         onVerifierMisesAJour = vm::onVerifierMisesAJour,
         onResultatMiseAJourFerme = vm::onResultatMiseAJourFerme,
+        onReessayerRappels = vm::onReessayerRappels,
         onOuvrirCodeVerrouillage = onOuvrirCodeVerrouillage,
         onDesactiverVerrouillage = vm::onDesactiverVerrouillage,
         modifier = modifier,
@@ -128,6 +131,7 @@ private fun ReglagesContenu(
     state: ReglagesUiState,
     onVerifierMisesAJour: () -> Unit,
     onResultatMiseAJourFerme: () -> Unit,
+    onReessayerRappels: () -> Unit,
     onOuvrirCodeVerrouillage: () -> Unit,
     onDesactiverVerrouillage: () -> Unit,
     modifier: Modifier = Modifier,
@@ -159,6 +163,7 @@ private fun ReglagesContenu(
                 miseAJour = state.miseAJour,
                 onVerifierMisesAJour = onVerifierMisesAJour,
                 onResultatMiseAJourFerme = onResultatMiseAJourFerme,
+                onReessayerRappels = onReessayerRappels,
             )
             BlocConfidentialite()
             BlocCarnet()
@@ -193,6 +198,7 @@ private fun BlocDonneesReference(
     miseAJour: EtatMiseAJour,
     onVerifierMisesAJour: () -> Unit,
     onResultatMiseAJourFerme: () -> Unit,
+    onReessayerRappels: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         TitreSection(stringResource(R.string.reglages_section_reference))
@@ -218,6 +224,7 @@ private fun BlocDonneesReference(
             miseAJour = miseAJour,
             onVerifierMisesAJour = onVerifierMisesAJour,
             onResultatMiseAJourFerme = onResultatMiseAJourFerme,
+            onReessayerRappels = onReessayerRappels,
         )
     }
 }
@@ -297,6 +304,7 @@ private fun ActionMiseAJour(
     miseAJour: EtatMiseAJour,
     onVerifierMisesAJour: () -> Unit,
     onResultatMiseAJourFerme: () -> Unit,
+    onReessayerRappels: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         // (B19) Le bouton est actif. Il reste inactif pendant une vérification en
@@ -329,7 +337,12 @@ private fun ActionMiseAJour(
         )
 
         miseAJour.resultat?.let { resultat ->
-            PanneauMiseAJour(resultat = resultat, onFermer = onResultatMiseAJourFerme)
+            PanneauMiseAJour(
+                resultat = resultat,
+                rappels = miseAJour.rappels,
+                onFermer = onResultatMiseAJourFerme,
+                onReessayerRappels = onReessayerRappels,
+            )
         }
     }
 }
@@ -349,7 +362,9 @@ private fun ActionMiseAJour(
 @Composable
 private fun PanneauMiseAJour(
     resultat: ResultatSync,
+    rappels: EtatReplanification?,
     onFermer: () -> Unit,
+    onReessayerRappels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // Trois apparences, dans l'ordre où on les regarde : quelque chose a changé, rien
@@ -402,15 +417,19 @@ private fun PanneauMiseAJour(
                 style = MaterialTheme.typography.bodyMedium,
             )
 
-            // Un nouveau calendrier déplace les dates prévues : le parent doit savoir que
-            // ses rappels ont suivi et qu'il n'a rien à faire de plus. Phrase réutilisée
-            // telle quelle de B17, où elle dit exactement la même chose après un import.
-            if (resultat.calendrierRemplace) {
-                Text(
-                    text = stringResource(R.string.import_rappels_recalcules),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
+            // Un nouveau calendrier déplace les dates prévues : le parent doit savoir ce que
+            // ses rappels sont devenus. Bloc réutilisé tel quel de B17, où il dit exactement
+            // la même chose après un import.
+            //
+            // Piloté par `rappels` et non par `resultat.calendrierRemplace` : ce dernier dit
+            // seulement qu'une replanification a été **tentée**, et c'est précisément la
+            // confusion qui faisait annoncer des rappels recalculés que le ViewModel savait
+            // ratés. `null` — aucune replanification à faire — n'écrit rien du tout.
+            RappelsReplanifies(
+                etat = rappels,
+                detailEchec = stringResource(R.string.maj_rappels_echec_calendrier),
+                onReessayer = onReessayerRappels,
+            )
 
             // Ce que la mise à jour a touché, et ce qu'elle n'a pas touché (§B8, règle 8 de
             // CLAUDE.md). Seulement après un remplacement réel : c'est le seul moment où la
@@ -792,6 +811,7 @@ private fun ApercuReglages(state: ReglagesUiState) {
             state = state,
             onVerifierMisesAJour = {},
             onResultatMiseAJourFerme = {},
+            onReessayerRappels = {},
             onOuvrirCodeVerrouillage = {},
             onDesactiverVerrouillage = {},
         )
@@ -863,6 +883,7 @@ private fun ApercuBlocReference(miseAJour: EtatMiseAJour) {
                 miseAJour = miseAJour,
                 onVerifierMisesAJour = {},
                 onResultatMiseAJourFerme = {},
+                onReessayerRappels = {},
             )
         }
     }
@@ -889,6 +910,49 @@ private fun ApercuMiseAJourCalendrierRemplace() {
                 ),
                 annuaire = IssueMiseAJour.DejaAJour(version = 2),
             ),
+            rappels = EtatReplanification.Reussie,
+        ),
+    )
+}
+
+/**
+ * Le cas que le défaut cachait : le calendrier est installé, la replanification a échoué. Le
+ * panneau reste celui d'une réussite — la mise à jour, elle, a bien eu lieu — mais il le dit
+ * et propose le seul geste qui y remédie.
+ */
+@Preview(showBackground = true, heightDp = 820)
+@Composable
+private fun ApercuMiseAJourRappelsEnEchec() {
+    ApercuBlocReference(
+        EtatMiseAJour(
+            resultat = ResultatSync(
+                calendrier = IssueMiseAJour.Remplace(
+                    versionPrecedente = 3,
+                    version = 4,
+                    publieLe = LocalDate.of(2026, 10, 20),
+                ),
+                annuaire = IssueMiseAJour.DejaAJour(version = 2),
+            ),
+            rappels = EtatReplanification.Echouee,
+        ),
+    )
+}
+
+/** Second essai en cours : le compte rendu reste lisible et dit ce qu'il est en train de faire. */
+@Preview(showBackground = true, heightDp = 780)
+@Composable
+private fun ApercuMiseAJourRappelsEnCours() {
+    ApercuBlocReference(
+        EtatMiseAJour(
+            resultat = ResultatSync(
+                calendrier = IssueMiseAJour.Remplace(
+                    versionPrecedente = 3,
+                    version = 4,
+                    publieLe = LocalDate.of(2026, 10, 20),
+                ),
+                annuaire = IssueMiseAJour.DejaAJour(version = 2),
+            ),
+            rappels = EtatReplanification.EnCours,
         ),
     )
 }

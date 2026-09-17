@@ -89,9 +89,17 @@ fun LigneImportCarnet(
      */
     var demandeNotifications by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(state.issue) {
-        val issue = state.issue
-        if (issue is IssueImport.Reussi && issue.rapport.enfantsAjoutes > 0) {
+    /*
+     * Clé sur le **rapport de fusion** et non sur l'issue entière : l'issue change aussi
+     * quand seul l'état des rappels change (un second essai de replanification), et
+     * reposer la question des notifications à ce moment-là n'aurait aucun sens. Le rapport,
+     * lui, repasse par `null` au début de chaque import — deux imports de suite relancent
+     * donc bien l'effet, comme avant.
+     */
+    val rapportFusion = (state.issue as? IssueImport.Reussi)?.rapport
+
+    LaunchedEffect(rapportFusion) {
+        if (rapportFusion != null && rapportFusion.enfantsAjoutes > 0) {
             demandeNotifications = true
         }
     }
@@ -105,6 +113,7 @@ fun LigneImportCarnet(
         state = state,
         onImportDemande = { selecteurDeDocument.launch(MIMES_CARNET_IMPORT) },
         onIssueFermee = vm::onIssueFermee,
+        onReessayerRappels = vm::onReessayerRappels,
         modifier = modifier,
     )
 }
@@ -114,6 +123,7 @@ private fun LigneImportCarnetContenu(
     state: ImportCarnetUiState,
     onImportDemande: () -> Unit,
     onIssueFermee: () -> Unit,
+    onReessayerRappels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -170,6 +180,7 @@ private fun LigneImportCarnetContenu(
             PanneauIssue(
                 issue = issue,
                 onFermer = onIssueFermee,
+                onReessayerRappels = onReessayerRappels,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
             )
         }
@@ -185,12 +196,18 @@ private fun LigneImportCarnetContenu(
  * `SnackbarHost` aurait demandé de modifier le `Scaffold` de l'écran Réglages, donc le
  * fichier de Dev B.
  *
- * `liveRegion` : TalkBack annonce le rapport dès qu'il apparaît.
+ * `liveRegion` : TalkBack annonce le rapport dès qu'il apparaît — y compris quand la seule
+ * chose qui change est l'issue de la replanification après un second essai.
+ *
+ * **L'apparence reste celle d'une réussite même quand les rappels ont manqué** : l'import,
+ * lui, a bien eu lieu et rien n'est à refaire de ce côté. Passer le panneau en rouge ferait
+ * croire que les enfants ne sont pas enregistrés, ce qui serait le mensonge inverse.
  */
 @Composable
 private fun PanneauIssue(
     issue: IssueImport,
     onFermer: () -> Unit,
+    onReessayerRappels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val couleurFond = when (issue) {
@@ -248,6 +265,17 @@ private fun PanneauIssue(
                 Text(text = paragraphe, style = MaterialTheme.typography.bodyMedium)
             }
 
+            // Les rappels, en dernière ligne du rapport comme avant — mais d'après ce que la
+            // replanification a réellement donné, et non plus inconditionnellement. C'est la
+            // phrase qui dit au parent qu'il sera prévenu : elle ne s'écrit que si c'est vrai.
+            if (issue is IssueImport.Reussi) {
+                RappelsReplanifies(
+                    etat = issue.rappels,
+                    detailEchec = stringResource(R.string.import_rappels_echec_carnet),
+                    onReessayer = onReessayerRappels,
+                )
+            }
+
             // Ce que l'application vient de faire du fichier, et ce qu'elle n'en a pas fait.
             // Affiché seulement après un import réel : c'est le seul moment où des données de
             // santé viennent d'entrer dans l'application (§B8).
@@ -275,7 +303,11 @@ private fun PanneauIssue(
  *
  * Dans l'ordre de ce que le parent cherche à vérifier : d'abord, si rien n'a été ajouté, la
  * phrase qui le dit ; puis les enfants, puis les vaccins ; puis — seulement s'il y en a —
- * les lignes que le fichier contenait en double ; enfin les rappels recalculés.
+ * les lignes que le fichier contenait en double.
+ *
+ * La phrase sur les rappels **n'est plus ici** : elle dépend de ce que la replanification a
+ * donné, pas du seul rapport de fusion, et elle peut s'accompagner d'une action. Elle est
+ * écrite par `RappelsReplanifies`, juste après ces lignes.
  *
  * Les compteurs à zéro ne sont **pas** masqués : « 0 ajouté, 3 déjà enregistrés » est
  * précisément l'information qui évite de réimporter dix fois le même fichier en croyant
@@ -329,9 +361,7 @@ private fun lignesDuRapport(rapport: ResultatImport): List<String> {
         null
     }
 
-    val rappels = stringResource(R.string.import_rappels_recalcules)
-
-    return listOfNotNull(introduction, enfants, doses, enDouble, rappels)
+    return listOfNotNull(introduction, enfants, doses, enDouble)
 }
 
 // --- Aperçus -----------------------------------------------------------------
@@ -346,6 +376,7 @@ private fun ApercuDansCarte(state: ImportCarnetUiState) {
                     state = state,
                     onImportDemande = {},
                     onIssueFermee = {},
+                    onReessayerRappels = {},
                 )
             }
         }
@@ -376,6 +407,7 @@ private fun ApercuImportReussi() {
                     dosesAjoutees = 11,
                     dosesFusionnees = 4,
                 ),
+                rappels = EtatReplanification.Reussie,
             ),
         ),
     )
@@ -388,6 +420,39 @@ private fun ApercuImportSansRienDeNouveau() {
         ImportCarnetUiState(
             issue = IssueImport.Reussi(
                 ResultatImport(enfantsFusionnes = 2, dosesFusionnees = 6, dosesIgnorees = 1),
+                rappels = EtatReplanification.Reussie,
+            ),
+        ),
+    )
+}
+
+/**
+ * Le cas que le défaut cachait : la fusion est écrite, la replanification a échoué. Le
+ * panneau reste vert — les enfants sont bien là — mais il le dit, et propose le seul geste
+ * qui y remédie.
+ */
+@Preview(showBackground = true)
+@Composable
+private fun ApercuImportRappelsEnEchec() {
+    ApercuDansCarte(
+        ImportCarnetUiState(
+            issue = IssueImport.Reussi(
+                ResultatImport(enfantsAjoutes = 2, dosesAjoutees = 11),
+                rappels = EtatReplanification.Echouee,
+            ),
+        ),
+    )
+}
+
+/** Second essai en cours : le rapport reste lisible, la ligne des rappels dit ce qu'elle fait. */
+@Preview(showBackground = true)
+@Composable
+private fun ApercuImportRappelsEnCours() {
+    ApercuDansCarte(
+        ImportCarnetUiState(
+            issue = IssueImport.Reussi(
+                ResultatImport(enfantsAjoutes = 2, dosesAjoutees = 11),
+                rappels = EtatReplanification.EnCours,
             ),
         ),
     )

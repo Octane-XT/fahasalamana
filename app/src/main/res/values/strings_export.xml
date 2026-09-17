@@ -98,8 +98,24 @@
     </plurals>
 
     <!-- La replanification des rappels fait partie du scénario 2 (« les rappels sont
-         recalculés ») : le parent doit savoir qu'il n'a rien à faire de plus. -->
+         recalculés ») : le parent doit savoir qu'il n'a rien à faire de plus.
+         Cette phrase n'est écrite que si la replanification a réellement abouti : sur un
+         carnet de vaccination, c'est elle qui dit au parent qu'il sera prévenu. -->
     <string name="import_rappels_recalcules">Les rappels de vaccination ont été recalculés pour tous les enfants.</string>
+
+    <!-- Les trois textes du cas où elle échoue. Se taire laisserait croire que tout va bien,
+         et reprendre la phrase du dessus serait un mensonge. Ils ne mettent rien sur le dos
+         de l'utilisateur (R7), ne donnent aucun détail technique, et disent le geste qui y
+         remédie : la replanification se retente seule, sans refaire l'import.
+         Comme `import_rappels_recalcules`, ils sont repris tels quels par B19 après un
+         nouveau calendrier — même situation, mêmes mots (voir strings_maj_reference.xml). -->
+    <string name="import_rappels_non_recalcules">En revanche, les rappels de vaccination n\'ont pas pu être reprogrammés : les notifications à venir manquent pour l\'instant. Elles reviendront d\'elles-mêmes à la prochaine saisie de vaccin, ou tout de suite avec le bouton ci-dessous.</string>
+    <string name="import_rappels_reessayer">Reprogrammer les rappels</string>
+    <string name="import_rappels_en_cours">Reprogrammation des rappels…</string>
+
+    <!-- Ce qui reste vrai malgré cet échec, du côté de l'import : la fusion est écrite. C'est
+         la première phrase lue, avant celle qui dit ce qui manque. -->
+    <string name="import_rappels_echec_carnet">Les enfants et les vaccins du fichier sont bien enregistrés dans votre carnet.</string>
 
     <!-- Ce que l'application a fait du fichier, et ce qu'elle n'en a pas fait (§B8). -->
     <string name="import_reussi_confidentialite">L\'application a seulement lu ce fichier : elle ne l\'a ni déplacé, ni modifié, ni envoyé ailleurs. Il reste là où vous l\'avez enregistré.</string>

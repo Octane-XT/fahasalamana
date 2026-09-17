@@ -74,8 +74,7 @@ class ImportCarnetViewModel(
                         IssueImport.FichierSansContenu
                     } else {
                         val rapport = enfants.importer(lecture.carnet)
-                        replanifierApresImport()
-                        IssueImport.Reussi(rapport)
+                        IssueImport.Reussi(rapport, replanifierApresImport())
                     }
                 }
             } catch (annulation: CancellationException) {
@@ -96,6 +95,40 @@ class ImportCarnetViewModel(
     }
 
     /**
+     * Le parent a touché « Reprogrammer les rappels » après un échec de replanification.
+     *
+     * **Ne refait ni la lecture du fichier ni la fusion** : elles ont abouti, et l'`Uri` du
+     * document n'est de toute façon pas conservée (§B8, point 2). Seule la replanification
+     * est retentée, à partir de ce qui est déjà en base.
+     *
+     * Le rapport d'import reste affiché pendant l'essai, d'où la mise à jour en place de la
+     * seule issue `Reussi` : recopier le rapport ailleurs le ferait clignoter. S'il a été
+     * fermé entre-temps, il n'y a plus rien à mettre à jour et le résultat est simplement
+     * abandonné — les rappels, eux, auront bien été reprogrammés.
+     */
+    fun onReessayerRappels() {
+        val issue = etat.value.issue
+        // Seul l'échec se retente : le bouton n'est affiché que là, et rien ne justifie de
+        // relancer une replanification qui a abouti ou qui est déjà en cours.
+        if (issue !is IssueImport.Reussi || issue.rappels != EtatReplanification.Echouee) return
+        viewModelScope.launch {
+            majRappels { EtatReplanification.EnCours }
+            val resultat = replanifierApresImport()
+            // Un second import lancé pendant l'essai aurait publié son propre rapport : c'est
+            // lui qui fait foi. On ne recouvre que le « en cours » posé juste au-dessus.
+            majRappels { avant -> if (avant == EtatReplanification.EnCours) resultat else avant }
+        }
+    }
+
+    /** Remplace le seul état des rappels dans le rapport affiché, s'il l'est encore. */
+    private fun majRappels(transformation: (EtatReplanification) -> EtatReplanification) {
+        etat.update { courant ->
+            val reussi = courant.issue as? IssueImport.Reussi ?: return@update courant
+            courant.copy(issue = reussi.copy(rappels = transformation(reussi.rappels)))
+        }
+    }
+
+    /**
      * Recalcule les rappels de tout le carnet après une fusion (§B8 : l'import est l'un des
      * déclencheurs de `replanifier`).
      *
@@ -109,16 +142,20 @@ class ImportCarnetViewModel(
      *
      * **Son échec ne remet pas en cause l'import**, qui est déjà écrit et validé : annoncer
      * un échec ferait croire au parent que ses enfants n'ont pas été importés, alors qu'ils
-     * le sont. Seuls les rappels manqueraient — et la prochaine saisie, la prochaine
-     * modification ou le prochain import les reprogrammera.
+     * le sont. Seuls les rappels manquent — et la prochaine saisie, la prochaine modification
+     * ou le prochain import les reprogrammera.
+     *
+     * Elle ne relève donc toujours pas, mais elle **rend** ce qui s'est passé au lieu de le
+     * laisser au seul journal : c'est l'écran qui décide quoi en dire, et il ne peut plus
+     * annoncer des rappels recalculés qui ne l'ont pas été.
      */
-    private suspend fun replanifierApresImport() {
-        try {
-            planificateur.replanifierTout()
-        } catch (annulation: CancellationException) {
-            throw annulation
-        } catch (erreur: Exception) {
-            Log.w(ETIQUETTE_LOG_RAPPEL, "Replanification après import impossible", erreur)
-        }
+    private suspend fun replanifierApresImport(): EtatReplanification = try {
+        planificateur.replanifierTout()
+        EtatReplanification.Reussie
+    } catch (annulation: CancellationException) {
+        throw annulation
+    } catch (erreur: Exception) {
+        Log.w(ETIQUETTE_LOG_RAPPEL, "Replanification après import impossible", erreur)
+        EtatReplanification.Echouee
     }
 }

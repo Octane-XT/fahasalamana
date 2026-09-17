@@ -14,7 +14,11 @@
      sans quoi le parent ne saura pas de quelle ligne on lui parle ;
    - `import_rappels_recalcules` (B17) : la phrase est mot pour mot la même après un import
      et après un nouveau calendrier, et en dupliquer une variante laisserait les deux
-     diverger à la première relecture ;
+     diverger à la première relecture. Même chose pour les trois textes du cas où la
+     replanification échoue (`import_rappels_non_recalcules`, `import_rappels_reessayer`,
+     `import_rappels_en_cours`) : seule la phrase qui rappelle ce qui, lui, est bien
+     enregistré change d'un écran à l'autre, et c'est `maj_rappels_echec_calendrier`
+     ci-dessous ;
    - `export_fermer` (B16), pour le bouton de fermeture : même mot, même geste.
 
   Ton (règle R7) et deux contraintes propres à cet écran :
@@ -58,5 +62,12 @@
          CLAUDE.md). Affiché seulement quand un contenu a réellement été remplacé : c'est le
          seul moment où la question se pose. -->
     <string name="maj_donnees_personnelles">Seuls le calendrier et l\'annuaire ont été remplacés. Les enfants et les vaccins enregistrés sur ce téléphone n\'ont pas été modifiés.</string>
+
+    <!-- Un nouveau calendrier déplace les dates prévues, donc les rappels : la phrase
+         `import_rappels_recalcules` n'est écrite que si la replanification a abouti. Quand
+         elle échoue, celle-ci est lue en premier — le calendrier, lui, est bien installé, et
+         la mise à jour n'est pas à refaire — puis `import_rappels_non_recalcules` dit ce qui
+         manque et le bouton le répare. Pendant du `import_rappels_echec_carnet` de B17. -->
+    <string name="maj_rappels_echec_calendrier">Le nouveau calendrier est bien installé sur ce téléphone.</string>
 
 </resources>
