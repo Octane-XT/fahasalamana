@@ -45,7 +45,6 @@ const val CANAL_RAPPELS: String = "rappels_vaccins"
  */
 private const val ID_RAPPEL: Int = 1
 
-private const val ETIQUETTE_LOG: String = "Fahasalamana"
 
 /** « 12/02 », comme dans le scénario de US-B5. */
 private val FORMAT_JOUR_MOIS: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM", Locale.FRENCH)
@@ -162,7 +161,7 @@ class NotificationHelper(context: Context) {
     @SuppressLint("MissingPermission") // [notificationsAutorisees] vérifie POST_NOTIFICATIONS juste avant.
     fun afficherRappel(contenu: ContenuRappel): Boolean {
         if (!notificationsAutorisees()) {
-            Log.i(ETIQUETTE_LOG, "Rappel non affiché : notifications non autorisées")
+            Log.i(ETIQUETTE_LOG_RAPPEL, "Rappel non affiché : notifications non autorisées")
             return false
         }
 
@@ -173,7 +172,7 @@ class NotificationHelper(context: Context) {
         } catch (refus: SecurityException) {
             // Course possible : la permission peut être retirée entre la vérification et
             // l'appel. Un rappel manqué ne doit pas faire tomber le worker qui l'affiche.
-            Log.w(ETIQUETTE_LOG, "Rappel refusé par le système", refus)
+            Log.w(ETIQUETTE_LOG_RAPPEL, "Rappel refusé par le système", refus)
             false
         }
     }

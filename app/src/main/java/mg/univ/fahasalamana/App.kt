@@ -41,15 +41,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        startKoin {
-            androidLogger()
-            androidContext(this@App)
-            workManagerFactory()
-            modules(appModule)
-        }
-
-        amorcerContenuDeReference()
-
         // (B10) Canal des rappels de vaccination. Créé ici plutôt qu'à la première
         // notification : un canal doit exister avant d'être utilisé, et `RappelWorker`
         // (B11) peut s'exécuter dans un processus réveillé par WorkManager où aucun écran
@@ -58,6 +49,18 @@ class App : Application() {
         // du Context, et faire dépendre le démarrage d'une définition Koin de plus, c'est
         // un plantage au lancement de plus le jour où elle manque.
         creerCanauxNotification(this)
+
+        // Ce canal est créé **avant** startKoin : `workManagerFactory()` initialise
+        // WorkManager, qui peut reprendre un travail en attente aussitôt. Un worker qui
+        // notifierait sur un canal encore inexistant verrait sa notification rejetée.
+        startKoin {
+            androidLogger()
+            androidContext(this@App)
+            workManagerFactory()
+            modules(appModule)
+        }
+
+        amorcerContenuDeReference()
     }
 
     /**

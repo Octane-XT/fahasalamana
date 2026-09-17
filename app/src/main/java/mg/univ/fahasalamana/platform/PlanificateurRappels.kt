@@ -218,12 +218,13 @@ class PlanificateurRappels(
 
         workManager.enqueueUniqueWork(travail.nomUnique, ExistingWorkPolicy.REPLACE, requete)
 
-        // Le détail reste en `Log.d` : il porte un délai, donc de quoi retrouver une date
-        // prévue, donc indirectement une date de naissance. Le niveau `info` se contente des
-        // compteurs.
+        // Ni le nom du travail ni le délai ne sont journalisés : le premier porte l'identifiant
+        // complet de l'enfant, le second permet de remonter à la date prévue, donc à la date de
+        // naissance. Ce sont des données de santé (§B8). L'identifiant abrégé suffit à relier
+        // une planification à l'exécution de son worker.
         Log.d(
             ETIQUETTE_LOG_RAPPEL,
-            "Rappel enfilé travail=${travail.nomUnique} type=${travail.type} dans ${travail.delai.toMinutes()} min",
+            "Rappel enfilé enfant=${abregerIdentifiant(travail.enfantId)} type=${travail.type}",
         )
     }
 }
