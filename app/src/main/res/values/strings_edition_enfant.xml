@@ -54,7 +54,10 @@
          Ce sont des données de santé, et l'application est hors ligne : il n'y a ni
          corbeille ni sauvegarde automatique (§B8). Le dialogue dit donc exactement ce qui
          part avec l'enfant, sans dramatiser. -->
-    <string name="edition_action_supprimer">Supprimer cet enfant</string>
+    <!-- B23 — « cette fiche » et non « cet enfant » : même mot que le titre du dialogue de
+         confirmation juste en dessous, et même forme que « Supprimer cette saisie » de
+         l'écran de saisie (bouton = titre du dialogue, sans le point d'interrogation). -->
+    <string name="edition_action_supprimer">Supprimer cette fiche</string>
     <string name="edition_suppression_titre">Supprimer la fiche de %1$s ?</string>
     <string name="edition_suppression_titre_sans_nom">Supprimer cette fiche ?</string>
     <string name="edition_suppression_message">Les vaccins déjà saisis pour %1$s et les rappels programmés seront supprimés en même temps. Cette suppression est définitive : la fiche ne pourra pas être retrouvée.</string>

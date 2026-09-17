@@ -48,9 +48,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -74,6 +76,7 @@ import mg.univ.fahasalamana.domain.nbFaits
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.components.EtatVide
+import mg.univ.fahasalamana.ui.components.EtiquettesTest
 import mg.univ.fahasalamana.ui.components.texteAge
 import mg.univ.fahasalamana.ui.theme.CouleurStatut
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
@@ -161,6 +164,8 @@ private fun FicheEnfantContenu(
                         },
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        // Titre d'écran : en-tête pour la navigation par titres de TalkBack.
+                        modifier = Modifier.semantics { heading() },
                     )
                 },
                 navigationIcon = {
@@ -230,7 +235,11 @@ private fun Echeancier(
     }
 
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
+        // Étiquette de test (B23) : un test d'interface défile jusqu'à une ligne précise
+        // (`performScrollToNode`) au lieu d'enchaîner des glissements à l'aveugle.
+        modifier = modifier
+            .fillMaxSize()
+            .testTag(EtiquettesTest.FICHE_ECHEANCIER),
         contentPadding = PaddingValues(bottom = 24.dp),
     ) {
         item(key = "entete") { EnteteEnfant(state) }
@@ -286,6 +295,11 @@ private fun Echeancier(
  *
  * L'âge se recalcule tout seul au passage de minuit : il vient de `aujourdHui`, qui est une
  * valeur de l'état et non une lecture d'horloge faite ici.
+ *
+ * Tout l'en-tête est **un seul bloc pour TalkBack** (B23) : c'est une seule information — la
+ * situation de l'enfant aujourd'hui. Sans fusion, il fallait cinq balayages pour entendre
+ * « Né le 01/01/2026 · 9 mois », « 12 faits », « 1 à faire », « 1 en retard » et la prochaine
+ * échéance, alors que c'est la phrase qu'on vient lire en premier.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -303,6 +317,7 @@ private fun EnteteEnfant(state: FicheEnfantUiState.Pret) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .semantics(mergeDescendants = true) { }
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -393,7 +408,13 @@ private fun EnTeteGroupe(libelle: String) {
  *
  * Toucher la ligne mène à `SaisieVaccin` — y compris pour une dose déjà faite, qui s'y corrige
  * ou s'y supprime (US-B4). `Modifier.clickable` fusionne la sémantique des enfants : TalkBack
- * annonce « Pentavalent — 1re dose, En retard, Prévu le… », puis l'action.
+ * annonce « En retard, Pentavalent — 1re dose, Prévu le… », puis l'action.
+ *
+ * **Le statut est annoncé une seule fois** (B23). Il est porté par la `contentDescription` de
+ * la pastille, qui vient en tête de la lecture — on entend l'état avant le détail — et le
+ * libellé écrit à côté, lui, est retiré de la sémantique : il reste à l'écran pour l'œil
+ * (§B7.2, la couleur n'est jamais seule) sans faire bégayer TalkBack. C'est aussi ce qui rend
+ * le statut vérifiable par un test sur l'étiquette de la ligne, sans lire la couleur.
  */
 @Composable
 private fun LigneVaccin(
@@ -406,6 +427,7 @@ private fun LigneVaccin(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .testTag(EtiquettesTest.ligneVaccin(ligne.vaccin.id))
             .clickable(
                 onClickLabel = stringResource(R.string.fiche_action_saisir),
                 role = Role.Button,
@@ -414,7 +436,11 @@ private fun LigneVaccin(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Pastille(couleur = apparence.couleur, icone = apparence.icone)
+        Pastille(
+            couleur = apparence.couleur,
+            icone = apparence.icone,
+            description = apparence.libelle,
+        )
         Spacer(Modifier.width(16.dp))
 
         Column(
@@ -434,6 +460,10 @@ private fun LigneVaccin(
                 style = MaterialTheme.typography.labelLarge,
                 // `principale` est la nuance prévue pour un contenu posé sur la surface.
                 color = apparence.couleur.principale,
+                // Déjà annoncé par la pastille, au début de la ligne : on l'efface de la
+                // sémantique pour ne pas l'entendre deux fois. Le texte reste affiché — c'est
+                // lui qui double la couleur pour un œil daltonien (§B7.2).
+                modifier = Modifier.clearAndSetSemantics { },
             )
             Text(
                 text = apparence.detail,
@@ -481,10 +511,18 @@ private fun LigneHorsCalendrier(dose: VaccinAdministre) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            // Ligne non cliquable, donc rien ne fusionne sa sémantique tout seul : sans cela
+            // TalkBack s'arrête d'abord sur la pastille, puis sur la phrase. C'est une seule
+            // information — une dose reçue —, elle se lit d'un bloc (B23).
+            .semantics(mergeDescendants = true) { }
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Pastille(couleur = couleurs.fait, icone = Icons.Outlined.CheckCircle)
+        Pastille(
+            couleur = couleurs.fait,
+            icone = Icons.Outlined.CheckCircle,
+            description = stringResource(R.string.fiche_statut_fait),
+        )
         Spacer(Modifier.width(16.dp))
         Text(
             text = stringResource(
@@ -498,8 +536,15 @@ private fun LigneHorsCalendrier(dose: VaccinAdministre) {
     }
 }
 
+/**
+ * Pastille de statut : fond coloré et icône.
+ *
+ * @param description nom du statut (« Fait », « En retard »…). C'est **la** porte d'entrée du
+ *   statut pour TalkBack : posée sur le premier élément de la ligne, elle se lit avant le nom
+ *   du vaccin. Le libellé écrit qui l'accompagne à l'écran est, lui, effacé de la sémantique.
+ */
 @Composable
-private fun Pastille(couleur: CouleurStatut, icone: ImageVector) {
+private fun Pastille(couleur: CouleurStatut, icone: ImageVector, description: String) {
     Surface(
         color = couleur.conteneur,
         contentColor = couleur.surConteneur,
@@ -509,8 +554,7 @@ private fun Pastille(couleur: CouleurStatut, icone: ImageVector) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Icon(
                 imageVector = icone,
-                // Décoratif : le libellé écrit à côté porte la même information.
-                contentDescription = null,
+                contentDescription = description,
                 modifier = Modifier.size(22.dp),
             )
         }
@@ -548,6 +592,9 @@ private fun BandeauSource(infos: InfosSource?) {
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
             .fillMaxWidth()
+            // Mention, version et source sont une seule information : un seul arrêt de
+            // TalkBack plutôt que trois bouts de phrase séparés (B23).
+            .semantics(mergeDescendants = true) { }
             .padding(horizontal = 16.dp, vertical = 16.dp),
     ) {
         Row(modifier = Modifier.padding(12.dp)) {

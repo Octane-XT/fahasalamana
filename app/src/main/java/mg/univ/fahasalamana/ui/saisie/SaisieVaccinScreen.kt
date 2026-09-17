@@ -43,8 +43,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.error
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -61,6 +67,7 @@ import mg.univ.fahasalamana.domain.validerSaisie
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.components.EtatVide
+import mg.univ.fahasalamana.ui.components.EtiquettesTest
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
 import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
@@ -151,6 +158,8 @@ private fun SaisieVaccinContenu(
                         },
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        // Titre d'écran : en-tête pour la navigation par titres de TalkBack.
+                        modifier = Modifier.semantics { heading() },
                     )
                 },
                 navigationIcon = {
@@ -219,6 +228,9 @@ private fun Formulaire(
     val refus = (state.validation as? ResultatSaisie.Refusee)?.motif
     val avertissement = (state.validation as? ResultatSaisie.Acceptee)?.avertissement
 
+    // Résolu ici, hors du `Modifier` : `stringResource` ne s'appelle que dans une composition.
+    val texteRefus = refus?.let { messageRefus(it) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -236,19 +248,26 @@ private fun Formulaire(
             readOnly = true,
             singleLine = true,
             label = { Text(stringResource(R.string.saisie_date_label)) },
-            isError = refus != null,
+            isError = texteRefus != null,
             supportingText = {
-                if (refus != null) Text(messageRefus(refus))
+                if (texteRefus != null) Text(texteRefus)
             },
             trailingIcon = {
-                IconButton(onClick = { dialogueDate = true }) {
+                IconButton(
+                    onClick = { dialogueDate = true },
+                    modifier = Modifier.testTag(EtiquettesTest.SAISIE_CHOISIR_DATE),
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.CalendarMonth,
                         contentDescription = stringResource(R.string.saisie_date_action),
                     )
                 }
             },
-            modifier = Modifier.fillMaxWidth(),
+            // `error()` : TalkBack annonce « saisie non valide » et lit le motif du refus,
+            // au lieu de laisser la seule couleur rouge porter l'information (B23).
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { if (texteRefus != null) error(texteRefus) },
         )
 
         // Hors fenêtre de tolérance : informatif, jamais bloquant (R5). Volontairement dans
@@ -287,13 +306,20 @@ private fun Formulaire(
                 text = stringResource(R.string.saisie_echec),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error,
+                // L'échec apparaît après un appui sur « Enregistrer », loin du doigt et sans
+                // que le focus bouge : sans région active, un utilisateur de TalkBack ne
+                // saurait pas que rien n'a été enregistré. `Assertive` parce que l'action
+                // demandée n'a pas eu lieu (B23).
+                modifier = Modifier.semantics { liveRegion = LiveRegionMode.Assertive },
             )
         }
 
         Button(
             onClick = onEnregistrer,
             enabled = state.peutEnregistrer,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(EtiquettesTest.SAISIE_ENREGISTRER),
         ) {
             Text(stringResource(R.string.saisie_action_enregistrer))
         }
@@ -344,6 +370,10 @@ private fun Formulaire(
  *
  * En correction, il rappelle en plus la saisie déjà enregistrée : c'est ce qui distingue,
  * à l'ouverture de l'écran, une première saisie (US-B3) d'une correction (US-B4).
+ *
+ * Bloc unique pour TalkBack (B23) : c'est une seule information — ce que l'on s'apprête à
+ * enregistrer —, et c'est la seule protection contre une saisie faite sur la mauvaise ligne.
+ * La découper en quatre arrêts revenait à la rendre facile à survoler.
  */
 @Composable
 private fun EnteteSaisie(state: SaisieVaccinUiState.Pret) {
@@ -351,7 +381,9 @@ private fun EnteteSaisie(state: SaisieVaccinUiState.Pret) {
         color = MaterialTheme.colorScheme.surfaceVariant,
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) { },
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -390,14 +422,23 @@ private fun EnteteSaisie(state: SaisieVaccinUiState.Pret) {
     }
 }
 
-/** Avertissement de fenêtre : neutre, informatif, jamais bloquant (R5 et R7). */
+/**
+ * Avertissement de fenêtre : neutre, informatif, jamais bloquant (R5 et R7).
+ *
+ * Région active `Polite` (B23) : le bandeau apparaît et change quand l'utilisateur choisit
+ * une autre date, sans que le focus bouge — il faut donc qu'il soit annoncé de lui-même.
+ * `Polite` et non `Assertive` : c'est un constat, il attend la fin de la phrase en cours, et
+ * il ne doit surtout pas prendre le ton d'une alerte (R7).
+ */
 @Composable
 private fun BandeauAvertissement(message: String) {
     Surface(
         color = MaterialTheme.colorScheme.secondaryContainer,
         contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
         shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) { liveRegion = LiveRegionMode.Polite },
     ) {
         Row(
             modifier = Modifier.padding(12.dp),

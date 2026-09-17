@@ -4,13 +4,16 @@
   section de plus dedans : Android fusionne tous les fichiers de res/values/, et deux
   développeurs qui écrivent un écran en parallèle ne s'écrasent alors pas l'un l'autre.
   Mêmes règles que strings.xml : interface en français, ton factuel et non culpabilisant
-  (règle R7) — « À faire », « Prochain : … », jamais « Vous avez oublié ».
+  (règle R7) — « À faire », « Prochaine dose : … », jamais « Vous avez oublié ».
 -->
 <resources>
 
     <!-- B06 — Écran Mes enfants : liste et actions (US-B8) -->
     <string name="mes_enfants_titre">Mes enfants</string>
     <string name="mes_enfants_action_ajouter">Ajouter un enfant</string>
+    <!-- B23 — Ce que fait l'appui sur une carte, annoncé par TalkBack (`onClickLabel`) :
+         un élément cliquable dit ce qu'il fait, pas seulement ce qu'il affiche. -->
+    <string name="mes_enfants_action_ouvrir">Ouvrir le carnet</string>
 
     <!-- B06 — État vide : premier lancement, aucun enfant enregistré -->
     <string name="mes_enfants_vide_titre">Ajoutez votre premier enfant</string>
@@ -30,9 +33,12 @@
         <item quantity="other">%1$d à faire</item>
     </plurals>
 
-    <!-- B06 — Prochaine échéance : %1$s nom du vaccin, %2$s dose, %3$s date -->
-    <string name="mes_enfants_prochain">Prochain : %1$s %2$s, le %3$s</string>
-    <string name="mes_enfants_prochain_date_seule">Prochain : le %1$s</string>
+    <!-- B06 — Prochaine échéance : %1$s nom du vaccin, %2$s dose, %3$s date.
+         B23 — « Prochaine dose » remplace « Prochain » : la fiche de l'enfant écrivait la
+         même idée avec d'autres mots. Le wireframe §B7.2, basse fidélité, note « prochain :
+         RR1 le 28/09 » ; aucun des deux écrans ne reprenait ce raccourci mot pour mot. -->
+    <string name="mes_enfants_prochain">Prochaine dose : %1$s %2$s, le %3$s</string>
+    <string name="mes_enfants_prochain_date_seule">Prochaine dose : le %1$s</string>
     <string name="mes_enfants_prochain_aucun">Toutes les doses du calendrier sont faites</string>
 
     <!-- B06 — Âge de l'enfant : les clés `mes_enfants_age_*` ont été retirées. La fiche

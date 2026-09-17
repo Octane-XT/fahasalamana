@@ -134,7 +134,17 @@ private fun ReglagesContenu(
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.reglages_titre)) }) },
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.reglages_titre),
+                        // Titre d'écran : en-tête pour la navigation par titres de TalkBack.
+                        modifier = Modifier.semantics { heading() },
+                    )
+                },
+            )
+        },
     ) { interieur ->
         Column(
             modifier = Modifier
@@ -462,6 +472,10 @@ private fun ligneMiseAJour(nomContenu: String, issue: IssueMiseAJour): String = 
  *
  * Encart coloré au milieu de la carte, avant la source : impossible à manquer quand on
  * vient vérifier d'où sortent les dates affichées dans les fiches.
+ *
+ * La mention et son explication se lisent d'un bloc pour TalkBack (B23) : c'est une seule
+ * phrase de responsabilité (§B1), la couper en deux arrêts laisserait entendre la mention
+ * sans l'explication qui la justifie.
  */
 @Composable
 private fun MentionDemonstration() {
@@ -469,7 +483,9 @@ private fun MentionDemonstration() {
         color = MaterialTheme.colorScheme.tertiaryContainer,
         contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
         shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) { },
     ) {
         Row(modifier = Modifier.padding(12.dp)) {
             Icon(

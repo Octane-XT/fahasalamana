@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  B23 — Fond de la fenêtre avant la première image Compose, en mode sombre.
+
+  Sans ce fichier, l'application s'ouvrait sur un écran blanc le temps de la première
+  composition, alors que le téléphone et toute l'interface sont en sombre : un éclair blanc
+  en pleine nuit, désagréable et signalé comme finition B23 dans `values/themes.xml`.
+
+  Valeur reprise de `FondSombre` (ui/theme/Color.kt), à tenir en accord à la main.
+-->
+<resources>
+    <color name="fenetre_demarrage">#191C1D</color>
+</resources>

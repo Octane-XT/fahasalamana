@@ -47,7 +47,22 @@
 
     <!-- B15 — Écran Réglages : confidentialité (CDC §B8, point 7).
          Ce texte est lu en soutenance : il décrit ce que le code fait aujourd'hui.
-         Toute évolution du code (export, réseau, sauvegarde) doit être répercutée ici. -->
+         Toute évolution du code (export, réseau, sauvegarde) doit être répercutée ici.
+
+         B23 — Relu phrase par phrase contre le code de cette branche. Ce qui l'adosse :
+         - « restent sur ce téléphone » : base Room dans le stockage privé de l'application,
+           DataStore pour les seuls réglages (`PreferencesLocales` ne contient aucune donnée
+           de santé) ;
+         - « n'envoie aucune donnée de santé » : aucun appel réseau n'existe encore — ni
+           client Retrofit, ni `ReferenceApi` ; la permission INTERNET est déclarée pour la
+           mise à jour des références (B19), qui ne lit que du contenu de référence ;
+         - « sauvegarde automatique désactivée » : `android:allowBackup="false"` et
+           `android:fullBackupContent="false"` dans le manifeste. TODO(B24) ajoute
+           `dataExtractionRules`, qui couvre en plus le transfert d'appareil à appareil sur
+           Android 12+ — la phrase ne parle que du cloud, elle reste donc exacte d'ici là ;
+         - « cet export n'est pas encore disponible » : exact, B16 et B17 ne sont pas livrés.
+           **C'est la phrase à reprendre le jour où l'export arrive** ; elle avait déjà
+           dérivé une fois. Elle ne doit pas être écrite en avance. -->
     <string name="reglages_section_confidentialite">Confidentialité</string>
     <string name="reglages_confidentialite_donnees_locales">Les enfants que vous ajoutez et les vaccins que vous saisissez restent sur ce téléphone, dans la mémoire de l\'application.</string>
     <string name="reglages_confidentialite_aucun_envoi">L\'application ne crée aucun compte et n\'envoie aucune donnée de santé sur Internet : ni les enfants, ni les vaccins saisis.</string>

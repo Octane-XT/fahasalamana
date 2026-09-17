@@ -56,7 +56,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.error
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,6 +74,7 @@ import mg.univ.fahasalamana.platform.DemandeNotificationsRappels
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.components.EtatVide
+import mg.univ.fahasalamana.ui.components.EtiquettesTest
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
 import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
@@ -173,7 +178,13 @@ private fun EditionEnfantContenu(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(titreEcran(state)) },
+                title = {
+                    Text(
+                        text = titreEcran(state),
+                        // Titre d'écran : en-tête pour la navigation par titres de TalkBack.
+                        modifier = Modifier.semantics { heading() },
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onRetour) {
                         Icon(
@@ -300,7 +311,9 @@ private fun FormulaireEnfant(
 
         Button(
             onClick = actions.onEnregistrer,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(EtiquettesTest.EDITION_VALIDER),
             // Bouton désactivé tant que la saisie est invalide : la règle est visible avant
             // d'être expliquée, et l'utilisateur n'appuie jamais dans le vide.
             enabled = state.peutEnregistrer,
@@ -369,7 +382,12 @@ private fun ChampPrenom(
     OutlinedTextField(
         value = valeur,
         onValueChange = onChange,
-        modifier = modifier.fillMaxWidth(),
+        // `error()` : TalkBack annonce le champ comme « saisie non valide » et lit le
+        // message, au lieu de laisser le texte d'accompagnement passer pour une aide (B23).
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag(EtiquettesTest.EDITION_PRENOM)
+            .semantics { if (message != null) error(message) },
         enabled = actif,
         label = { Text(stringResource(R.string.edition_champ_prenom)) },
         singleLine = true,
@@ -403,6 +421,8 @@ private fun ChampDateNaissance(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .testTag(EtiquettesTest.EDITION_DATE_NAISSANCE)
+            .semantics { if (message != null) error(message) }
             .clickable(
                 enabled = actif,
                 onClickLabel = stringResource(R.string.edition_action_choisir_date),
