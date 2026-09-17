@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Fond de l'icône de lanceur (B24).
+
+  Même bleu-vert « santé » que `PrimaireClair` dans ui/theme/Color.kt. La valeur est
+  répétée ici et non partagée parce que les deux ne vivent pas dans le même monde : la
+  palette de Color.kt est du Kotlin lu par Compose, cette couleur-ci est une ressource
+  lue par le lanceur, avant même que l'application démarre. Si la teinte de l'application
+  change, changer les deux.
+-->
+<resources>
+
+    <color name="ic_launcher_background">#FF00687A</color>
+
+</resources>

@@ -7,8 +7,9 @@
   fin y disparaîtraient — d'où une forme volontairement massive, lisible à 24 dp dans la
   barre d'état.
 
-  Le projet n'a encore aucun jeu d'icônes (TODO(B24) : icône de lanceur et adaptive icon) ;
-  ce fichier est le premier, et il ne sert qu'aux notifications.
+  Ce fichier ne sert qu'aux notifications. L'icône de lanceur, ajoutée en B24, reprend la
+  même croix à une autre échelle : mipmap-anydpi-v26/ic_launcher.xml et
+  drawable/ic_launcher_foreground.xml.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"

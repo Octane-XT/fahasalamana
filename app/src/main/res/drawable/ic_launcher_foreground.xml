@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Calque avant de l'icône de lanceur (B24) : la croix de santé, blanche.
+
+  Géométrie d'une icône adaptative, et pourquoi ces chiffres-là :
+
+  - la toile fait **108 × 108 dp**, c'est la taille imposée aux deux calques ;
+  - le lanceur n'en montre que les **72 × 72 dp** du centre (18 → 90) : tout ce qui
+    déborde peut être rogné par le masque, rond, carré ou en goutte, selon le téléphone ;
+  - la « keyline » recommandée pour une forme pleine est un cercle de **66 dp** de
+    diamètre, soit un rayon de 33 dp autour du centre (54, 54).
+
+  La croix ci-dessous tient dans 60 × 60 dp (24 → 84), bras de 20 dp de large. Son coin
+  le plus éloigné du centre est à √(30² + 10²) ≈ 31,6 dp : dans le cercle de 33, donc
+  jamais rogné, quel que soit le masque.
+
+  Même forme que la petite icône des notifications (drawable/ic_rappel_vaccination.xml),
+  volontairement : c'est la même application qui parle. Forme pleine et sans détail fin,
+  parce qu'une icône de lanceur est regardée à 48 dp et parfois en monochrome.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M44,24 L64,24 L64,44 L84,44 L84,64 L64,64 L64,84 L44,84 L44,64 L24,64 L24,44 L44,44 Z" />
+</vector>
