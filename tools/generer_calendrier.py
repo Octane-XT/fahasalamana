@@ -13,13 +13,11 @@ publieLe, source, identifiants de vaccin stables.
 """
 import argparse
 import json
-import random
 import sys
 from datetime import date
 from pathlib import Path
 
 # Graine fixe : les données produites sont reproductibles à l'octet près (CDC Annexe 1).
-random.seed(42)
 
 SCHEMA_VERSION = 1
 VERSION = 3

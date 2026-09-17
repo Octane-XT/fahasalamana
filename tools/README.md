@@ -1,9 +1,10 @@
 # Générateurs de données de référence
 
 Deux scripts Python **sans dépendance** produisent les fichiers de référence de
-Fahasalamana Zaza, conformément au contrat du CDC §B5.1. Graine fixe
-(`random.seed(42)`) : à script identique, les fichiers produits sont identiques
-à l'octet près.
+Fahasalamana Zaza, conformément au contrat du CDC §B5.1. À script identique, les
+fichiers produits sont identiques à l'octet près : le calendrier est écrit en dur,
+et l'annuaire, seul à tirer des valeurs au sort, le fait avec une graine fixe
+(`random.seed(42)`).
 
 | Script | Produit | Volumétrie |
 |---|---|---|
