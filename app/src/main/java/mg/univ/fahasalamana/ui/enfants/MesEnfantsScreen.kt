@@ -2,6 +2,7 @@ package mg.univ.fahasalamana.ui.enfants
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,8 +38,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,6 +55,7 @@ import mg.univ.fahasalamana.domain.ResumeEnfant
 import mg.univ.fahasalamana.ui.components.EtatChargement
 import mg.univ.fahasalamana.ui.components.EtatErreur
 import mg.univ.fahasalamana.ui.components.EtatVide
+import mg.univ.fahasalamana.ui.components.EtiquettesTest
 import mg.univ.fahasalamana.ui.components.texteAge
 import mg.univ.fahasalamana.ui.theme.CouleurStatut
 import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
@@ -104,16 +111,27 @@ private fun MesEnfantsContenu(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.mes_enfants_titre)) })
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.mes_enfants_titre),
+                        // Titre d'écran : en-tête pour la navigation par titres de TalkBack.
+                        modifier = Modifier.semantics { heading() },
+                    )
+                },
+            )
         },
         floatingActionButton = {
             // Pas de bouton flottant sur l'état vide ni pendant le chargement : `EtatVide`
             // porte déjà le même bouton, au centre de l'écran, là où l'œil se pose.
+            // Les deux portent aussi la même étiquette de test (B23) : un test qui ajoute un
+            // enfant n'a pas à savoir dans quel état se trouve l'écran.
             if (state is MesEnfantsUiState.Pret) {
                 ExtendedFloatingActionButton(
                     onClick = onAjouterEnfant,
                     icon = { Icon(Icons.Filled.Add, contentDescription = null) },
                     text = { Text(stringResource(R.string.mes_enfants_action_ajouter)) },
+                    modifier = Modifier.testTag(EtiquettesTest.AJOUTER_ENFANT),
                 )
             }
         },
@@ -129,6 +147,7 @@ private fun MesEnfantsContenu(
                     description = stringResource(R.string.mes_enfants_vide_description),
                     icone = Icons.Outlined.ChildCare,
                     libelleAction = stringResource(R.string.mes_enfants_action_ajouter),
+                    etiquetteAction = EtiquettesTest.AJOUTER_ENFANT,
                     onAction = onAjouterEnfant,
                 )
 
@@ -169,17 +188,35 @@ private fun ListeEnfants(
     }
 }
 
-/** Une carte de la liste : identité à gauche, résumé R6 en dessous (wireframe §B7.2). */
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Une carte de la liste : identité à gauche, résumé R6 en dessous (wireframe §B7.2).
+ *
+ * La carte est **un seul bloc pour TalkBack** : `Modifier.clickable` fusionne la sémantique
+ * de ses enfants, donc le prénom, l'âge, les puces de résumé et la prochaine échéance se
+ * lisent d'une traite au lieu de cinq arrêts successifs. `onClickLabel` dit ce que fait
+ * l'appui — « Ouvrir le carnet » — là où le `Card(onClick = …)` de Material se contentait
+ * d'un « Appuyer deux fois pour activer » qui n'apprend rien (B23).
+ */
 @Composable
 private fun CarteEnfant(
     enfant: LigneEnfant,
     onClic: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val forme = MaterialTheme.shapes.medium
     OutlinedCard(
-        onClick = onClic,
-        modifier = modifier.fillMaxWidth(),
+        shape = forme,
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag(EtiquettesTest.carteEnfant(enfant.id))
+            // `clip` avant `clickable` : sans lui l'ondulation du toucher déborderait des
+            // coins arrondis de la carte, que seule la `Surface` interne découpe.
+            .clip(forme)
+            .clickable(
+                onClickLabel = stringResource(R.string.mes_enfants_action_ouvrir),
+                role = Role.Button,
+                onClick = onClic,
+            ),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -307,18 +344,25 @@ private fun PuceStatut(
     }
 }
 
-/** Initiale du prénom dans un rond : repère visuel de la carte, sans image à charger. */
+/**
+ * Initiale du prénom dans un rond : repère visuel de la carte, sans image à charger.
+ *
+ * Purement décorative, et il faut le dire à la machine (B23) : la carte fusionne la
+ * sémantique de tout son contenu, donc cette seule lettre se lisait devant le prénom —
+ * « F, Faly, 8 mois… ». `clearAndSetSemantics` la retire de la lecture ; elle reste à
+ * l'écran, où elle sert l'œil et lui seul.
+ */
 @Composable
 private fun Pastille(initiale: Char?, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .size(44.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.secondaryContainer),
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .clearAndSetSemantics { },
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            // Le prénom est écrit juste à côté : la pastille est décorative pour TalkBack.
             text = initiale?.uppercase(Locale.FRENCH).orEmpty(),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSecondaryContainer,

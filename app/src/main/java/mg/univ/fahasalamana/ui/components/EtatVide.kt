@@ -17,6 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +36,11 @@ import mg.univ.fahasalamana.ui.theme.FahasalamanaTheme
  * @param icone illustration facultative, purement décorative (`contentDescription = null` :
  *   le titre porte déjà l'information pour TalkBack).
  * @param libelleAction libellé du bouton ; le bouton n'apparaît qu'avec [onAction].
+ * @param etiquetteAction étiquette de test posée sur le bouton (B23). Elle permet à un écran
+ *   de donner **la même** étiquette à son bouton d'état vide et à son bouton habituel — sur
+ *   « Mes enfants », le bouton flottant et celui de l'état vide font la même chose et portent
+ *   déjà le même libellé : un test n'a pas à savoir dans quel état se trouve l'écran.
+ *   Voir [EtiquettesTest] : ce n'est pas une information d'accessibilité.
  */
 @Composable
 fun EtatVide(
@@ -41,6 +49,7 @@ fun EtatVide(
     description: String? = null,
     icone: ImageVector? = null,
     libelleAction: String? = null,
+    etiquetteAction: String? = null,
     onAction: (() -> Unit)? = null,
 ) {
     Column(
@@ -65,6 +74,9 @@ fun EtatVide(
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
+            // Titre de l'écran vide : marqué comme en-tête pour que TalkBack le trouve par
+            // navigation par titres, comme les en-têtes de section des autres écrans.
+            modifier = Modifier.semantics { heading() },
         )
 
         if (description != null) {
@@ -79,7 +91,10 @@ fun EtatVide(
 
         if (libelleAction != null && onAction != null) {
             Spacer(Modifier.height(24.dp))
-            Button(onClick = onAction) {
+            Button(
+                onClick = onAction,
+                modifier = if (etiquetteAction != null) Modifier.testTag(etiquetteAction) else Modifier,
+            ) {
                 Text(libelleAction)
             }
         }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  B23 — Une seule couleur ici, et une seule raison : le fond de la fenêtre avant la première
+  image Compose.
+
+  Les couleurs de l'application vivent dans `ui/theme/Color.kt` et nulle part ailleurs
+  (CLAUDE.md : aucune valeur hexadécimale dans un écran). Celle-ci fait exception parce
+  qu'elle est lue par le système, à partir du manifeste, avant que la moindre ligne de
+  Compose ne s'exécute : elle ne peut pas venir d'un `colorScheme`.
+
+  Sa valeur reprend `FondClair` de Color.kt ; `values-night/colors.xml` reprend `FondSombre`.
+  Les deux fichiers sont à tenir en accord avec Color.kt à la main — il n'y a pas de lien.
+-->
+<resources>
+    <color name="fenetre_demarrage">#FBFCFE</color>
+</resources>

@@ -5,11 +5,15 @@
   MainActivity. Parent android:Theme.Material.Light.NoActionBar pour éviter une
   dépendance à AppCompat dans un projet 100 % Compose.
 
-  Connu : en mode sombre, la fenêtre reste claire le temps de la première image. Un
-  values-night/themes.xml avec un windowBackground sombre le corrigerait (finition B23).
+  B23 — L'éclair blanc au lancement en mode sombre est corrigé : le fond de fenêtre pointe
+  sur `@color/fenetre_demarrage`, que `values-night/colors.xml` redéfinit en sombre. Un
+  `values-night/themes.xml` complet n'est pas nécessaire — seul le fond est visible pendant
+  ce court instant, le reste du thème système n'est jamais dessiné.
 -->
 <resources>
 
-    <style name="Theme.Fahasalamana" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Fahasalamana" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/fenetre_demarrage</item>
+    </style>
 
 </resources>

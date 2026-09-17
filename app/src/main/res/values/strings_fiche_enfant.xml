@@ -12,10 +12,16 @@
 
     <!-- B08 — Fiche enfant : barre du haut et états de l'écran -->
     <string name="fiche_titre">Carnet de vaccination</string>
-    <string name="fiche_action_modifier">Modifier cet enfant</string>
+    <!-- B23 — « la fiche » et non « cet enfant » : c'est le mot des écrans d'édition et de
+         suppression (« Modifier la fiche de Faly », « Supprimer la fiche de Faly ? »).
+         On ajoute un enfant ; on modifie et on supprime sa fiche. -->
+    <string name="fiche_action_modifier">Modifier la fiche</string>
     <string name="fiche_erreur">Le carnet de cet enfant n\'a pas pu être lu.</string>
+    <!-- B23 — Titre et explication identiques à `edition_introuvable_*` : même situation,
+         mêmes mots. La fiche disait « Il a peut-être été supprimé depuis la liste des
+         enfants », ce qui était en plus inexact — la suppression se fait depuis l'édition. -->
     <string name="fiche_introuvable_titre">Cet enfant n\'est plus dans le carnet</string>
-    <string name="fiche_introuvable_detail">Il a peut-être été supprimé depuis la liste des enfants.</string>
+    <string name="fiche_introuvable_detail">Sa fiche a peut-être été supprimée depuis un autre écran.</string>
     <string name="fiche_introuvable_action">Revenir à mes enfants</string>
     <string name="fiche_calendrier_absent_titre">Le calendrier vaccinal n\'est pas encore chargé</string>
     <string name="fiche_calendrier_absent_detail">Les échéances s\'afficheront dès que le calendrier de référence sera disponible sur ce téléphone.</string>
@@ -33,7 +39,12 @@
     <string name="fiche_badge_a_faire">%1$d à faire</string>
     <string name="fiche_badge_en_retard">%1$d en retard</string>
     <string name="fiche_badge_a_jour">Carnet à jour</string>
-    <string name="fiche_prochaine_echeance">Prochaine dose à faire : le %1$s</string>
+    <!-- B23 — « Prochaine dose », le même mot que sur la carte de la liste des enfants.
+         Disait « Prochaine dose à faire », qui entrait en collision avec le statut « À faire » :
+         la date affichée ici est la plus proche date prévue parmi les doses non faites, elle
+         peut donc appartenir à une dose « À venir » (voir `ResumeEnfant.prochaineEcheance`).
+         Deux sens pour « à faire » dans le même en-tête, juste sous le badge « 1 à faire ». -->
+    <string name="fiche_prochaine_echeance">Prochaine dose : le %1$s</string>
 
     <!-- B08 — Fiche enfant : en-têtes de tranche d'âge -->
     <string name="fiche_groupe_naissance">Naissance</string>
